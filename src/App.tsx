@@ -1,13 +1,10 @@
 import React from 'react'
-import i18n from '@dhis2/d2-i18n'
-import classes from './App.module.css'
+import MainRouter from "./modules/Router";
+import "./styles/main.css"
+import "./styles/common.css"
 
 const MyApp = () => (
-    <div className={classes.container}>
-        <>
-            <h1>{i18n.t('Welcome to LODIIS!')}</h1>
-        </>
-    </div>
+    <MainRouter/>
 )
 
 export default MyApp
