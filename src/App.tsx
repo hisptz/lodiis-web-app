@@ -6,6 +6,7 @@ import {ConfirmDialogProvider} from "@hisptz/dhis2-ui";
 import {MutableSnapshot, RecoilRoot} from "recoil";
 import {useDataEngine} from "@dhis2/app-runtime";
 import {EngineState} from "./shared/state/engine";
+import "./locales"
 
 const MyApp = () => {
     const engine = useDataEngine();

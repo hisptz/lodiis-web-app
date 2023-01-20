@@ -16,6 +16,7 @@ export function DimensionsSelector({selectors}: DimensionsSelectorProps) {
                     {
                         selectors?.map((props) => (
                             <DimensionSelector
+                                key={`${props.id}-selector-area`}
                                 {...props}
                             />
                         ))

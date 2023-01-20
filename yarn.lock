@@ -2050,7 +2050,7 @@
     styled-components "^5.3.6"
     usehooks-ts "^2.9.1"
 
-"@hisptz/dhis2-utils@*":
+"@hisptz/dhis2-utils@*", "@hisptz/dhis2-utils@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@hisptz/dhis2-utils/-/dhis2-utils-1.0.0.tgz#002bcb0fa260ac30165c2b169aee011e0a5d60c8"
   integrity sha512-RSvu/IE31CTqqa05jNJzkZIe2tzq6VRbyZ2dSUefQhGUDw/Uf400Bjmuzqxhps6cUPHwh0CCRIF674qwU+opkw==
@@ -10537,6 +10537,11 @@ react-final-form@^6.5.3:
   integrity sha512-x3XYvozolECp3nIjly+4QqxdjSSWfcnpGEL5K8OBT6xmGrq5kBqbA6+/tOqoom9NwqIPPbxPNsOViFlbKgowbA==
   dependencies:
     "@babel/runtime" "^7.15.4"
+
+react-hook-form@^7.42.1:
+  version "7.42.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.42.1.tgz#c6396ca684716d89abc1c7e64343badfd30c56c6"
+  integrity sha512-2UIGqwMZksd5HS55crTT1ATLTr0rAI4jS7yVuqTaoRVDhY2Qc4IyjskCmpnmdYqUNOYFy04vW253tb2JRVh+IQ==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

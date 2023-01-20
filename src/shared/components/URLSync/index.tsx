@@ -1,40 +1,28 @@
-import {RecoilURLSync} from "recoil-sync";
+import {RecoilSync} from "recoil-sync";
 import React from "react";
 import {useSearchParams} from "react-router-dom";
-import {fromPairs, isEmpty} from "lodash";
+import {compact, fromPairs} from "lodash";
 
 export function URLSync({children, storeKey}: { children: React.ReactNode, storeKey: string }) {
-    const [, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     return (
-        <RecoilURLSync
-            serialize={(value: any) => {
-                if (isEmpty(value)) return ""
-                return Object.keys(value).map((key) => `${key}:${value[key]}`).join(';')
-            }}
-            deserialize={(params) => {
-                if (isEmpty(params)) return null;
-                return fromPairs(params?.split(';').map((value: string) => value.split(':')));
-            }}
+        <RecoilSync
             storeKey={storeKey}
-            location={{
-                part: "queryParams",
+            read={(itemKey) => {
+                return searchParams.get(itemKey)?.split(':');
             }}
-            browserInterface={{
-                replaceURL: (url) => {
-                    const urlObject = new URL(url);
-                    setSearchParams(urlObject.searchParams, {
-                        replace: true
-                    })
-                },
-                pushURL: (url) => {
-                    const urlObject = new URL(url);
-                    setSearchParams(urlObject.searchParams)
-                },
+            write={({allItems}) => {
+                const newValue = fromPairs(compact(Array.from(allItems.entries()).map(([key, value]) => {
+                    if (value) {
+                        return ([key, (value as string[])?.join(';') ?? ''])
+                    }
+                    return;
+                })));
+                setSearchParams(newValue)
             }}
-
         >
             {children}
-        </RecoilURLSync>
+        </RecoilSync>
     )
 }
