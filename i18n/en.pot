@@ -5,8 +5,35 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-19T12:39:49.274Z\n"
-"PO-Revision-Date: 2023-01-19T12:39:49.274Z\n"
+"POT-Creation-Date: 2023-01-20T08:44:37.417Z\n"
+"PO-Revision-Date: 2023-01-20T08:44:37.417Z\n"
 
-msgid "Welcome to LODIIS!"
-msgstr "Welcome to LODIIS!"
+msgid "Data Management"
+msgstr "Data Management"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Custom Reports"
+msgstr "Custom Reports"
+
+msgid "Performance Monitoring"
+msgstr "Performance Monitoring"
+
+msgid "Select intervention"
+msgstr "Select intervention"
+
+msgid "Select organisation unit"
+msgstr "Select organisation unit"
+
+msgid "Select period"
+msgstr "Select period"
+
+msgid "Page not Found"
+msgstr "Page not Found"
+
+msgid "Go to home"
+msgstr "Go to home"
+
+msgid "and {{number}} more"
+msgstr "and {{number}} more"
