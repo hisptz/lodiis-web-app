@@ -1,27 +1,33 @@
 import {DimensionsSelector} from "../../../../shared/components/DimensionsSelector";
 import i18n from '@dhis2/d2-i18n';
 import {DimensionSelectorProps} from "../../../../shared/components/DimensionsSelector/components/DimensionSelector";
-import React, {useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {useRecoilCallback, useRecoilValue} from "recoil";
 import {DimensionState} from "./state/dimensions";
 import {OrgUnitSelectorModal, PeriodSelectorModal} from "@hisptz/dhis2-ui";
-import {OrganisationUnit, OrgUnitSelection, PeriodUtility} from "@hisptz/dhis2-utils";
-import {isEmpty} from "lodash";
-
+import {OrgUnitSelection, PeriodUtility} from "@hisptz/dhis2-utils";
+import {compact, find, isEmpty} from "lodash";
+import {useOrgUnits} from "../../../../shared/hooks/orgUnit";
+import {ProgramSelectorModal} from "./components/ProgramSelector";
+import {useSetting} from "@dhis2/app-service-datastore";
 
 export function DataDimensionSelector() {
-    const periods = useRecoilValue(DimensionState("pe"));
-    const orgUnits = useRecoilValue(DimensionState("ou"));
-    const program = useRecoilValue(DimensionState("program"));
+    const periodSelection = useRecoilValue(DimensionState("pe"));
+    const orgUnitSelection = useRecoilValue(DimensionState("ou"));
+    const programSelection = useRecoilValue(DimensionState("program"));
 
-    const [selectedOrgUnits, setSelectedOrgUnits] = useState<OrganisationUnit[]>([]);
+    const [programs] = useSetting("programs", {global: true})
+
+    const {selectedOrgUnits, setSelectedOrgUnits} = useOrgUnits(orgUnitSelection)
 
     const [openFilter, setOpenFilter] = useState<"program" | "ou" | "pe" | undefined>();
 
-    const onFilterOpen = (dimension: "program" | "ou" | "pe") => () => {
-        setOpenFilter(dimension)
-    }
-
+    const onFilterOpen = useCallback(
+        (dimension: "program" | "ou" | "pe") => () => {
+            setOpenFilter(dimension)
+        },
+        [],
+    );
     const onFilterUpdate = useRecoilCallback(({set}) => (dimension: "program" | "ou" | "pe", value: string[]) => {
         setOpenFilter(undefined)
         set(DimensionState(dimension), value);
@@ -31,11 +37,11 @@ export function DataDimensionSelector() {
         setOpenFilter(undefined)
     }
 
-    const selectors: DimensionSelectorProps[] = [
+    const selectors: DimensionSelectorProps[] = useMemo(() => [
         {
             label: i18n.t("Select intervention"),
             onClick: onFilterOpen("program"),
-            selectedItems: program ?? [],
+            selectedItems: compact(programSelection.map((programId: string) => find(programs, ['id', programId])?.name)) ?? [],
             id: "program"
         },
         {
@@ -47,33 +53,35 @@ export function DataDimensionSelector() {
         {
             label: i18n.t("Select period"),
             onClick: onFilterOpen("pe"),
-            selectedItems: periods?.map((periodId) => PeriodUtility.getPeriodById(periodId).name) ?? [],
+            selectedItems: periodSelection?.map((periodId: string) => PeriodUtility.getPeriodById(periodId).name) ?? [],
             id: "pe"
         },
-    ]
+    ], [onFilterOpen, selectedOrgUnits, periodSelection, programSelection]);
 
     return (
         <>
             <DimensionsSelector selectors={selectors}/>
-            <OrgUnitSelectorModal
-                value={{
-                    orgUnits: orgUnits?.map((orgUnit: string) => ({id: orgUnit, children: []}))
-                }}
-                position="middle"
-                onClose={onFilterClose}
-                hide={!(openFilter === "ou")}
-                onUpdate={(value: OrgUnitSelection) => {
-                    if (!isEmpty(value.orgUnits)) {
-                        setSelectedOrgUnits(value.orgUnits ?? []);
-                        onFilterUpdate("ou", value.orgUnits?.map(({id}) => id) ?? [])
-                    }
-                }}
-            />
+            {
+                openFilter === "ou" && (<OrgUnitSelectorModal
+                    value={{
+                        orgUnits: selectedOrgUnits
+                    }}
+                    position="middle"
+                    onClose={onFilterClose}
+                    hide={!(openFilter === "ou")}
+                    onUpdate={(value: OrgUnitSelection) => {
+                        if (!isEmpty(value.orgUnits)) {
+                            setSelectedOrgUnits(value.orgUnits ?? []);
+                            onFilterUpdate("ou", value.orgUnits?.map(({id}) => id) ?? [])
+                        }
+                    }}
+                />)
+            }
             <PeriodSelectorModal
                 position="middle"
                 onClose={onFilterClose}
                 hide={!(openFilter === "pe")}
-                selectedPeriods={periods ?? []}
+                selectedPeriods={periodSelection ?? []}
                 onUpdate={
                     (items: any) => {
                         if (!isEmpty(items)) {
@@ -81,6 +89,11 @@ export function DataDimensionSelector() {
                         }
                     }
                 }/>
+            <ProgramSelectorModal
+                onClose={onFilterClose}
+                hide={!(openFilter === "program")}
+                onUpdate={(value) => onFilterUpdate("program", value)}
+                selected={programSelection}/>
         </>
     )
 }
