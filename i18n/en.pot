@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-20T08:44:37.417Z\n"
-"PO-Revision-Date: 2023-01-20T08:44:37.417Z\n"
+"POT-Creation-Date: 2023-01-20T14:01:58.058Z\n"
+"PO-Revision-Date: 2023-01-20T14:01:58.058Z\n"
 
 msgid "Data Management"
 msgstr "Data Management"
@@ -20,14 +20,14 @@ msgstr "Custom Reports"
 msgid "Performance Monitoring"
 msgstr "Performance Monitoring"
 
-msgid "Select intervention"
-msgstr "Select intervention"
+msgid "Select program"
+msgstr "Select program"
 
-msgid "Select organisation unit"
-msgstr "Select organisation unit"
+msgid "Cancel"
+msgstr "Cancel"
 
-msgid "Select period"
-msgstr "Select period"
+msgid "Update"
+msgstr "Update"
 
 msgid "Page not Found"
 msgstr "Page not Found"
@@ -37,3 +37,12 @@ msgstr "Go to home"
 
 msgid "and {{number}} more"
 msgstr "and {{number}} more"
+
+msgid "Select organisation unit"
+msgstr "Select organisation unit"
+
+msgid "Select period"
+msgstr "Select period"
+
+msgid "Select intervention"
+msgstr "Select intervention"
