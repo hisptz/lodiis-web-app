@@ -4,12 +4,15 @@ import {columnsConfig} from "../../../../../constants/metadata";
 import {fromPairs} from "lodash";
 
 
-export const ColumnState = atom({
+export const ColumnState = atom<{ [key: string]: boolean } | undefined>({
     key: "column-state",
     default: selector({
         key: "column-state-default",
         get: ({get}) => {
             const program = get(DimensionState('program'));
+            if (!program) {
+                return;
+            }
             const config = columnsConfig[program as string];
             if (!config) {
                 throw Error(`There is no configuration for the program ${program}`)

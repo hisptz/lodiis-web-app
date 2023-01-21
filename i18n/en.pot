@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-21T10:17:19.979Z\n"
-"PO-Revision-Date: 2023-01-21T10:17:19.979Z\n"
+"POT-Creation-Date: 2023-01-21T14:32:01.002Z\n"
+"PO-Revision-Date: 2023-01-21T14:32:01.002Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -50,6 +50,21 @@ msgstr "Cancel"
 msgid "Update"
 msgstr "Update"
 
+msgid "Columns"
+msgstr "Columns"
+
+msgid "Check all "
+msgstr "Check all "
+
+msgid "Uncheck all "
+msgstr "Uncheck all "
+
+msgid "Choose columns to be displayed on the table"
+msgstr "Choose columns to be displayed on the table"
+
+msgid "Hide"
+msgstr "Hide"
+
 msgid "Search"
 msgstr "Search"
 
@@ -58,12 +73,6 @@ msgstr "First name"
 
 msgid "Search Criteria"
 msgstr "Search Criteria"
-
-msgid "Hide"
-msgstr "Hide"
-
-msgid "Columns"
-msgstr "Columns"
 
 msgid "Excel"
 msgstr "Excel"
@@ -76,6 +85,13 @@ msgstr "JSON"
 
 msgid "Download"
 msgstr "Download"
+
+msgid ""
+"There are no results for the selected intervention, period, and "
+"organisation unit"
+msgstr ""
+"There are no results for the selected intervention, period, and "
+"organisation unit"
 
 msgid "Page not Found"
 msgstr "Page not Found"

@@ -57,6 +57,7 @@ export interface ColumnConfig {
     get: (tei: TrackedEntityInstance) => string | number | React.ReactNode
     mandatory?: boolean;
     hidden?: boolean;
+    sortable?: boolean;
 }
 
 export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
@@ -67,35 +68,40 @@ export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
                 key: "orgUnit",
                 get: (tei: TrackedEntityInstance) => {
                     return get(tei, ['enrollments', 0, 'orgUnitName'])
-                }
+                },
+                sortable: true
             },
             {
                 label: i18n.t("Registration Date"),
                 key: "date",
                 get: (tei: TrackedEntityInstance) => {
                     return DateTime.fromISO(get(tei, ['enrollments', 0, 'enrollmentDate'])).toFormat('yyyy-MM-dd')
-                }
+                },
+                sortable: true
             },
             {
                 label: i18n.t("First Name"),
                 key: "firstName",
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
-                }
+                },
+                sortable: true
             },
             {
                 label: i18n.t("Surname"),
                 key: "surname",
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
-                }
+                },
+                sortable: true
             },
             {
                 label: i18n.t("Date of Birth"),
                 key: "dateOfBirth",
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
-                }
+                },
+                sortable: true
             },
             {
                 label: i18n.t("Primary UIC"),

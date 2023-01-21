@@ -9,6 +9,7 @@ import {CircularLoader} from "@dhis2/ui";
 import {ErrorThrower} from "../../../../shared/components/ErrorThrower";
 import i18n from '@dhis2/d2-i18n';
 import {isEmpty} from "lodash";
+import EmptyList from "../../../../shared/components/EmptyList";
 
 export function ErrorBoundedTable() {
     const {orgUnits, search, program, periods} = useDimension();
@@ -20,7 +21,8 @@ export function ErrorBoundedTable() {
 }
 
 function Table() {
-    const {data: rows, loading, pagination, error, columns, refetch} = useTableData();
+    const {data: rows, loading, pagination, error, columns, refetch, sortState, onSort} = useTableData();
+    const {dimensionsNotSelected} = useDimension();
     const [ref, {height}] = useElementSize();
 
     if (isEmpty(rows) && loading) {
@@ -37,6 +39,14 @@ function Table() {
         )
     }
 
+    if (isEmpty(rows)) {
+        return <EmptyList
+            message={dimensionsNotSelected ?
+                i18n.t("Select intervention, organisation unit, and period to start") :
+                i18n.t("There are no results for the selected intervention, period, and organisation unit")}
+        />
+    }
+
     if (error) {
         throw error;
     }
@@ -45,7 +55,8 @@ function Table() {
         <div ref={ref} style={{padding: "0 16px", flex: 1, margin: "32px 0"}}
              className=" w-100">
             <CustomDataTable
-                emptyLabel={i18n.t("There are no results for the selected intervention, period, and organisation unit")}
+                onSort={onSort}
+                sortState={sortState}
                 pagination={pagination}
                 loading={loading}
                 columns={columns}

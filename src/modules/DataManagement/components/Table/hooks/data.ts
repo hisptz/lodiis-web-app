@@ -1,5 +1,5 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
-import {forIn, fromPairs, head, isEmpty} from "lodash";
+import {forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
 import {ATTRIBUTES, columnsConfig, TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {useRecoilValue} from "recoil";
@@ -56,6 +56,7 @@ const query = {
 
 export function useTableData() {
     const periods = useRecoilValue(DimensionState("pe"));
+    const [sortState, setSortState] = useState<{ name: string; direction: "asc" | "desc" | "default" }>();
     const [response, setResponse] = useState<any>();
 
     const {page, pageSize, total, pageCount} = response?.pager ?? {page: 1, pageSize: 50};
@@ -84,11 +85,14 @@ export function useTableData() {
     const columnVisibility = useRecoilValue(ColumnState);
 
     const columns = useMemo(() => {
+        if (!program) {
+            return [];
+        }
         const config = columnsConfig[program as string];
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }
-        return config?.columns.filter((column) => columnVisibility[column.key]);
+        return config?.columns.filter((column) => columnVisibility?.[column.key]);
     }, [program, columnVisibility]);
 
     const {refetch, loading, error, fetching} = useDataQuery(query,
@@ -117,13 +121,28 @@ export function useTableData() {
 
     const sanitizedData = useMemo(() => {
         const teis: TrackedEntityInstance[] = response?.trackedEntityInstances ?? [];
-        return teis.map(tei => {
+        const data = teis.map(tei => {
             return {
                 ...fromPairs(columns?.map(column => [column.key, column.get(tei)])),
                 id: tei.id
             }
         });
-    }, [response, columnVisibility, loading, fetching]);
+
+        if (sortState) {
+            if (sortState.direction === "default") {
+                return data;
+            }
+            const sortedData = sortBy(data, sortState.name);
+            if (sortState.direction === "asc") {
+                return sortedData;
+            } else {
+                return sortedData.reverse();
+            }
+        } else {
+            return data;
+        }
+
+    }, [response, columnVisibility, loading, fetching, sortState]);
 
     const onPageChange = (page: number) => {
         refetch({page})
@@ -132,8 +151,16 @@ export function useTableData() {
         refetch({pageSize, page: 1})
     }
 
+
+    const onSort = (sort: any) => {
+        setSortState(sort)
+    }
+
+
     return {
         loading: loading || fetching,
+        sortState,
+        onSort,
         refetch,
         columns,
         error,

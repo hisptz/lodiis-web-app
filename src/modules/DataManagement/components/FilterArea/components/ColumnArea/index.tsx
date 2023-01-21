@@ -16,6 +16,10 @@ export function ColumnArea() {
     const {value: hide, setTrue: hideModal, setFalse: showModal} = useBoolean(true);
     const program = head(useRecoilValue(DimensionState("program")));
     const columns = useMemo(() => {
+        if (!program) {
+            return []
+        }
+
         const config = columnsConfig[program as string];
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
@@ -72,7 +76,7 @@ export function ColumnModal({
                                 columns,
                                 onChange,
                                 onClose
-                            }: { hide: boolean, value: { [key: string]: boolean }, onChange: (value: { [key: string]: boolean }) => void; onClose: () => void; columns: ColumnConfig[] }) {
+                            }: { hide: boolean, value?: { [key: string]: boolean }, onChange: (value: { [key: string]: boolean }) => void; onClose: () => void; columns: ColumnConfig[] }) {
     const form = useForm<{ [key: string]: boolean }>({
         defaultValues: value
     })
