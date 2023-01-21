@@ -5,8 +5,29 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-21T08:15:20.941Z\n"
-"PO-Revision-Date: 2023-01-21T08:15:20.941Z\n"
+"POT-Creation-Date: 2023-01-21T10:17:19.979Z\n"
+"PO-Revision-Date: 2023-01-21T10:17:19.979Z\n"
+
+msgid "Registration Unit"
+msgstr "Registration Unit"
+
+msgid "Registration Date"
+msgstr "Registration Date"
+
+msgid "First Name"
+msgstr "First Name"
+
+msgid "Surname"
+msgstr "Surname"
+
+msgid "Date of Birth"
+msgstr "Date of Birth"
+
+msgid "Primary UIC"
+msgstr "Primary UIC"
+
+msgid "Secondary UIC"
+msgstr "Secondary UIC"
 
 msgid "Data Management"
 msgstr "Data Management"
@@ -32,14 +53,8 @@ msgstr "Update"
 msgid "Search"
 msgstr "Search"
 
-msgid "Primary UIC"
-msgstr "Primary UIC"
-
 msgid "First name"
 msgstr "First name"
-
-msgid "Surname"
-msgstr "Surname"
 
 msgid "Search Criteria"
 msgstr "Search Criteria"
