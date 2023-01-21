@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-20T14:01:58.058Z\n"
-"PO-Revision-Date: 2023-01-20T14:01:58.058Z\n"
+"POT-Creation-Date: 2023-01-21T08:15:20.941Z\n"
+"PO-Revision-Date: 2023-01-21T08:15:20.941Z\n"
 
 msgid "Data Management"
 msgstr "Data Management"
@@ -28,6 +28,39 @@ msgstr "Cancel"
 
 msgid "Update"
 msgstr "Update"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Primary UIC"
+msgstr "Primary UIC"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Surname"
+msgstr "Surname"
+
+msgid "Search Criteria"
+msgstr "Search Criteria"
+
+msgid "Hide"
+msgstr "Hide"
+
+msgid "Columns"
+msgstr "Columns"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "CSV"
+msgstr "CSV"
+
+msgid "JSON"
+msgstr "JSON"
+
+msgid "Download"
+msgstr "Download"
 
 msgid "Page not Found"
 msgstr "Page not Found"

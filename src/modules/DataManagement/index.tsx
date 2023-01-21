@@ -8,11 +8,12 @@ export default function DataManagement() {
 
     return (
         <URLSync storeKey="filter">
-            <div className="column w-100 h-100 gap-32">
-                <DataDimensionSelector/>
-                <FilterArea/>
-            </div>
-
+            <URLSync dataType="string" storeKey="search">
+                <div className="column w-100 h-100 gap-32">
+                    <DataDimensionSelector/>
+                    <FilterArea/>
+                </div>
+            </URLSync>
         </URLSync>
     )
 }

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-import {Button, ButtonStrip, DropdownButton, FlyoutMenu, IconLayoutColumns24, IconSearch24, MenuItem} from '@dhis2/ui'
+import {Button, ButtonStrip, DropdownButton, FlyoutMenu, IconLayoutColumns24, MenuItem} from '@dhis2/ui'
 import i18n from '@dhis2/d2-i18n';
+import {SearchArea} from "./components/SearchArea";
 
 
 export function FilterArea() {
@@ -12,9 +13,7 @@ export function FilterArea() {
 
     return (
         <div style={{padding: "0 16px"}} className=" row space-between w-100">
-            <Button icon={<IconSearch24/>}>
-                {i18n.t("Search")}
-            </Button>
+            <SearchArea/>
             <ButtonStrip>
                 <Button icon={<IconLayoutColumns24/>}>{i18n.t("Columns")}</Button>
                 <DropdownButton

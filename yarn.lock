@@ -2051,22 +2051,31 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@hisptz/dhis2-ui@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@hisptz/dhis2-ui/-/dhis2-ui-1.0.0.tgz#21cf539bffeaf8653c8d6d0ebb8d1b02286b1396"
-  integrity sha512-HoUlpyspmkmew68X9gBLSaoxXL/xrOYF2s8k4IxXQHIP+dpS3k+M/QlGoYP8ZxvUtaAm4V+KTvtiJQl9oJthdQ==
+"@hisptz/dhis2-ui@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@hisptz/dhis2-ui/-/dhis2-ui-1.0.2.tgz#8e0629fc1fc7cb280b9048fefc8bd17fd6348e32"
+  integrity sha512-fnVYjoLr500NlRz8zY4qLvt+vlJGJoHOO5tUFJXBQFbfYlNXKaURyM++WQu15iFsLLZONLLQIN+WY68H+ezb2Q==
   dependencies:
     "@dhis2/app-runtime" "^3.7.0"
-    "@hisptz/dhis2-utils" "*"
+    "@hisptz/dhis2-utils" "^1.0.2"
     classnames "^2.3.2"
     react-color "^2.19.3"
     styled-components "^5.3.6"
     usehooks-ts "^2.9.1"
 
-"@hisptz/dhis2-utils@*", "@hisptz/dhis2-utils@^1.0.0":
+"@hisptz/dhis2-utils@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@hisptz/dhis2-utils/-/dhis2-utils-1.0.0.tgz#002bcb0fa260ac30165c2b169aee011e0a5d60c8"
   integrity sha512-RSvu/IE31CTqqa05jNJzkZIe2tzq6VRbyZ2dSUefQhGUDw/Uf400Bjmuzqxhps6cUPHwh0CCRIF674qwU+opkw==
+  dependencies:
+    lodash "^4.17.21"
+    luxon "^3.0.1"
+    typescript "^4.6.3"
+
+"@hisptz/dhis2-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@hisptz/dhis2-utils/-/dhis2-utils-1.0.2.tgz#dcda7ae5afa364b6ef8aba0be84bd3074963302c"
+  integrity sha512-MUCxGIBQpwn9d/VBaDhTfjfTe3vMcC6UdW4oU6Be44AB7PRseObUgmPE/zDBEwanhGNbnZdmPc76qvwp3e7W7w==
   dependencies:
     lodash "^4.17.21"
     luxon "^3.0.1"
