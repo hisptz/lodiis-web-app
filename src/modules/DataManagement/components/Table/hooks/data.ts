@@ -120,7 +120,7 @@ export function useTableData() {
                 id: tei.id
             }
         });
-    }, [response, columns]);
+    }, [response, columns, loading, fetching]);
 
     const onPageChange = (page: number) => {
         refetch({page})
@@ -131,6 +131,7 @@ export function useTableData() {
 
     return {
         loading: loading || fetching,
+        refetch,
         columns,
         error,
         data: sanitizedData,

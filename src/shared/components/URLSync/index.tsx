@@ -16,7 +16,7 @@ export function URLSync({
                 if (dataType === "string") {
                     return searchParams.get(itemKey);
                 }
-                return searchParams.get(itemKey)?.split(':');
+                return searchParams.get(itemKey)?.split(';');
             }}
             write={({diff}) => {
                 setSearchParams((prev) => {
