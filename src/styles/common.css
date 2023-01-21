@@ -71,6 +71,10 @@ label > span:nth-child(2) {
 }
 
 /*padding*/
+.p-8 {
+    padding: 8px;
+}
+
 .p-16 {
     padding: 16px;
 }
