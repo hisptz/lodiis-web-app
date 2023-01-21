@@ -23,8 +23,6 @@ function Table() {
     const {data: rows, loading, pagination, error, columns, refetch} = useTableData();
     const [ref, {height}] = useElementSize();
 
-    console.log(loading);
-
     if (isEmpty(rows) && loading) {
 
         return (

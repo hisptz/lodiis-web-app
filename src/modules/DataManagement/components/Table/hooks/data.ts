@@ -8,6 +8,7 @@ import {useEffect, useMemo, useState} from "react";
 import {PeriodUtility, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {Interval} from "luxon";
 import {SearchValuesState} from "../../FilterArea/components/SearchArea/state/search";
+import {ColumnState} from "../state/column";
 
 
 function sanitizeFilters(searchValues: SearchCriteriaValues) {
@@ -80,13 +81,15 @@ export function useTableData() {
 
     const ou = useRecoilValue(DimensionState("ou"));
     const program = head(useRecoilValue(DimensionState("program")));
+    const columnVisibility = useRecoilValue(ColumnState);
+
     const columns = useMemo(() => {
         const config = columnsConfig[program as string];
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }
-        return config?.columns;
-    }, [program]);
+        return config?.columns.filter((column) => columnVisibility[column.key]);
+    }, [program, columnVisibility]);
 
     const {refetch, loading, error, fetching} = useDataQuery(query,
         {
@@ -120,7 +123,7 @@ export function useTableData() {
                 id: tei.id
             }
         });
-    }, [response, columns, loading, fetching]);
+    }, [response, columnVisibility, loading, fetching]);
 
     const onPageChange = (page: number) => {
         refetch({page})
@@ -135,6 +138,7 @@ export function useTableData() {
         columns,
         error,
         data: sanitizedData,
+        columnVisibility,
         pagination: {
             page,
             pageSize,

@@ -1,7 +1,8 @@
 import React, {useState} from "react";
-import {Button, ButtonStrip, DropdownButton, FlyoutMenu, IconLayoutColumns24, MenuItem} from '@dhis2/ui'
+import {ButtonStrip, DropdownButton, FlyoutMenu, MenuItem} from '@dhis2/ui'
 import i18n from '@dhis2/d2-i18n';
 import {SearchArea} from "./components/SearchArea";
+import {ColumnArea} from "./components/ColumnArea";
 
 
 export function FilterArea() {
@@ -15,7 +16,7 @@ export function FilterArea() {
         <div style={{padding: "0 16px"}} className=" row space-between w-100">
             <SearchArea/>
             <ButtonStrip>
-                <Button icon={<IconLayoutColumns24/>}>{i18n.t("Columns")}</Button>
+                <ColumnArea/>
                 <DropdownButton
                     onClick={() => setDownloadStateRef((prevState) => !prevState)}
                     open={downloadStateRef}

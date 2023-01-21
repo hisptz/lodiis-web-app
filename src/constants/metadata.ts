@@ -55,6 +55,8 @@ export interface ColumnConfig {
     label: string;
     key: string;
     get: (tei: TrackedEntityInstance) => string | number | React.ReactNode
+    mandatory?: boolean;
+    hidden?: boolean;
 }
 
 export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
@@ -100,7 +102,8 @@ export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
                 key: "primaryUIC",
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.PRIMARY_UIC)
-                }
+                },
+                mandatory: true
             },
             {
                 label: i18n.t("Secondary UIC"),
