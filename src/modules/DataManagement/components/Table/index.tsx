@@ -10,6 +10,7 @@ import {ErrorThrower} from "../../../../shared/components/ErrorThrower";
 import i18n from '@dhis2/d2-i18n';
 import {isEmpty} from "lodash";
 import EmptyList from "../../../../shared/components/EmptyList";
+import {useNavigate} from "react-router-dom";
 
 export function ErrorBoundedTable() {
     const {orgUnits, search, program, periods} = useDimension();
@@ -24,6 +25,11 @@ function Table() {
     const {data: rows, loading, pagination, error, columns, refetch, sortState, onSort} = useTableData();
     const {dimensionsNotSelected} = useDimension();
     const [ref, {height}] = useElementSize();
+    const navigate = useNavigate();
+
+    const onRowClick = (id: string) => {
+        navigate(`view/${id}`)
+    }
 
     if (isEmpty(rows) && loading) {
 
@@ -55,6 +61,7 @@ function Table() {
         <div ref={ref} style={{padding: "0 16px", flex: 1, margin: "32px 0"}}
              className=" w-100">
             <CustomDataTable
+                onRowClick={onRowClick}
                 onSort={onSort}
                 sortState={sortState}
                 pagination={pagination}

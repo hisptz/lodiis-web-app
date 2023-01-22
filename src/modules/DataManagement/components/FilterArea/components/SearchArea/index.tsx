@@ -68,7 +68,7 @@ export function SearchModal({
             </ModalContent>
             <ModalActions>
                 <ButtonStrip>
-                    <Button>{i18n.t("Hide")}</Button>
+                    <Button onClick={onClose}>{i18n.t("Hide")}</Button>
                     <Button onClick={form.handleSubmit(onFormSubmit)} primary>{i18n.t("Update")}</Button>
                 </ButtonStrip>
             </ModalActions>

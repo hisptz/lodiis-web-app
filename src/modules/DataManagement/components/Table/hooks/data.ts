@@ -124,7 +124,7 @@ export function useTableData() {
         const data = teis.map(tei => {
             return {
                 ...fromPairs(columns?.map(column => [column.key, column.get(tei)])),
-                id: tei.id
+                id: tei.trackedEntityInstance
             }
         });
 
