@@ -5,8 +5,123 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-19T12:39:49.274Z\n"
-"PO-Revision-Date: 2023-01-19T12:39:49.274Z\n"
+"POT-Creation-Date: 2023-01-22T12:22:13.493Z\n"
+"PO-Revision-Date: 2023-01-22T12:22:13.493Z\n"
 
-msgid "Welcome to LODIIS!"
-msgstr "Welcome to LODIIS!"
+msgid "Registration Unit"
+msgstr "Registration Unit"
+
+msgid "Registration Date"
+msgstr "Registration Date"
+
+msgid "First Name"
+msgstr "First Name"
+
+msgid "Surname"
+msgstr "Surname"
+
+msgid "Date of Birth"
+msgstr "Date of Birth"
+
+msgid "Primary UIC"
+msgstr "Primary UIC"
+
+msgid "Secondary UIC"
+msgstr "Secondary UIC"
+
+msgid "Data Management"
+msgstr "Data Management"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Custom Reports"
+msgstr "Custom Reports"
+
+msgid "Performance Monitoring"
+msgstr "Performance Monitoring"
+
+msgid "Select program"
+msgstr "Select program"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Columns"
+msgstr "Columns"
+
+msgid "Check all "
+msgstr "Check all "
+
+msgid "Uncheck all "
+msgstr "Uncheck all "
+
+msgid "Choose columns to be displayed on the table"
+msgstr "Choose columns to be displayed on the table"
+
+msgid "Hide"
+msgstr "Hide"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Clear search"
+msgstr "Clear search"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Search Criteria"
+msgstr "Search Criteria"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "CSV"
+msgstr "CSV"
+
+msgid "JSON"
+msgstr "JSON"
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Downloading..."
+msgstr "Downloading..."
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Select intervention, organisation unit, and period to start"
+msgstr "Select intervention, organisation unit, and period to start"
+
+msgid ""
+"There are no results for the selected intervention, period, and "
+"organisation unit"
+msgstr ""
+"There are no results for the selected intervention, period, and "
+"organisation unit"
+
+msgid "Page not Found"
+msgstr "Page not Found"
+
+msgid "Go to home"
+msgstr "Go to home"
+
+msgid "and {{number}} more"
+msgstr "and {{number}} more"
+
+msgid "Select organisation unit"
+msgstr "Select organisation unit"
+
+msgid "Select period"
+msgstr "Select period"
+
+msgid "Select intervention"
+msgstr "Select intervention"
+
+msgid "There are no items"
+msgstr "There are no items"
