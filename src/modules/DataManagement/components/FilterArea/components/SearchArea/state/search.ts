@@ -35,6 +35,10 @@ export const SearchValuesState = selector<SearchCriteriaValues>({
             set(SearchState("primaryUIC"), newValue.primaryUIC);
             set(SearchState("firstName"), newValue.firstName);
             set(SearchState("surname"), newValue.surname);
+        } else {
+            set(SearchState("primaryUIC"), '');
+            set(SearchState("firstName"), '');
+            set(SearchState("surname"), '');
         }
     }
 })

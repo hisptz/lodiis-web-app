@@ -1,10 +1,10 @@
-import {Button, ButtonStrip, IconSearch24, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
+import {Button, ButtonStrip, IconCross24, IconSearch24, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import i18n from '@dhis2/d2-i18n';
 import React from 'react';
 import {FormProvider, useForm} from "react-hook-form";
 import {RHFTextInputField} from "@hisptz/dhis2-ui";
 import {useBoolean} from "usehooks-ts";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useResetRecoilState} from "recoil";
 import {SearchValuesState} from "./state/search";
 
 
@@ -18,11 +18,22 @@ export interface SearchCriteriaValues {
 export function SearchArea() {
     const {value: searchHidden, setTrue: closeSearch, setFalse: openSearch} = useBoolean(true);
     const [searchValue, setSearchValue] = useRecoilState(SearchValuesState);
+
+    const searchActive = !!searchValue.surname || searchValue.firstName || searchValue.primaryUIC;
+
+    const resetSearchState = useResetRecoilState(SearchValuesState);
     return (
         <>
-            <Button onClick={openSearch} icon={<IconSearch24/>}>
-                {i18n.t("Search")}
-            </Button>
+            <ButtonStrip>
+                <Button onClick={openSearch} icon={<IconSearch24/>}>
+                    {i18n.t("Search")}
+                </Button>
+                {
+                    searchActive && (<Button onClick={resetSearchState} icon={<IconCross24/>}>
+                        {i18n.t("Clear search")}
+                    </Button>)
+                }
+            </ButtonStrip>
             <SearchModal value={searchValue} hide={searchHidden} onClose={closeSearch} onUpdate={setSearchValue}/>
         </>
     )
