@@ -9,6 +9,7 @@ import {PeriodUtility, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {Interval} from "luxon";
 import {SearchValuesState} from "../../FilterArea/components/SearchArea/state/search";
 import {ColumnState} from "../state/column";
+import {useDownloadData} from "../../../hooks/download";
 
 
 function sanitizeFilters(searchValues: SearchCriteriaValues) {
@@ -33,7 +34,7 @@ function sanitizeFilters(searchValues: SearchCriteriaValues) {
 }
 
 
-const query = {
+export const DATA_QUERY = {
     tei: {
         resource: "trackedEntityInstances",
         params: ({search, ou, pe, program, page, pageSize}: any) => {
@@ -80,6 +81,7 @@ export function useTableData() {
     }, [periods]);
     const searchValue = useRecoilValue(SearchValuesState);
 
+
     const ou = useRecoilValue(DimensionState("ou"));
     const program = head(useRecoilValue(DimensionState("program")));
     const columnVisibility = useRecoilValue(ColumnState);
@@ -95,7 +97,29 @@ export function useTableData() {
         return config?.columns.filter((column) => columnVisibility?.[column.key]);
     }, [program, columnVisibility]);
 
-    const {refetch, loading, error, fetching} = useDataQuery(query,
+    const {download, downloading} = useDownloadData({
+        resource: 'trackedEntityInstances',
+        query: DATA_QUERY,
+        queryKey: "tei",
+        mapping: (data: TrackedEntityInstance) => {
+            console.log(data);
+            return fromPairs(columns?.map(column => ([column.label, column.get(data)])))
+        }
+
+    });
+
+    const onDownload = (type: string) => {
+        if (!isEmpty(ou) && !isEmpty(sanitizedPeriod) && !isEmpty(program)) {
+            download(type, {
+                ou,
+                pe: sanitizedPeriod,
+                program,
+                search: searchValue
+            })
+        }
+    }
+
+    const {refetch, loading, error, fetching} = useDataQuery(DATA_QUERY,
         {
             lazy: true,
             variables: {
@@ -166,6 +190,8 @@ export function useTableData() {
         error,
         data: sanitizedData,
         columnVisibility,
+        downloading,
+        download: onDownload,
         pagination: {
             page,
             pageSize,

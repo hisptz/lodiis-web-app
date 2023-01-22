@@ -3,13 +3,15 @@ import {ButtonStrip, DropdownButton, FlyoutMenu, MenuItem} from '@dhis2/ui'
 import i18n from '@dhis2/d2-i18n';
 import {SearchArea} from "./components/SearchArea";
 import {ColumnArea} from "./components/ColumnArea";
+import {useTableData} from "../Table/hooks/data";
 
 
 export function FilterArea() {
     const [downloadStateRef, setDownloadStateRef] = useState(false);
+    const {download, downloading} = useTableData()
     const onDownloadClick = (type: string) => () => {
         setDownloadStateRef(false);
-        //TODO: Implement download feature here
+        download(type);
     };
 
     return (
@@ -18,6 +20,7 @@ export function FilterArea() {
             <ButtonStrip>
                 <ColumnArea/>
                 <DropdownButton
+                    loading={downloading}
                     onClick={() => setDownloadStateRef((prevState) => !prevState)}
                     open={downloadStateRef}
                     component={
@@ -29,7 +32,7 @@ export function FilterArea() {
                                 />
                                 <MenuItem
                                     label={i18n.t('CSV')}
-                                    onClick={onDownloadClick('xlsx')}
+                                    onClick={onDownloadClick('csv')}
                                 />
                                 <MenuItem
                                     label={i18n.t('JSON')}
@@ -39,7 +42,7 @@ export function FilterArea() {
                         </div>
                     }
 
-                >{i18n.t("Download")}</DropdownButton>
+                >{!downloading ? i18n.t("Download") : i18n.t("Downloading...")}</DropdownButton>
             </ButtonStrip>
         </div>
     )

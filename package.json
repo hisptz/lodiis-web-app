@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@dhis2/cli-app-scripts": "^10.2.0",
+    "@types/async": "^3.2.16",
     "@types/lodash": "^4.14.191",
     "@types/luxon": "^3.2.0",
     "@types/react": "16",
@@ -26,6 +27,8 @@
     "@hisptz/dhis2-ui": "^1.0.3",
     "@hisptz/dhis2-utils": "^1.0.0",
     "@recoiljs/refine": "^0.1.1",
+    "async-es": "^3.2.4",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "luxon": "^3.2.1",
     "react-error-boundary": "^3.1.4",
@@ -34,6 +37,7 @@
     "react-router-dom": "^6.7.0",
     "recoil": "^0.7.6",
     "recoil-sync": "^0.2.0",
-    "usehooks-ts": "^2.9.1"
+    "usehooks-ts": "^2.9.1",
+    "xlsx": "^0.18.5"
   }
 }

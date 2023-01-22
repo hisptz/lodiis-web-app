@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-22T11:32:11.886Z\n"
-"PO-Revision-Date: 2023-01-22T11:32:11.886Z\n"
+"POT-Creation-Date: 2023-01-22T12:22:13.493Z\n"
+"PO-Revision-Date: 2023-01-22T12:22:13.493Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -68,6 +68,9 @@ msgstr "Hide"
 msgid "Search"
 msgstr "Search"
 
+msgid "Clear search"
+msgstr "Clear search"
+
 msgid "First name"
 msgstr "First name"
 
@@ -85,6 +88,9 @@ msgstr "JSON"
 
 msgid "Download"
 msgstr "Download"
+
+msgid "Downloading..."
+msgstr "Downloading..."
 
 msgid "Back"
 msgstr "Back"
