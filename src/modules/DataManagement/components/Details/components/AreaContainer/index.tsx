@@ -14,7 +14,7 @@ export function AreaContainer({
         <div className={classes['area-container']}>
             <div className="row space-between align-center">
                 <h3 className={classes['area-header']}>{heading}</h3>
-                {onEdit && (<Button>{i18n.t("Edit")}</Button>)}
+                {onEdit && (<Button small onClick={onEdit}>{i18n.t("Edit")}</Button>)}
             </div>
             <Divider dense/>
             {children}

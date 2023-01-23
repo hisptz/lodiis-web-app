@@ -17,7 +17,7 @@ const query = {
                 'orgUnit',
                 'attributes[attribute,value]',
                 'trackedEntityType',
-                'enrollments[enrollment,orgUnitName,enrollmentDate,events[event,dataValues[dataElement,value],eventDate]]'
+                'enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,dataValues[dataElement,value],eventDate]]'
             ]
         })
     },
@@ -39,7 +39,7 @@ export function useData() {
     const [searchParams] = useSearchParams();
     const programId = searchParams.get("program");
     const programConfig = find(PROGRAM_CONFIG, ['id', programId]) ?? DEFAULT_PROGRAM_CONFIG;
-    const {data, loading, error} = useDataQuery(query, {
+    const {data, loading, error, refetch} = useDataQuery(query, {
         variables: {
             teiId,
             programId
@@ -47,7 +47,6 @@ export function useData() {
     });
 
     const profileData = useMemo(() => {
-        console.log(data, programConfig)
         if (data && programConfig) {
             return new ProfileData(data?.tei as TrackedEntityInstance, {program: programConfig})
         }
@@ -55,13 +54,12 @@ export function useData() {
 
     const program = data?.program as Program;
 
-    console.log(profileData);
-
     return {
         profileData,
         program,
         loading,
-        error
+        error,
+        refetch
     }
 
 }

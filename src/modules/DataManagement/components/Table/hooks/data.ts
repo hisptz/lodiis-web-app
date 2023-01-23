@@ -102,7 +102,6 @@ export function useTableData() {
         query: DATA_QUERY,
         queryKey: "tei",
         mapping: (data: TrackedEntityInstance) => {
-            console.log(data);
             return fromPairs(columns?.map(column => ([column.label, column.get(data)])))
         }
 

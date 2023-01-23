@@ -43,7 +43,44 @@ export class ProfileData {
             {
                 header: i18n.t("Date"),
                 value: this.enrollmentDate?.toFormat('yyyy-MM-dd'),
-                id: "date"
+                id: "enrollmentDate"
+            }
+        ]
+    }
+
+    getEnrollmentFormValues() {
+        return {
+            orgUnit: this.enrollment.orgUnit,
+            enrollmentDate: this.enrollmentDate?.toFormat('yyyy-MM-dd')
+        }
+    }
+
+    updateEnrollment({orgUnit, enrollmentDate}: { orgUnit: string; enrollmentDate: string; }) {
+        const updatedEnrollment = {...this.enrollment, orgUnit, enrollmentDate};
+        delete updatedEnrollment.events;
+        return updatedEnrollment;
+    }
+
+
+    getEnrollmentFormFields() {
+        return [
+            {
+                label: i18n.t("Organisation unit"),
+                valueType: "orgUnit",
+                name: "orgUnit",
+                required: true,
+                validations: {
+                    required: i18n.t("Organisation unit is required")
+                }
+            },
+            {
+                label: i18n.t("Date of enrollment"),
+                valueType: "date",
+                name: "enrollmentDate",
+                required: true,
+                validations: {
+                    required: i18n.t("Enrollment date is required")
+                }
             }
         ]
     }
