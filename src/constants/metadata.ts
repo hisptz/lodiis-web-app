@@ -40,7 +40,6 @@ export const programs = [
     }
 ]
 
-
 export enum ATTRIBUTES {
     FIRST_NAME = "WTZ7GLTrE8Q",
     SURNAME = "rSP9c21JsfC",
@@ -49,7 +48,6 @@ export enum ATTRIBUTES {
     SECONDARY_UIC = "eIU7KMx4Tu3",
 
 }
-
 
 export interface ColumnConfig {
     label: string;

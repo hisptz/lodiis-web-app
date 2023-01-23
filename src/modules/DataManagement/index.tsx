@@ -13,7 +13,9 @@ export default function DataManagement() {
                 <div className="column w-100 h-100 gap-16">
                     <DataDimensionSelector/>
                     <FilterArea/>
-                    <ErrorBoundedTable/>
+                    <div style={{height: 'calc(100vh - 292px)'}} className="w-100">
+                        <ErrorBoundedTable/>
+                    </div>
                 </div>
             </URLSync>
         </URLSync>
