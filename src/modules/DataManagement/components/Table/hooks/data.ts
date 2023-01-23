@@ -1,5 +1,5 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
-import {forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
+import {find, forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
 import {ATTRIBUTES, DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {useRecoilValue} from "recoil";
@@ -90,11 +90,11 @@ export function useTableData() {
         if (!program) {
             return [];
         }
-        const config = PROGRAM_CONFIG[program as string] ?? DEFAULT_PROGRAM_CONFIG;
+        const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }
-        return config?.columns.filter((column) => columnVisibility?.[column.key]);
+        return config?.columns.filter((column: { key: string | number; }) => columnVisibility?.[column.key]);
     }, [program, columnVisibility]);
 
     const {download, downloading} = useDownloadData({

@@ -7,7 +7,7 @@ import {FormProvider, useForm, useFormContext} from "react-hook-form";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {ColumnState} from "../../../Table/state/column";
 import {useBoolean} from "usehooks-ts";
-import {head} from "lodash";
+import {find, head} from "lodash";
 import {DimensionState} from "../../../../../../shared/state/dimensions";
 
 
@@ -20,7 +20,7 @@ export function ColumnArea() {
             return []
         }
 
-        const config = PROGRAM_CONFIG[program as string] ?? DEFAULT_PROGRAM_CONFIG;
+        const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }

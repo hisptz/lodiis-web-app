@@ -1,7 +1,7 @@
 import {atom, selector} from "recoil";
 import {DimensionState} from "../../../../../shared/state/dimensions";
 import {DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG} from "../../../../../constants/metadata";
-import {fromPairs} from "lodash";
+import {find, fromPairs} from "lodash";
 
 
 export const ColumnState = atom<{ [key: string]: boolean } | undefined>({
@@ -13,7 +13,7 @@ export const ColumnState = atom<{ [key: string]: boolean } | undefined>({
             if (!program) {
                 return;
             }
-            const config = PROGRAM_CONFIG[program as string] ?? DEFAULT_PROGRAM_CONFIG;
+            const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
             if (!config) {
                 throw Error(`There is no configuration for the program ${program}`)
             }

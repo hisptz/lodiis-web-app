@@ -4,6 +4,7 @@ import {get} from "lodash";
 import {DateTime} from "luxon";
 import {getAttributeValue} from "../shared/utils/metadata";
 import React from "react"
+import {ProgramConfig} from "../shared/interfaces/metadata";
 
 
 export const TEI_FIELDS = [
@@ -65,7 +66,8 @@ export interface ProfileConfig {
 }
 
 
-export const DEFAULT_PROGRAM_CONFIG = {
+export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
+    id: "",
     columns: [
         {
             label: i18n.t("Registration Unit"),
@@ -140,16 +142,18 @@ export const DEFAULT_PROGRAM_CONFIG = {
                     return ""
                 }
                 const dateOfBirth = DateTime.fromJSDate(new Date(dateString));
-                return dateOfBirth.diffNow("years").years.toString();
+                return Math.abs(dateOfBirth.diffNow("years").years).toFixed(0)
             },
         },
     ]
 }
 
 
-export const PROGRAM_CONFIG: { [key: string]: { columns: ColumnConfig[]; profile: ProfileConfig[] } } = {
-    em38qztTI8s: {
+export const PROGRAM_CONFIG: ProgramConfig[] = [
+    {
         ...DEFAULT_PROGRAM_CONFIG,
+        id: "em38qztTI8s",
+
         columns: [
             ...DEFAULT_PROGRAM_CONFIG.columns,
             {
@@ -186,4 +190,4 @@ export const PROGRAM_CONFIG: { [key: string]: { columns: ColumnConfig[]; profile
             },
         ]
     }
-}
+]

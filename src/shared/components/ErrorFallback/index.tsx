@@ -8,7 +8,7 @@ export default function ErrorFallback({error, resetErrorBoundary}: FallbackProps
 
     return (
         <div style={{minHeight: 400}} className="h-100 w-100 column center align-center">
-            <div className="size-32">
+            <div className="icon-size-64">
                 <IconError24/>
             </div>
             <h3>{error.name}</h3>

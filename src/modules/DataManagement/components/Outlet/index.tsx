@@ -2,6 +2,8 @@ import {Button, IconArrowLeft24} from "@dhis2/ui";
 import i18n from "@dhis2/d2-i18n";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import React from "react";
+import {ErrorBoundary} from "react-error-boundary";
+import ErrorFallback from "../../../../shared/components/ErrorFallback";
 
 
 export function DataManagementOutlet() {
@@ -20,7 +22,9 @@ export function DataManagementOutlet() {
                 </div>
             ) : null}
             <div className=" w-100" style={{overflow: 'auto', flex: 1}}>
-                <Outlet/>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <Outlet/>
+                </ErrorBoundary>
             </div>
         </div>
     )

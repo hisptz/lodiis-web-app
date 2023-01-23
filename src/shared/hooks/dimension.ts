@@ -1,8 +1,8 @@
-import {head, isEmpty} from "lodash";
+import {find, head, isEmpty} from "lodash";
 import {useRecoilValue} from "recoil";
 import {DimensionState} from "../state/dimensions";
 import {SearchValuesState} from "../../modules/DataManagement/components/FilterArea/components/SearchArea/state/search";
-import {ColumnConfig, PROGRAM_CONFIG} from "../../constants/metadata";
+import {DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG} from "../../constants/metadata";
 
 
 export function useDimension() {
@@ -25,10 +25,11 @@ export function useDimension() {
 
 export function useProgram() {
     const program: string | undefined = head(useRecoilValue(DimensionState("program")));
-    const columns: ColumnConfig[] | undefined = program ? PROGRAM_CONFIG[program]?.columns : undefined;
+    const {columns, profile} = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
 
     return {
         program,
-        columns
+        columns,
+        profile
     }
 }
