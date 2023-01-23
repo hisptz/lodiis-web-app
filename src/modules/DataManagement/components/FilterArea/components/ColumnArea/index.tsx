@@ -1,7 +1,7 @@
 import {Button, ButtonStrip, IconLayoutColumns24, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import i18n from "@dhis2/d2-i18n";
 import React, {useMemo} from "react";
-import {ColumnConfig, columnsConfig} from "../../../../../../constants/metadata";
+import {ColumnConfig, DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG} from "../../../../../../constants/metadata";
 import {RHFCheckboxField} from "@hisptz/dhis2-ui";
 import {FormProvider, useForm, useFormContext} from "react-hook-form";
 import {useRecoilState, useRecoilValue} from "recoil";
@@ -20,7 +20,7 @@ export function ColumnArea() {
             return []
         }
 
-        const config = columnsConfig[program as string];
+        const config = PROGRAM_CONFIG[program as string] ?? DEFAULT_PROGRAM_CONFIG;
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }

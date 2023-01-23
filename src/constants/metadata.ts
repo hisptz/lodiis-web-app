@@ -60,49 +60,100 @@ export interface ColumnConfig {
     sortable?: boolean;
 }
 
-export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
+export interface ProfileConfig {
+    label: string;
+    key: string;
+    get: (tei: TrackedEntityInstance) => string | number | React.ReactNode
+}
+
+
+export const DEFAULT_PROGRAM_CONFIG = {
+    columns: [
+        {
+            label: i18n.t("Registration Unit"),
+            key: "orgUnit",
+            get: (tei: TrackedEntityInstance) => {
+                return get(tei, ['enrollments', 0, 'orgUnitName'])
+            },
+            sortable: true
+        },
+        {
+            label: i18n.t("Registration Date"),
+            key: "date",
+            get: (tei: TrackedEntityInstance) => {
+                return DateTime.fromISO(get(tei, ['enrollments', 0, 'enrollmentDate'])).toFormat('yyyy-MM-dd')
+            },
+            sortable: true
+        },
+        {
+            label: i18n.t("First Name"),
+            key: "firstName",
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
+            },
+            sortable: true
+        },
+        {
+            label: i18n.t("Surname"),
+            key: "surname",
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
+            },
+            sortable: true
+        },
+        {
+            label: i18n.t("Date of Birth"),
+            key: "dateOfBirth",
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
+            },
+            sortable: true
+        },
+    ],
+    profile: [
+        {
+            key: "firstName",
+            label: i18n.t("First name"),
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
+            },
+        },
+        {
+            label: i18n.t("Surname"),
+            key: "surname",
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
+            },
+
+        },
+        {
+            label: i18n.t("Date of Birth"),
+            key: "dateOfBirth",
+            get: (tei: TrackedEntityInstance) => {
+                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
+            },
+        },
+        {
+            label: i18n.t("Age"),
+            key: "age",
+            get: (tei: TrackedEntityInstance) => {
+                const dateString = getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH);
+                if (!dateString) {
+                    return ""
+                }
+                const dateOfBirth = DateTime.fromJSDate(new Date(dateString));
+                return dateOfBirth.diffNow("years").years.toString();
+            },
+        },
+    ]
+}
+
+
+export const PROGRAM_CONFIG: { [key: string]: { columns: ColumnConfig[]; profile: ProfileConfig[] } } = {
     em38qztTI8s: {
+        ...DEFAULT_PROGRAM_CONFIG,
         columns: [
-            {
-                label: i18n.t("Registration Unit"),
-                key: "orgUnit",
-                get: (tei: TrackedEntityInstance) => {
-                    return get(tei, ['enrollments', 0, 'orgUnitName'])
-                },
-                sortable: true
-            },
-            {
-                label: i18n.t("Registration Date"),
-                key: "date",
-                get: (tei: TrackedEntityInstance) => {
-                    return DateTime.fromISO(get(tei, ['enrollments', 0, 'enrollmentDate'])).toFormat('yyyy-MM-dd')
-                },
-                sortable: true
-            },
-            {
-                label: i18n.t("First Name"),
-                key: "firstName",
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
-                },
-                sortable: true
-            },
-            {
-                label: i18n.t("Surname"),
-                key: "surname",
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
-                },
-                sortable: true
-            },
-            {
-                label: i18n.t("Date of Birth"),
-                key: "dateOfBirth",
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
-                },
-                sortable: true
-            },
+            ...DEFAULT_PROGRAM_CONFIG.columns,
             {
                 label: i18n.t("Primary UIC"),
                 key: "primaryUIC",
@@ -118,7 +169,23 @@ export const columnsConfig: { [key: string]: { columns: ColumnConfig[] } } = {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SECONDARY_UIC)
                 }
             },
-
+        ],
+        profile: [
+            ...DEFAULT_PROGRAM_CONFIG.profile,
+            {
+                label: i18n.t("Primary UIC"),
+                key: "primaryUIC",
+                get: (tei: TrackedEntityInstance) => {
+                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.PRIMARY_UIC)
+                },
+            },
+            {
+                label: i18n.t("Secondary UIC"),
+                key: "secondaryUIC",
+                get: (tei: TrackedEntityInstance) => {
+                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SECONDARY_UIC)
+                }
+            },
         ]
     }
 }

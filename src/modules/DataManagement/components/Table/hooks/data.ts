@@ -1,6 +1,6 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
 import {forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
-import {ATTRIBUTES, columnsConfig, TEI_FIELDS} from "../../../../../constants/metadata";
+import {ATTRIBUTES, DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {useRecoilValue} from "recoil";
 import {DimensionState} from "../../../../../shared/state/dimensions";
@@ -90,7 +90,7 @@ export function useTableData() {
         if (!program) {
             return [];
         }
-        const config = columnsConfig[program as string];
+        const config = PROGRAM_CONFIG[program as string] ?? DEFAULT_PROGRAM_CONFIG;
         if (!config) {
             throw Error(`There is no configuration for the program ${program}`)
         }
