@@ -23,12 +23,12 @@ export function ErrorBoundedTable() {
 
 function Table() {
     const {data: rows, loading, pagination, error, columns, refetch, sortState, onSort} = useTableData();
-    const {dimensionsNotSelected} = useDimension();
+    const {dimensionsNotSelected, program} = useDimension();
     const [ref, {height}] = useElementSize();
     const navigate = useNavigate();
 
     const onRowClick = (id: string) => {
-        navigate(`view/${id}`)
+        navigate(`view/${id}?program=${program}`);
     }
 
     if (isEmpty(rows) && loading) {
