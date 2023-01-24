@@ -34,9 +34,10 @@ export default function Details() {
     }
 
     return (
-        <div style={{padding: "0 16px"}} className="column w-100 h-100 gap-16">
-            <h1>{program?.name}</h1>
-            <div className={classes['container']}>
+        <div style={{padding: "0 16px", margin: "16px 0"}} className="column w-100 h-100 gap-16">
+            <h1 style={{margin: 0}}>{program?.name}</h1>
+            <div style={{overflow: "auto", height: "calc(100vh - 244px)", position: "relative"}}
+                 className={classes['container']}>
                 <StagesArea/>
                 <ProfileArea/>
             </div>

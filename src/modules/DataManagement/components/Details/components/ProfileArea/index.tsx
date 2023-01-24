@@ -222,10 +222,12 @@ export function Relationships() {
 export function ProfileArea() {
 
     return (
-        <div className="column gap-16 w-100 h-100">
-            <Profile/>
-            <Enrollment/>
-            <Relationships/>
+        <div style={{position: "sticky", top: 0, left: 0}}>
+            <div className="column gap-16 w-100">
+                <Profile/>
+                <Enrollment/>
+                <Relationships/>
+            </div>
         </div>
     )
 }

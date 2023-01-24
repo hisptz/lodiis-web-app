@@ -12,6 +12,9 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 16px;
+    align-items: start;
+    height: 100%;
+    overflow: auto;
 }
 
 .area-header {

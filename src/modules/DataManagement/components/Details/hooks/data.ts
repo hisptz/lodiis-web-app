@@ -17,7 +17,7 @@ const query = {
                 'orgUnit',
                 'attributes[attribute,value]',
                 'trackedEntityType',
-                'enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,dataValues[dataElement,value],eventDate]]'
+                'enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,programStage,dueDate,orgUnit,orgUnitName,status,dataValues[dataElement,value],eventDate]]'
             ]
         })
     },
@@ -29,7 +29,7 @@ const query = {
                 'id',
                 'displayName',
                 'programTrackedEntityAttributes[mandatory,trackedEntityAttribute[id,displayName,formName,valueType]]',
-                'programStages[programStageDataElements[dataElement[id,formName]]]'
+                'programStages[displayName,id,lastUpdated,programStageDataElements[dataElement[id,formName]]]'
             ]
         }
     }

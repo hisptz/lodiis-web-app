@@ -1,6 +1,6 @@
 import {Enrollment, Event as DHIS2Event, Program, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {ProgramConfig} from "../interfaces/metadata";
-import {find, forIn, fromPairs, head, set} from "lodash";
+import {filter, find, forIn, fromPairs, head, isEmpty, set} from "lodash";
 import {DateTime} from "luxon";
 import i18n from '@dhis2/d2-i18n';
 
@@ -46,6 +46,11 @@ export class ProfileData {
             value: profileDetail.get(this.trackedEntityInstance),
             id: profileDetail.key
         }))
+    }
+
+
+    getProgramStages() {
+        return this.program.programStages?.filter((programStage) => !isEmpty(this.getEvents(programStage.id)))
     }
 
     getEnrollmentData() {
@@ -98,7 +103,6 @@ export class ProfileData {
         return updatedEnrollment;
     }
 
-
     getEnrollmentFormFields() {
         return [
             {
@@ -120,6 +124,10 @@ export class ProfileData {
                 }
             }
         ]
+    }
+
+    getEvents(programStageId: string) {
+        return filter(this.events, ['programStage', programStageId]);
     }
 
 }
