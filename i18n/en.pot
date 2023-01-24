@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-22T12:22:13.493Z\n"
-"PO-Revision-Date: 2023-01-22T12:22:13.493Z\n"
+"POT-Creation-Date: 2023-01-24T10:52:20.767Z\n"
+"PO-Revision-Date: 2023-01-24T10:52:20.767Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -22,6 +22,12 @@ msgstr "Surname"
 
 msgid "Date of Birth"
 msgstr "Date of Birth"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Age"
+msgstr "Age"
 
 msgid "Primary UIC"
 msgstr "Primary UIC"
@@ -50,6 +56,33 @@ msgstr "Cancel"
 msgid "Update"
 msgstr "Update"
 
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Profile updated successfully"
+msgstr "Profile updated successfully"
+
+msgid "Edit enrollment"
+msgstr "Edit enrollment"
+
+msgid "Updating"
+msgstr "Updating"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Enrollment updated successfully"
+msgstr "Enrollment updated successfully"
+
+msgid "Enrollment"
+msgstr "Enrollment"
+
+msgid "Relationships"
+msgstr "Relationships"
+
+msgid "Stages and events"
+msgstr "Stages and events"
+
 msgid "Columns"
 msgstr "Columns"
 
@@ -70,9 +103,6 @@ msgstr "Search"
 
 msgid "Clear search"
 msgstr "Clear search"
-
-msgid "First name"
-msgstr "First name"
 
 msgid "Search Criteria"
 msgstr "Search Criteria"
@@ -125,3 +155,18 @@ msgstr "Select intervention"
 
 msgid "There are no items"
 msgstr "There are no items"
+
+msgid "Organisation unit"
+msgstr "Organisation unit"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Organisation unit is required"
+msgstr "Organisation unit is required"
+
+msgid "Date of enrollment"
+msgstr "Date of enrollment"
+
+msgid "Enrollment date is required"
+msgstr "Enrollment date is required"

@@ -28,6 +28,7 @@ const query = {
             fields: [
                 'id',
                 'displayName',
+                'programTrackedEntityAttributes[mandatory,trackedEntityAttribute[id,displayName,formName,valueType]]',
                 'programStages[programStageDataElements[dataElement[id,formName]]]'
             ]
         }
@@ -48,7 +49,10 @@ export function useData() {
 
     const profileData = useMemo(() => {
         if (data && programConfig) {
-            return new ProfileData(data?.tei as TrackedEntityInstance, {program: programConfig})
+            return new ProfileData(data?.tei as TrackedEntityInstance, {
+                programConfig: programConfig,
+                program: data.program as Program
+            })
         }
     }, [programConfig, data]);
 

@@ -3,23 +3,111 @@ import i18n from '@dhis2/d2-i18n';
 import {DetailArea} from "../DetailArea";
 import {AreaContainer} from "../AreaContainer";
 import {useData} from "../../hooks/data";
-import {ProfileData} from "../../../../../../shared/models/data";
 import {Button, ButtonStrip, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import {FormProvider, useForm} from "react-hook-form";
 import {useBoolean} from "usehooks-ts";
-import {RHFTextInputField} from "@hisptz/dhis2-ui";
+import {RHFDHIS2FormField, RHFTextInputField, VALUE_TYPE} from "@hisptz/dhis2-ui";
 import {useAlert, useDataMutation} from "@dhis2/app-runtime";
+
+
+const teiMutation: any = {
+    resource: "trackedEntityInstances",
+    id: ({id}: any) => id,
+    data: ({data}: any) => data,
+    type: "update"
+}
+
+function ProfileEditModal({hide, onClose}: { hide: boolean; onClose: () => void; }) {
+    const {refetch, profileData: profile} = useData();
+    const form = useForm({
+        defaultValues: profile?.getProfileFormValues()
+    });
+
+    const {show, hide: hideAlert} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}))
+
+    const [update, {loading}] = useDataMutation(teiMutation, {
+        onComplete: () => {
+            show({
+                message: i18n.t("Profile updated successfully"),
+                type: {
+                    success: true
+                }
+            });
+            refetch();
+            onClose();
+        },
+        onError: (error) => {
+            show({message: error.message || error.details.message, type: {critical: true}});
+            setTimeout(hideAlert, 5000);
+        }
+    });
+
+    const onSubmit = async (newValues: Record<string, any>) => {
+        const updatedTei = profile?.updateProfile(newValues);
+        await update({
+            id: updatedTei?.trackedEntityInstance,
+            data: updatedTei
+        });
+    }
+
+    const fields = profile?.getProfileFormFields();
+
+    return (
+        <Modal position="middle" hide={hide} onClose={onClose}>
+            <ModalTitle>
+                {i18n.t("Edit enrollment")}
+            </ModalTitle>
+            <ModalContent>
+                <FormProvider {...form}>
+                    <div className="column gap-8">
+                        {
+                            fields?.map((dhis2Field) => (
+                                <RHFDHIS2FormField
+                                    required={dhis2Field.mandatory}
+                                    valueType={dhis2Field.valueType as VALUE_TYPE}
+                                    name={dhis2Field?.id as string}
+                                    label={dhis2Field?.displayName}
+                                    validations={{
+                                        required: i18n.t("{{field}} is required", {
+                                            field: dhis2Field.displayName
+                                        })
+                                    }}
+                                />
+                            ))
+                        }
+                    </div>
+                </FormProvider>
+            </ModalContent>
+            <ModalActions>
+                <ButtonStrip>
+                    <Button onClick={onClose}>{i18n.t("Cancel")}</Button>
+                    <Button
+                        loading={loading}
+                        onClick={form.handleSubmit(onSubmit)}
+                        primary>
+                        {loading ? `${i18n.t("Updating")}...` : i18n.t("Update")}
+                    </Button>
+                </ButtonStrip>
+            </ModalActions>
+        </Modal>
+    )
+}
 
 export function Profile() {
     const {profileData} = useData();
-    return (<AreaContainer heading={i18n.t("Profile")}>
-        <div className="column gap-8">
-            {
-                profileData?.getProfileData()?.map(data => (
-                    <DetailArea key={`${data.id}-profile-details`} {...data} />))
-            }
-        </div>
-    </AreaContainer>)
+    const {value: hide, setTrue: hideModal, setFalse: openModal} = useBoolean(true)
+
+    return (<>
+        <AreaContainer onEdit={openModal} heading={i18n.t("Profile")}>
+            <div className="column gap-8">
+                {
+                    profileData?.getProfileData()?.map(data => (
+                        <DetailArea key={`${data.id}-profile-details`} {...data} />))
+                }
+            </div>
+        </AreaContainer>
+        <ProfileEditModal hide={hide} onClose={hideModal}/>
+    </>)
 
 }
 
@@ -30,8 +118,8 @@ const updateEnrollmentMutation: any = {
     data: ({data}: any) => data
 }
 
-function EnrollmentEditModal({hide, onClose, profile}: { hide: boolean; onClose: () => void; profile?: ProfileData }) {
-    const {refetch} = useData();
+function EnrollmentEditModal({hide, onClose}: { hide: boolean; onClose: () => void }) {
+    const {refetch, profileData: profile} = useData();
     const form = useForm<{ enrollmentDate: string; orgUnit: string; }>({
         defaultValues: profile?.getEnrollmentFormValues()
     });
@@ -118,7 +206,7 @@ export function Enrollment() {
                     }
                 </div>
             </AreaContainer>
-            <EnrollmentEditModal hide={hide} onClose={hideModal} profile={profileData}/>
+            <EnrollmentEditModal hide={hide} onClose={hideModal}/>
         </>
     )
 }

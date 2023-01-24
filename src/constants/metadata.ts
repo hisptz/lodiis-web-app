@@ -62,7 +62,8 @@ export interface ColumnConfig {
 export interface ProfileConfig {
     label: string;
     key: string;
-    get: (tei: TrackedEntityInstance) => string | number | React.ReactNode
+    get: (tei: TrackedEntityInstance) => string | number | React.ReactNode;
+    editable?: boolean
 }
 
 
@@ -112,26 +113,29 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
     ],
     profile: [
         {
-            key: "firstName",
+            key: ATTRIBUTES.FIRST_NAME,
             label: i18n.t("First name"),
             get: (tei: TrackedEntityInstance) => {
                 return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
             },
+            editable: true
         },
         {
             label: i18n.t("Surname"),
-            key: "surname",
+            key: ATTRIBUTES.SURNAME,
             get: (tei: TrackedEntityInstance) => {
                 return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
             },
+            editable: true
 
         },
         {
             label: i18n.t("Date of Birth"),
-            key: "dateOfBirth",
+            key: ATTRIBUTES.DATE_OF_BIRTH,
             get: (tei: TrackedEntityInstance) => {
                 return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
             },
+            editable: false
         },
         {
             label: i18n.t("Age"),
@@ -144,6 +148,7 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
                 const dateOfBirth = DateTime.fromJSDate(new Date(dateString));
                 return Math.abs(dateOfBirth.diffNow("years").years).toFixed(0)
             },
+            editable: false,
         },
     ]
 }
@@ -176,17 +181,19 @@ export const PROGRAM_CONFIG: ProgramConfig[] = [
             ...DEFAULT_PROGRAM_CONFIG.profile,
             {
                 label: i18n.t("Primary UIC"),
-                key: "primaryUIC",
+                key: ATTRIBUTES.PRIMARY_UIC,
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.PRIMARY_UIC)
                 },
+                editable: false
             },
             {
                 label: i18n.t("Secondary UIC"),
-                key: "secondaryUIC",
+                key: ATTRIBUTES.SECONDARY_UIC,
                 get: (tei: TrackedEntityInstance) => {
                     return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SECONDARY_UIC)
-                }
+                },
+                editable: false
             },
         ]
     }

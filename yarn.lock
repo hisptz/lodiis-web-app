@@ -2051,10 +2051,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@hisptz/dhis2-ui@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@hisptz/dhis2-ui/-/dhis2-ui-1.0.3.tgz#be003bd2627c94cca7bb50c9505a9b87f25743ac"
-  integrity sha512-Hs5sofePbLJxf5U9kTOr3K3GIV8kd0JKpHMmt+JRs3hVXyNtfdMq6pDFc2uVHydmWDxi1fSrceq5MMUuLqMwVw==
+"@hisptz/dhis2-ui@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@hisptz/dhis2-ui/-/dhis2-ui-1.0.4.tgz#2818717e2a9dc427d50e27ffedc4150ff3dd5261"
+  integrity sha512-HLxPj8hy78YN4CKWYKfXChltLRj/mAEHSTwaTte+ycUadyS2m4tNsFk9sF3X3bmEQbGNkSfYEtxQRjFDw99uMA==
   dependencies:
     "@dhis2/app-runtime" "^3.7.0"
     "@hisptz/dhis2-utils" "^1.0.2"
