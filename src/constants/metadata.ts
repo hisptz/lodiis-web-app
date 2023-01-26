@@ -66,7 +66,6 @@ export interface ProfileConfig {
     editable?: boolean
 }
 
-
 export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
     id: "",
     columns: [
@@ -150,7 +149,8 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
             },
             editable: false,
         },
-    ]
+    ],
+    programStages: []
 }
 
 
@@ -158,7 +158,6 @@ export const PROGRAM_CONFIG: ProgramConfig[] = [
     {
         ...DEFAULT_PROGRAM_CONFIG,
         id: "em38qztTI8s",
-
         columns: [
             ...DEFAULT_PROGRAM_CONFIG.columns,
             {
@@ -195,6 +194,7 @@ export const PROGRAM_CONFIG: ProgramConfig[] = [
                 },
                 editable: false
             },
-        ]
+        ],
+
     }
 ]
