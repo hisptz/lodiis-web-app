@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-25T06:37:59.017Z\n"
-"PO-Revision-Date: 2023-01-25T06:37:59.017Z\n"
+"POT-Creation-Date: 2023-01-26T04:21:36.615Z\n"
+"PO-Revision-Date: 2023-01-26T04:21:36.615Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -83,6 +83,9 @@ msgstr "Enrollment"
 msgid "Relationships"
 msgstr "Relationships"
 
+msgid "Event details"
+msgstr "Event details"
+
 msgid "Status"
 msgstr "Status"
 
@@ -95,32 +98,17 @@ msgstr "Registration unit"
 msgid "Due date"
 msgstr "Due date"
 
-msgid "Event deleted successfully"
-msgstr "Event deleted successfully"
-
-msgid "Delete event"
-msgstr "Delete event"
-
-msgid "Are you sure you want to delete this event"
-msgstr "Are you sure you want to delete this event"
-
-msgid "Deleting"
-msgstr "Deleting"
-
-msgid "Delete"
-msgstr "Delete"
-
 msgid "Actions"
 msgstr "Actions"
 
 msgid "Last updated"
 msgstr "Last updated"
 
+msgid "Services"
+msgstr "Services"
+
 msgid "There are no services provided for this beneficiary"
 msgstr "There are no services provided for this beneficiary"
-
-msgid "Stages and events"
-msgstr "Stages and events"
 
 msgid "Columns"
 msgstr "Columns"

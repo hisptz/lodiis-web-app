@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {ProgramStage} from "@hisptz/dhis2-utils";
 import i18n from '@dhis2/d2-i18n';
 import {useData} from "../../../../hooks/data";
@@ -7,8 +7,10 @@ import {CustomDataTable, useConfirmDialog} from "@hisptz/dhis2-ui";
 import {fromPairs} from "lodash";
 import {DateTime} from "luxon";
 
-import {Button, ButtonStrip, IconDelete24, IconEdit24, Tag} from '@dhis2/ui'
+import {Button, ButtonStrip, Divider, IconChevronDown24, IconChevronUp24, IconEdit24, IconView24, Tag} from '@dhis2/ui'
 import {useAlert, useDataMutation} from "@dhis2/app-runtime";
+import {ViewEventModal} from "./components/ViewEvent";
+import Collapsible from "react-collapsible";
 
 const eventDeleteMutation: any = {
     resource: "events",
@@ -49,8 +51,11 @@ const columns = [
     }
 ]
 
-export function Stage({stage}: { stage: ProgramStage }) {
+export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOpen: boolean }) {
     const {profileData: profile, refetch} = useData();
+    const [selectedForEdit, setSelectedForEdit] = useState<DHIS2Event | undefined>();
+    const [selectedForView, setSelectedForView] = useState<DHIS2Event | undefined>();
+
     const events = profile?.getEvents(stage.id) ?? [];
 
     const {show, hide} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}))
@@ -71,6 +76,7 @@ export function Stage({stage}: { stage: ProgramStage }) {
 
     }
 
+    //Call this to implement delete
     const onDelete = (event: DHIS2Event) => () => {
         confirm({
             title: i18n.t("Delete event"),
@@ -89,6 +95,10 @@ export function Stage({stage}: { stage: ProgramStage }) {
         })
     }
 
+    const onView = (event: DHIS2Event) => {
+        setSelectedForView(event)
+    }
+
     const sanitizedColumns = [...columns, {
         label: i18n.t("Actions"),
         key: "actions",
@@ -96,7 +106,7 @@ export function Stage({stage}: { stage: ProgramStage }) {
             return (
                 <ButtonStrip>
                     <Button small onClick={onEdit(event)} icon={<IconEdit24/>}/>
-                    <Button small destructive onClick={onDelete(event)} icon={<IconDelete24/>}/>
+                    <Button small onClick={onView(event)} icon={<IconView24/>}/>
                 </ButtonStrip>
             )
         }
@@ -107,18 +117,47 @@ export function Stage({stage}: { stage: ProgramStage }) {
         id: event.event
     }));
 
-
-    return (<div className="column ">
-        <div style={{alignItems: 'flex-end'}} className="row gap-16">
-            <h2>{stage.displayName}</h2>
-            {
-                stage.lastUpdated ? (
-                    <h4>{i18n.t("Last updated")} {DateTime.fromISO(stage.lastUpdated as string).diffNow('days').negate().rescale().toFormat('dd \'days\' ago')}</h4>
-                ) : null
+    return (<>
+        <Collapsible
+            open={initiallyOpen}
+            triggerWhenOpen={
+                <>
+                    <div className="row space-between">
+                        <div style={{alignItems: 'flex-end'}} className="row gap-16">
+                            <h2 style={{margin: 0}}>{stage.displayName}</h2>
+                            {
+                                stage.lastUpdated ? (
+                                    <h4 style={{margin: 0}}>{i18n.t("Last updated")} {DateTime.fromISO(stage.lastUpdated as string).diffNow('days').negate().rescale().toFormat('dd \'days\' ago')}</h4>
+                                ) : null
+                            }
+                        </div>
+                        <div className="icon-button">
+                            <IconChevronUp24/>
+                        </div>
+                    </div>
+                    <Divider/>
+                </>
             }
-        </div>
-        <div className="">
+            trigger={
+                <>
+                    <div className="row space-between">
+                        <div style={{alignItems: 'flex-end'}} className="row gap-16">
+                            <h2 style={{margin: 0}}>{stage.displayName}</h2>
+                            {
+                                stage.lastUpdated ? (
+                                    <h4 style={{margin: 0}}>{i18n.t("Last updated")} {DateTime.fromISO(stage.lastUpdated as string).diffNow('days').negate().rescale().toFormat('dd \'days\' ago')}</h4>
+                                ) : null
+                            }
+                        </div>
+                        <div>
+                            <IconChevronDown24/>
+                        </div>
+                    </div>
+                    <Divider/>
+                </>}>
             <CustomDataTable tableProps={{scrollHeight: "320px"}} rows={rows} columns={sanitizedColumns}/>
-        </div>
-    </div>)
+        </Collapsible>
+        <ViewEventModal onEdit={onEdit} event={selectedForView} onClose={() => setSelectedForView(undefined)}
+                        hide={!selectedForView} stage={stage}/>
+    </>)
 }

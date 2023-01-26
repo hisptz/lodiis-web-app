@@ -29,7 +29,7 @@ const query = {
                 'id',
                 'displayName',
                 'programTrackedEntityAttributes[mandatory,trackedEntityAttribute[id,displayName,formName,valueType]]',
-                'programStages[displayName,id,lastUpdated,programStageDataElements[dataElement[id,formName]]]'
+                'programStages[displayName,id,lastUpdated,programStageDataElements[dataElement[id,formName,valueType,displayName,optionSet[code,name]]]]'
             ]
         }
     }

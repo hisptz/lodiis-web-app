@@ -20,10 +20,10 @@ export function StagesArea() {
                 </div>)
             }
             {
-                !isEmpty(stages) && (<div style={{padding: "0 8px"}} className="column gap-16">
+                !isEmpty(stages) && (<div style={{padding: "16px 8px"}} className="column gap-16">
                     {
-                        stages?.map(programStage => (
-                            <Stage key={`${programStage.id}-area`} stage={programStage}/>))
+                        stages?.map((programStage, index) => (
+                            <Stage initiallyOpen={index === 0} key={`${programStage.id}-area`} stage={programStage}/>))
                     }
                 </div>)
             }

@@ -6,7 +6,7 @@ import {useData} from "../../hooks/data";
 import {Button, ButtonStrip, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import {FormProvider, useForm} from "react-hook-form";
 import {useBoolean} from "usehooks-ts";
-import {RHFDHIS2FormField, RHFTextInputField, VALUE_TYPE} from "@hisptz/dhis2-ui";
+import {RHFDHIS2FormField, VALUE_TYPE} from "@hisptz/dhis2-ui";
 import {useAlert, useDataMutation} from "@dhis2/app-runtime";
 
 
@@ -63,6 +63,7 @@ function ProfileEditModal({hide, onClose}: { hide: boolean; onClose: () => void;
                         {
                             fields?.map((dhis2Field) => (
                                 <RHFDHIS2FormField
+                                    key={`${dhis2Field.id}-field`}
                                     required={dhis2Field.mandatory}
                                     valueType={dhis2Field.valueType as VALUE_TYPE}
                                     name={dhis2Field?.id as string}
@@ -162,10 +163,11 @@ function EnrollmentEditModal({hide, onClose}: { hide: boolean; onClose: () => vo
                     <div className="column gap-8">
                         {
                             fields?.map(field => (
-                                <RHFTextInputField
+                                <RHFDHIS2FormField
+                                    key={`${field.name}-field`}
                                     required={field.required}
                                     label={field.label}
-                                    type={field.valueType}
+                                    valueType={field.valueType as VALUE_TYPE}
                                     name={field.name}
                                     validations={field.validations}
                                 />))
