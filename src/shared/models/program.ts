@@ -1,6 +1,6 @@
 import {ProgramConfig} from "../interfaces/metadata";
 import {Program as DHIS2Program} from "@hisptz/dhis2-utils"
-import {compact, fromPairs} from "lodash";
+import {compact, find, fromPairs, isEmpty} from "lodash";
 
 export class KBProgram {
     config: ProgramConfig;
@@ -17,6 +17,25 @@ export class KBProgram {
 
     get profileVariables() {
         return this.config.profile;
+    }
+
+    get searchFields() {
+        const fields = this.config.search.fields;
+        if (isEmpty(fields)) {
+            return [];
+        }
+        return compact(fields.map(({id, type, label}) => {
+            if (type === "trackedEntityAttribute") {
+                return find(this.program.programTrackedEntityAttributes, ['trackedEntityAttribute.id', id])?.trackedEntityAttribute;
+            } else if (type === "attribute") {
+                //TODO: Implement this if ever necessary
+            }
+        }))
+
+    }
+
+    get searchFieldKeys() {
+        return this.searchFields.map(({id}) => id);
     }
 
     getDefaultColumnVisibility() {

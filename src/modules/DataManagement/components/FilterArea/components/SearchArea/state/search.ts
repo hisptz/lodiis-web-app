@@ -1,7 +1,8 @@
-import {atomFamily, DefaultValue, selector} from "recoil";
+import {atomFamily, DefaultValue, selectorFamily} from "recoil";
 import {syncEffect} from "recoil-sync";
 import {nullable, string} from "@recoiljs/refine";
 import {SearchCriteriaValues} from "../index";
+import {forEach, fromPairs, isEmpty} from "lodash";
 
 
 export const SearchState = atomFamily<any, string>({
@@ -17,27 +18,28 @@ export const SearchState = atomFamily<any, string>({
 });
 
 
-export const SearchValuesState = selector<SearchCriteriaValues>({
+export const SearchValuesState = selectorFamily<SearchCriteriaValues | undefined, any>({
     key: "search-values",
-    get: ({get}) => {
-        const primaryUIC = get(SearchState("primaryUIC"))
-        const firstName = get(SearchState("firstName"))
-        const surname = get(SearchState("surname"))
-        return {
-            primaryUIC,
-            firstName,
-            surname
+    get: (keys?: any) => ({get}) => {
+        if (isEmpty(keys)) {
+            return;
         }
+        return fromPairs(keys?.map((key: string) => [key, get(SearchState(key))]))
     },
-    set: ({set, reset}, newValue) => {
+    set: (keys?: any) => ({set, reset}, newValue) => {
+        if (isEmpty(keys)) {
+            return;
+        }
         if (!(newValue instanceof DefaultValue)) {
-            set(SearchState("primaryUIC"), newValue.primaryUIC);
-            set(SearchState("firstName"), newValue.firstName);
-            set(SearchState("surname"), newValue.surname);
+            if (newValue) {
+                forEach(keys, (key) => {
+                    set(SearchState(key), newValue[key])
+                })
+            }
         } else {
-            reset(SearchState("primaryUIC"));
-            reset(SearchState("firstName"));
-            reset(SearchState("surname"));
+            forEach(keys, (key) => {
+                reset(SearchState(key))
+            })
         }
     }
 })

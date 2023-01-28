@@ -2,26 +2,25 @@ import {Button, ButtonStrip, IconCross24, IconSearch24, Modal, ModalActions, Mod
 import i18n from '@dhis2/d2-i18n';
 import React from 'react';
 import {FormProvider, useForm} from "react-hook-form";
-import {RHFTextInputField} from "@hisptz/dhis2-ui";
+import {RHFDHIS2FormField, VALUE_TYPE} from "@hisptz/dhis2-ui";
 import {useBoolean} from "usehooks-ts";
-import {useRecoilState, useResetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {SearchValuesState} from "./state/search";
+import {KBProgramState} from "../../../../../../shared/state/program";
+import {compact, isEmpty} from "lodash";
 
 
-export interface SearchCriteriaValues {
-    primaryUIC?: string;
-    firstName?: string;
-    surname?: string;
-}
-
+export type SearchCriteriaValues = Record<string, string>;
 
 export function SearchArea() {
     const {value: searchHidden, setTrue: closeSearch, setFalse: openSearch} = useBoolean(true);
-    const [searchValue, setSearchValue] = useRecoilState(SearchValuesState);
+    const kbProgram = useRecoilValue(KBProgramState);
 
-    const searchActive = !!searchValue.surname || searchValue.firstName || searchValue.primaryUIC;
+    const [searchValue, setSearchValue] = useRecoilState(SearchValuesState(kbProgram?.searchFieldKeys));
 
-    const resetSearchState = useResetRecoilState(SearchValuesState);
+    const searchActive = searchValue && !isEmpty(compact(Object.values(searchValue)));
+
+    const resetSearchState = useResetRecoilState(SearchValuesState(kbProgram?.searchFieldKeys));
     return (
         <>
             <ButtonStrip>
@@ -44,13 +43,22 @@ export function SearchArea() {
 
 
 function Search() {
-
+    const kbProgram = useRecoilValue(KBProgramState);
+    const searchFields = kbProgram?.searchFields;
 
     return (
         <div className="column gap-16">
-            <RHFTextInputField label={i18n.t("Primary UIC")} name={"primaryUIC"}/>
-            <RHFTextInputField label={i18n.t("First name")} name={"firstName"}/>
-            <RHFTextInputField label={i18n.t("Surname")} name={"surname"}/>
+            {
+                searchFields?.map((field) => {
+
+                    return <RHFDHIS2FormField
+                        key={`${field.id}-search-field`}
+                        valueType={field.valueType as VALUE_TYPE}
+                        name={field.id}
+                        label={field.displayName}
+                    />
+                })
+            }
         </div>
     )
 }

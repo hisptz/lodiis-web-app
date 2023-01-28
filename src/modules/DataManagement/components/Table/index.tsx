@@ -13,11 +13,11 @@ import EmptyList from "../../../../shared/components/EmptyList";
 import {useNavigate} from "react-router-dom";
 
 export function ErrorBoundedTable() {
-    const {orgUnits, search, program, periods} = useDimension();
+    const {orgUnits, program, periods} = useDimension();
     const [ref, {height}] = useElementSize();
     return (
         <div ref={ref} className="w-100 h-100">
-            <ErrorBoundary resetKeys={[orgUnits, search, program, periods]} FallbackComponent={ErrorFallback}>
+            <ErrorBoundary resetKeys={[orgUnits, program, periods]} FallbackComponent={ErrorFallback}>
                 <Table height={height}/>
             </ErrorBoundary>
         </div>

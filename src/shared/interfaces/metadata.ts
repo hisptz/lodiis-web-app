@@ -23,6 +23,9 @@ export interface ProgramStageConfig {
 export interface ProgramConfig {
     id: string;
     name: string;
+    search: {
+        fields: { id: string; type: "attribute" | "trackedEntityAttribute"; label?: string }[]
+    }
     columns: ColumnConfig[];
     profile: ProfileConfig[];
     programStages: ProgramStageConfig[]

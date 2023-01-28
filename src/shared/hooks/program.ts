@@ -28,14 +28,26 @@ export function useKBProgram() {
     const [searchParams] = useSearchParams();
     const programId = useMemo(() => searchParams.get("program"), [searchParams]);
     const [programsConfig] = useSetting("programs", {global: true});
-    const {data, loading, error} = useDataQuery(query, {
+    const {data, loading, error, refetch} = useDataQuery(query, {
+        lazy: true,
         variables: {
             programId
         }
     });
 
     const [program, setProgram] = useRecoilState(KBProgramState);
-    const resetKBProgramState = useResetRecoilState(KBProgramState)
+    const resetKBProgramState = useResetRecoilState(KBProgramState);
+
+    useEffect(() => {
+        if (programId) {
+            refetch({
+                programId
+            })
+        }
+        return () => {
+
+        };
+    }, [programId]);
 
     useEffect(() => {
         if (!programId) {
@@ -55,6 +67,7 @@ export function useKBProgram() {
             resetKBProgramState();
         };
     }, [data, programsConfig, programId]);
+
     return {
         program,
         loading,

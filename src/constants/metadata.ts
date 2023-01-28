@@ -62,6 +62,18 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
             sortable: true
         },
     ],
+    search: {
+        fields: [
+            {
+                id: ATTRIBUTES.FIRST_NAME,
+                type: "trackedEntityAttribute"
+            },
+            {
+                id: ATTRIBUTES.SURNAME,
+                type: "trackedEntityAttribute"
+            }
+        ]
+    },
     profile: [
         {
             key: ATTRIBUTES.FIRST_NAME,
@@ -177,6 +189,16 @@ export const programs: ProgramConfig[] = [
                 editable: false
             },
         ],
+        search: {
+            ...DEFAULT_PROGRAM_CONFIG.search,
+            fields: [
+                ...DEFAULT_PROGRAM_CONFIG.search.fields,
+                {
+                    id: ATTRIBUTES.PRIMARY_UIC,
+                    type: "trackedEntityAttribute"
+                }
+            ]
+        }
     },
     {
         ...DEFAULT_PROGRAM_CONFIG,

@@ -1,6 +1,6 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
 import {compact, find, forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
-import {ATTRIBUTES, DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
+import {DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {selector, useRecoilValue} from "recoil";
 import {DimensionState} from "../../../../../shared/state/dimensions";
@@ -36,16 +36,7 @@ function sanitizeFilters(searchValues: SearchCriteriaValues) {
         if (!value) {
             return;
         }
-        switch (key) {
-            case "primaryUIC":
-                filter.push(`${ATTRIBUTES.PRIMARY_UIC}:like:${value}`);
-                break;
-            case "firstName":
-                filter.push(`${ATTRIBUTES.FIRST_NAME}:like:${value}`);
-                break;
-            case "surname":
-                filter.push(`${ATTRIBUTES.SURNAME}:like:${value}`)
-        }
+        filter.push(`${key}:like:${value}`)
     });
     return filter;
 }
@@ -97,7 +88,7 @@ export function useTableData() {
             console.info("Could not merge the intervals", periods)
         }
     }, [periods]);
-    const searchValue = useRecoilValue(SearchValuesState);
+    const searchValue = useRecoilValue(SearchValuesState(program?.searchFieldKeys));
 
 
     const columns = useMemo(() => {
