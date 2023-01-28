@@ -1,16 +1,33 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
-import {find, forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
+import {compact, find, forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
 import {ATTRIBUTES, DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
-import {useRecoilValue} from "recoil";
+import {selector, useRecoilValue} from "recoil";
 import {DimensionState} from "../../../../../shared/state/dimensions";
 import {useEffect, useMemo, useState} from "react";
 import {PeriodUtility, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {Interval} from "luxon";
 import {SearchValuesState} from "../../FilterArea/components/SearchArea/state/search";
-import {ColumnState} from "../state/column";
 import {useDownloadData} from "../../../hooks/download";
+import {ProfileData} from "../../../../../shared/models/data";
+import {useDimension} from "../../../../../shared/hooks/dimension";
+import {KBProgramState} from "../../../../../shared/state/program";
+import {ColumnState} from "../state/column";
 
+selector({
+    key: "column-state-default",
+    get: ({get}) => {
+        const program = get(DimensionState('program'));
+        if (!program) {
+            return;
+        }
+        const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
+        if (!config) {
+            throw Error(`There is no configuration for the program ${program}`)
+        }
+        return fromPairs(config?.columns.map(column => [column.key, !column.hidden]));
+    }
+})
 
 function sanitizeFilters(searchValues: SearchCriteriaValues) {
     const filter: string[] = [];
@@ -32,7 +49,6 @@ function sanitizeFilters(searchValues: SearchCriteriaValues) {
     });
     return filter;
 }
-
 
 export const DATA_QUERY = {
     tei: {
@@ -56,8 +72,10 @@ export const DATA_QUERY = {
 }
 
 export function useTableData() {
-    const periods = useRecoilValue(DimensionState("pe"));
+    const {periods, program: programId, orgUnits: ou, dimensionsNotSelected} = useDimension();
+    const program = useRecoilValue(KBProgramState)
     const [sortState, setSortState] = useState<{ name: string; direction: "asc" | "desc" | "default" }>();
+    const columnVisibility = useRecoilValue(ColumnState(programId));
     const [response, setResponse] = useState<any>();
 
     const {page, pageSize, total, pageCount} = response?.pager ?? {page: 1, pageSize: 50};
@@ -82,19 +100,8 @@ export function useTableData() {
     const searchValue = useRecoilValue(SearchValuesState);
 
 
-    const ou = useRecoilValue(DimensionState("ou"));
-    const program = head(useRecoilValue(DimensionState("program")));
-    const columnVisibility = useRecoilValue(ColumnState);
-
     const columns = useMemo(() => {
-        if (!program) {
-            return [];
-        }
-        const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
-        if (!config) {
-            throw Error(`There is no configuration for the program ${program}`)
-        }
-        return config?.columns.filter((column: { key: string | number; }) => columnVisibility?.[column.key]);
+        return program?.tableColumns.filter((column: { key: string | number; }) => columnVisibility?.[column.key]) ?? [];
     }, [program, columnVisibility]);
 
     const {download, downloading} = useDownloadData({
@@ -102,9 +109,11 @@ export function useTableData() {
         query: DATA_QUERY,
         queryKey: "tei",
         mapping: (data: TrackedEntityInstance) => {
-            return fromPairs(columns?.map(column => ([column.label, column.get(data)])))
+            if (!program) {
+                return {};
+            }
+            return new ProfileData(data, program).getTableData()
         }
-
     });
 
     const onDownload = (type: string) => {
@@ -132,24 +141,25 @@ export function useTableData() {
         });
 
     useEffect(() => {
-        if (!isEmpty(ou) && !isEmpty(sanitizedPeriod) && !isEmpty(program)) {
+        if (!dimensionsNotSelected) {
             refetch({
                 ou,
                 pe: sanitizedPeriod,
-                program,
+                program: programId,
                 search: searchValue
             })
         }
-    }, [sanitizedPeriod, ou, program, searchValue]);
+    }, [dimensionsNotSelected]);
+
 
     const sanitizedData = useMemo(() => {
+
         const teis: TrackedEntityInstance[] = response?.trackedEntityInstances ?? [];
-        const data = teis.map(tei => {
-            return {
-                ...fromPairs(columns?.map(column => [column.key, column.get(tei)])),
-                id: tei.trackedEntityInstance
-            }
-        });
+        const data = compact(teis.map(tei => {
+            if (!program) return;
+            const profile = new ProfileData(tei, program);
+            return profile.getTableData();
+        }));
 
         if (sortState) {
             if (sortState.direction === "default") {
@@ -165,7 +175,7 @@ export function useTableData() {
             return data;
         }
 
-    }, [response, columnVisibility, loading, fetching, sortState]);
+    }, [program, response, sortState]);
 
     const onPageChange = (page: number) => {
         refetch({page})

@@ -1,24 +1,26 @@
-import React, {useMemo} from "react";
-import {useParams, useSearchParams} from "react-router-dom";
-import {useSetting} from "@dhis2/app-service-datastore";
-import {find} from "lodash";
+import React from "react";
 import {StagesArea} from "./components/StagesArea";
 import {ProfileArea} from "./components/ProfileArea";
 import classes from "./Details.module.css"
-import {useData} from "./hooks/data";
+import {useProfileData} from "./hooks/data";
 import FullPageLoader from "../../../../shared/components/Loaders";
 import {ErrorThrower} from "../../../../shared/components/ErrorThrower";
+import {KBProgramState, KBProgramSync} from "../../../../shared/state/program";
+import {useRecoilValue} from "recoil";
 
-export default function Details() {
-    const {teiId} = useParams();
-    const {loading, error} = useData();
-    const [searchParams] = useSearchParams();
-    const [programs] = useSetting("programs", {global: true})
-    const program = useMemo(() => {
-        const programId = searchParams.get('program');
-        return find(programs, ['id', programId]);
-    }, [searchParams]);
 
+export default function KBProfileDetails() {
+
+    return (
+        <KBProgramSync>
+            <Details/>
+        </KBProgramSync>
+    )
+}
+
+function Details() {
+    const {loading, error} = useProfileData();
+    const kbProgram = useRecoilValue(KBProgramState)
 
     if (loading) {
         return (<FullPageLoader/>)
@@ -35,7 +37,7 @@ export default function Details() {
 
     return (
         <div style={{padding: "0 16px", margin: "16px 0"}} className="column w-100 h-100 gap-16">
-            <h1 style={{margin: 0}}>{program?.name}</h1>
+            <h1 style={{margin: 0}}>{kbProgram?.config?.name}</h1>
             <div style={{overflow: "auto", height: "calc(100vh - 244px)", position: "relative"}}
                  className={classes['container']}>
                 <StagesArea/>

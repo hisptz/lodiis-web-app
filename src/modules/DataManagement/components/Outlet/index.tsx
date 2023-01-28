@@ -22,7 +22,7 @@ export function DataManagementOutlet() {
                 </div>
             ) : null}
             <div className=" w-100" style={{flex: 1}}>
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <ErrorBoundary resetKeys={[location]} FallbackComponent={ErrorFallback}>
                     <Outlet/>
                 </ErrorBoundary>
             </div>

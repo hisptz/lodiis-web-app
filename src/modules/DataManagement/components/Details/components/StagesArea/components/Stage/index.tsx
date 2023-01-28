@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {ProgramStage} from "@hisptz/dhis2-utils";
 import i18n from '@dhis2/d2-i18n';
-import {useData} from "../../../../hooks/data";
+import {useProfileData} from "../../../../hooks/data";
 import {Event as DHIS2Event} from "@hisptz/dhis2-utils/build/types/interfaces/dhis2/tracker";
 import {CustomDataTable, useConfirmDialog} from "@hisptz/dhis2-ui";
 import {fromPairs} from "lodash";
@@ -52,7 +52,7 @@ const columns = [
 ]
 
 export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOpen: boolean }) {
-    const {profileData: profile, refetch} = useData();
+    const {profileData: profile, refetch} = useProfileData();
     const [selectedForEdit, setSelectedForEdit] = useState<DHIS2Event | undefined>();
     const [selectedForView, setSelectedForView] = useState<DHIS2Event | undefined>();
 

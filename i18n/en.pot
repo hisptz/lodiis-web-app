@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-26T04:21:36.615Z\n"
-"PO-Revision-Date: 2023-01-26T04:21:36.615Z\n"
+"POT-Creation-Date: 2023-01-27T06:18:58.349Z\n"
+"PO-Revision-Date: 2023-01-27T06:18:58.349Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -97,6 +97,21 @@ msgstr "Registration unit"
 
 msgid "Due date"
 msgstr "Due date"
+
+msgid "Event deleted successfully"
+msgstr "Event deleted successfully"
+
+msgid "Delete event"
+msgstr "Delete event"
+
+msgid "Are you sure you want to delete this event"
+msgstr "Are you sure you want to delete this event"
+
+msgid "Deleting"
+msgstr "Deleting"
+
+msgid "Delete"
+msgstr "Delete"
 
 msgid "Actions"
 msgstr "Actions"

@@ -1,45 +1,5 @@
 import i18n from '@dhis2/d2-i18n';
-import {TrackedEntityInstance} from "@hisptz/dhis2-utils";
-import {get} from "lodash";
-import {DateTime} from "luxon";
-import {getAttributeValue} from "../shared/utils/metadata";
-import React from "react"
 import {ProgramConfig} from "../shared/interfaces/metadata";
-
-
-export const TEI_FIELDS = [
-    'trackedEntityInstance',
-    'orgUnit',
-    'attributes[attribute,value]',
-    'trackedEntityType',
-    'enrollments[enrollment,orgUnitName,enrollmentDate]'
-]
-export const programs = [
-    {
-        id: "dwtPhZrg2k7",
-        name: "0-19 OGAC Module"
-    },
-    {
-        id: "hOEIHJDrrvz",
-        name: "AGYW/DREAMS"
-    },
-    {
-        id: "tkL2hvIRwMy",
-        name: "Education(LBSE) Module"
-    },
-    {
-        id: "CK4iMK8b0aZ",
-        name: "NON-AGYW/DREAMS"
-    },
-    {
-        id: "em38qztTI8s",
-        name: "OVC"
-    },
-    {
-        id: "iR6hbkQABMk",
-        name: "PP_PREV"
-    }
-]
 
 export enum ATTRIBUTES {
     FIRST_NAME = "WTZ7GLTrE8Q",
@@ -50,62 +10,54 @@ export enum ATTRIBUTES {
 
 }
 
-export interface ColumnConfig {
-    label: string;
-    key: string;
-    get: (tei: TrackedEntityInstance) => string | number | React.ReactNode
-    mandatory?: boolean;
-    hidden?: boolean;
-    sortable?: boolean;
-}
-
-export interface ProfileConfig {
-    label: string;
-    key: string;
-    get: (tei: TrackedEntityInstance) => string | number | React.ReactNode;
-    editable?: boolean
-}
-
 export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
     id: "",
+    name: "",
     columns: [
         {
             label: i18n.t("Registration Unit"),
             key: "orgUnit",
-            get: (tei: TrackedEntityInstance) => {
-                return get(tei, ['enrollments', 0, 'orgUnitName'])
+            get: {
+                from: "attribute",
+                id: ["enrollments", 0, "orgUnitName"]
             },
             sortable: true
         },
         {
             label: i18n.t("Registration Date"),
             key: "date",
-            get: (tei: TrackedEntityInstance) => {
-                return DateTime.fromISO(get(tei, ['enrollments', 0, 'enrollmentDate'])).toFormat('yyyy-MM-dd')
+
+            get: {
+                from: "attribute",
+                id: ["enrollments", 0, "enrollmentDate"],
+                formatAs: "date"
             },
             sortable: true
         },
         {
             label: i18n.t("First Name"),
             key: "firstName",
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.FIRST_NAME,
             },
             sortable: true
         },
         {
             label: i18n.t("Surname"),
             key: "surname",
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.SURNAME,
             },
             sortable: true
         },
         {
             label: i18n.t("Date of Birth"),
             key: "dateOfBirth",
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.DATE_OF_BIRTH,
             },
             sortable: true
         },
@@ -114,16 +66,18 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
         {
             key: ATTRIBUTES.FIRST_NAME,
             label: i18n.t("First name"),
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.FIRST_NAME)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.FIRST_NAME,
             },
             editable: true
         },
         {
             label: i18n.t("Surname"),
             key: ATTRIBUTES.SURNAME,
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SURNAME)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.SURNAME,
             },
             editable: true
 
@@ -131,26 +85,129 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
         {
             label: i18n.t("Date of Birth"),
             key: ATTRIBUTES.DATE_OF_BIRTH,
-            get: (tei: TrackedEntityInstance) => {
-                return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH)
+            get: {
+                from: "trackedEntityAttribute",
+                id: ATTRIBUTES.DATE_OF_BIRTH,
             },
             editable: false
         },
         {
             label: i18n.t("Age"),
             key: "age",
-            get: (tei: TrackedEntityInstance) => {
-                const dateString = getAttributeValue(tei.attributes ?? [], ATTRIBUTES.DATE_OF_BIRTH);
-                if (!dateString) {
-                    return ""
-                }
-                const dateOfBirth = DateTime.fromJSDate(new Date(dateString));
-                return Math.abs(dateOfBirth.diffNow("years").years).toFixed(0)
+            get: {
+                from: "computed",
+                id: ATTRIBUTES.DATE_OF_BIRTH,
+                as: "age"
             },
             editable: false,
         },
     ],
     programStages: []
+}
+export const TEI_FIELDS = [
+    'trackedEntityInstance',
+    'orgUnit',
+    'attributes[attribute,value]',
+    'trackedEntityType',
+    'enrollments[enrollment,orgUnitName,enrollmentDate]'
+]
+export const programs: ProgramConfig[] = [
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "dwtPhZrg2k7",
+        name: "0-19 OGAC Module",
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "hOEIHJDrrvz",
+        name: "AGYW/DREAMS"
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "tkL2hvIRwMy",
+        name: "Education(LBSE) Module"
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "CK4iMK8b0aZ",
+        name: "NON-AGYW/DREAMS"
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "em38qztTI8s",
+        name: "OVC",
+        columns: [
+            ...DEFAULT_PROGRAM_CONFIG.columns,
+            {
+                label: i18n.t("Primary UIC"),
+                key: "primaryUIC",
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.PRIMARY_UIC,
+                },
+                mandatory: true
+            },
+            {
+                label: i18n.t("Secondary UIC"),
+                key: "secondaryUIC",
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.SECONDARY_UIC,
+                },
+            },
+        ],
+        profile: [
+            ...DEFAULT_PROGRAM_CONFIG.profile,
+            {
+                label: i18n.t("Primary UIC"),
+                key: ATTRIBUTES.PRIMARY_UIC,
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.PRIMARY_UIC,
+                },
+                editable: false
+            },
+            {
+                label: i18n.t("Secondary UIC"),
+                key: ATTRIBUTES.SECONDARY_UIC,
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.SECONDARY_UIC,
+                },
+                editable: false
+            },
+        ],
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "iR6hbkQABMk",
+        name: "PP_PREV"
+    }
+]
+
+export interface DataGetConfig {
+    //Where is the data coming from for the specific resource
+    from: "dataElement" | "trackedEntityAttribute" | "attribute" | "computed",
+    //id of the resource from, a path for type attribute
+    id: string | Array<string | number>;
+    formatAs?: "date";
+    as?: "age";
+}
+
+export interface ColumnConfig {
+    label: string;
+    key: string;
+    get: DataGetConfig;
+    mandatory?: boolean;
+    hidden?: boolean;
+    sortable?: boolean;
+}
+
+export interface ProfileConfig {
+    label: string;
+    key: string;
+    get: DataGetConfig
+    editable?: boolean
 }
 
 
@@ -163,17 +220,19 @@ export const PROGRAM_CONFIG: ProgramConfig[] = [
             {
                 label: i18n.t("Primary UIC"),
                 key: "primaryUIC",
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.PRIMARY_UIC)
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.PRIMARY_UIC,
                 },
                 mandatory: true
             },
             {
                 label: i18n.t("Secondary UIC"),
                 key: "secondaryUIC",
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SECONDARY_UIC)
-                }
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.SECONDARY_UIC,
+                },
             },
         ],
         profile: [
@@ -181,16 +240,18 @@ export const PROGRAM_CONFIG: ProgramConfig[] = [
             {
                 label: i18n.t("Primary UIC"),
                 key: ATTRIBUTES.PRIMARY_UIC,
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.PRIMARY_UIC)
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.PRIMARY_UIC,
                 },
                 editable: false
             },
             {
                 label: i18n.t("Secondary UIC"),
                 key: ATTRIBUTES.SECONDARY_UIC,
-                get: (tei: TrackedEntityInstance) => {
-                    return getAttributeValue(tei.attributes ?? [], ATTRIBUTES.SECONDARY_UIC)
+                get: {
+                    from: "trackedEntityAttribute",
+                    id: ATTRIBUTES.SECONDARY_UIC,
                 },
                 editable: false
             },

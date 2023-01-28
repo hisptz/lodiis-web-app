@@ -22,6 +22,7 @@ export interface ProgramStageConfig {
 
 export interface ProgramConfig {
     id: string;
+    name: string;
     columns: ColumnConfig[];
     profile: ProfileConfig[];
     programStages: ProgramStageConfig[]

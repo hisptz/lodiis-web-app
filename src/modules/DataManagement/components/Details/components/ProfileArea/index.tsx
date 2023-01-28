@@ -2,7 +2,7 @@ import React from "react";
 import i18n from '@dhis2/d2-i18n';
 import {DetailArea} from "../DetailArea";
 import {AreaContainer} from "../AreaContainer";
-import {useData} from "../../hooks/data";
+import {useProfileData} from "../../hooks/data";
 import {Button, ButtonStrip, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import {FormProvider, useForm} from "react-hook-form";
 import {useBoolean} from "usehooks-ts";
@@ -18,7 +18,7 @@ const teiMutation: any = {
 }
 
 function ProfileEditModal({hide, onClose}: { hide: boolean; onClose: () => void; }) {
-    const {refetch, profileData: profile} = useData();
+    const {refresh, profile} = useProfileData();
     const form = useForm({
         defaultValues: profile?.getProfileFormValues()
     });
@@ -33,7 +33,7 @@ function ProfileEditModal({hide, onClose}: { hide: boolean; onClose: () => void;
                     success: true
                 }
             });
-            refetch();
+            refresh();
             onClose();
         },
         onError: (error) => {
@@ -95,14 +95,16 @@ function ProfileEditModal({hide, onClose}: { hide: boolean; onClose: () => void;
 }
 
 export function Profile() {
-    const {profileData} = useData();
-    const {value: hide, setTrue: hideModal, setFalse: openModal} = useBoolean(true)
+    const {profile} = useProfileData();
+    const {value: hide, setTrue: hideModal, setFalse: openModal} = useBoolean(true);
+
+    console.log(profile)
 
     return (<>
         <AreaContainer onEdit={openModal} heading={i18n.t("Profile")}>
             <div className="column gap-8">
                 {
-                    profileData?.getProfileData()?.map(data => (
+                    profile?.getProfileData()?.map(data => (
                         <DetailArea key={`${data.id}-profile-details`} {...data} />))
                 }
             </div>
@@ -120,7 +122,7 @@ const updateEnrollmentMutation: any = {
 }
 
 function EnrollmentEditModal({hide, onClose}: { hide: boolean; onClose: () => void }) {
-    const {refetch, profileData: profile} = useData();
+    const {refresh, profile: profile} = useProfileData();
     const form = useForm<{ enrollmentDate: string; orgUnit: string; }>({
         defaultValues: profile?.getEnrollmentFormValues()
     });
@@ -134,7 +136,7 @@ function EnrollmentEditModal({hide, onClose}: { hide: boolean; onClose: () => vo
                     success: true
                 }
             });
-            refetch();
+            refresh();
             onClose();
         },
         onError: (error) => {
@@ -191,7 +193,7 @@ function EnrollmentEditModal({hide, onClose}: { hide: boolean; onClose: () => vo
 }
 
 export function Enrollment() {
-    const {profileData} = useData();
+    const {profile} = useProfileData();
     const {value: hide, setTrue: hideModal, setFalse: openModal} = useBoolean(true)
 
     const onEdit = () => {
@@ -203,7 +205,7 @@ export function Enrollment() {
             <AreaContainer onEdit={onEdit} heading={i18n.t("Enrollment")}>
                 <div className="column gap-8">
                     {
-                        profileData?.getEnrollmentData()?.map(data => (
+                        profile?.getEnrollmentData()?.map(data => (
                             <DetailArea key={`${data.id}-profile-details`} {...data}/>))
                     }
                 </div>

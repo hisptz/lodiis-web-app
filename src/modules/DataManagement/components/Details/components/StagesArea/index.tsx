@@ -1,14 +1,14 @@
 import React from "react";
 import i18n from "@dhis2/d2-i18n";
 import {AreaContainer} from "../AreaContainer";
-import {useData} from "../../hooks/data";
+import {useProfileData} from "../../hooks/data";
 import {Stage} from "./components/Stage";
 import {isEmpty} from "lodash";
 import EmptyList from "../../../../../../shared/components/EmptyList";
 
 
 export function StagesArea() {
-    const {profileData: profile} = useData();
+    const {profileData: profile} = useProfileData();
 
     const stages = profile?.getProgramStages();
 

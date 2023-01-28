@@ -1,8 +1,12 @@
 import {Enrollment, Event as DHIS2Event, Program, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {ProgramConfig} from "../interfaces/metadata";
-import {filter, find, forIn, fromPairs, head, isEmpty, set} from "lodash";
+import {filter, find, forIn, fromPairs, get, head, isEmpty, set} from "lodash";
 import {DateTime} from "luxon";
 import i18n from '@dhis2/d2-i18n';
+import {DataGetConfig} from "../../constants/metadata";
+import {getAttributeValue, getDataElementValue} from "../utils/metadata";
+import {KBProgram} from "./program";
+import {CustomDataTableRow} from "@hisptz/dhis2-ui";
 
 
 function generateAttributes(value: Record<string, any>) {
@@ -13,6 +17,45 @@ function generateAttributes(value: Record<string, any>) {
     return attributes;
 }
 
+function calculateAge(param: string) {
+    return DateTime.fromJSDate(new Date(param)).diffNow('years').negate().years.toFixed(0);
+}
+
+function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event | TrackedEntityInstance) {
+
+    let value: string | number | undefined = "";
+
+    switch (config.from) {
+        case "attribute":
+            value = get(data, config.id);
+            break;
+        case "trackedEntityAttribute":
+            value = getAttributeValue(data.attributes ?? [], config.id as string);
+            break;
+        case "dataElement":
+            value = getDataElementValue(data.attributes ?? [], config.id as string);
+            break;
+        case "computed":
+            const param = (data.attributes ? getAttributeValue(data.attributes, config.id as string) : getDataElementValue(data.dataValues, config.id as string)) ?? get(data, config.id);
+            switch (config.as) {
+                case "age":
+                    value = calculateAge(param);
+                    break;
+            }
+    }
+    if (!config.formatAs) {
+        return value;
+    }
+    if (!value) {
+        return value;
+    }
+    switch (config.formatAs) {
+        case "date":
+            return DateTime.fromJSDate(new Date(value)).toFormat('yyyy-MM-dd');
+    }
+
+}
+
 export class ProfileData {
 
     trackedEntityInstance: TrackedEntityInstance;
@@ -21,12 +64,10 @@ export class ProfileData {
     enrollmentDate: DateTime | undefined;
     enrollment: Enrollment;
     programConfig: ProgramConfig;
-    program: Program
+    program: Program;
+    kbProgram: KBProgram
 
-    constructor(trackedEntityInstance: TrackedEntityInstance, {
-        programConfig,
-        program
-    }: { programConfig: ProgramConfig; program: Program }) {
+    constructor(trackedEntityInstance: TrackedEntityInstance, program: KBProgram) {
         this.trackedEntityInstance = trackedEntityInstance;
         this.enrollment = head(this.trackedEntityInstance.enrollments) as Enrollment;
         this.attributes = trackedEntityInstance.attributes ?? [];
@@ -35,17 +76,29 @@ export class ProfileData {
             this.enrollmentDate = DateTime.fromISO(this.enrollment.enrollmentDate);
         }
 
-        this.programConfig = programConfig;
-        this.program = program;
+        this.programConfig = program.config;
+        this.program = program.program;
+        this.kbProgram = program
 
     }
 
     getProfileData() {
+        console.log(this.programConfig)
         return this.programConfig.profile.map(profileDetail => ({
             header: profileDetail.label,
-            value: profileDetail.get(this.trackedEntityInstance),
+            value: resolveDataConfigValue(profileDetail.get, this.trackedEntityInstance),
             id: profileDetail.key
         }))
+    }
+
+    getTableData(): CustomDataTableRow {
+        return {
+            ...fromPairs(this.programConfig.columns.map(({key, label, get}) => {
+                const value = resolveDataConfigValue(get, this.trackedEntityInstance);
+                return [key, value]
+            })),
+            id: this.trackedEntityInstance.trackedEntityInstance
+        };
     }
 
 
@@ -76,7 +129,7 @@ export class ProfileData {
 
     getProfileFormValues() {
         return fromPairs(this.programConfig.profile.filter(({editable}) => editable).map((config) => {
-            return [config.key, config.get(this.trackedEntityInstance)]
+            return [config.key, resolveDataConfigValue(config.get, this.trackedEntityInstance)]
         }));
     }
 

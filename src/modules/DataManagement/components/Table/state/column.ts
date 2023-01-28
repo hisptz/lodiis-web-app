@@ -1,23 +1,14 @@
-import {atom, selector} from "recoil";
-import {DimensionState} from "../../../../../shared/state/dimensions";
-import {DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG} from "../../../../../constants/metadata";
-import {find, fromPairs} from "lodash";
+import {atomFamily, selectorFamily} from "recoil";
+import {KBProgramState} from "../../../../../shared/state/program";
 
 
-export const ColumnState = atom<{ [key: string]: boolean } | undefined>({
+export const ColumnState = atomFamily<{ [key: string]: boolean } | undefined, string>({
     key: "column-state",
-    default: selector({
+    default: selectorFamily({
         key: "column-state-default",
-        get: ({get}) => {
-            const program = get(DimensionState('program'));
-            if (!program) {
-                return;
-            }
-            const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
-            if (!config) {
-                throw Error(`There is no configuration for the program ${program}`)
-            }
-            return fromPairs(config?.columns.map(column => [column.key, !column.hidden]));
+        get: (programId: string) => ({get}) => {
+            const kbProgram = get(KBProgramState);
+            return kbProgram?.getDefaultColumnVisibility();
         }
     })
 })
