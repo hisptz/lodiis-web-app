@@ -149,8 +149,7 @@ export function useTableData() {
                 search: searchValue
             })
         }
-    }, [dimensionsNotSelected]);
-
+    }, [dimensionsNotSelected, ou, sanitizedPeriod, programId, searchValue]);
 
     const sanitizedData = useMemo(() => {
 

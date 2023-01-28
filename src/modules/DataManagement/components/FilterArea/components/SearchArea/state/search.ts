@@ -23,22 +23,21 @@ export const SearchValuesState = selector<SearchCriteriaValues>({
         const primaryUIC = get(SearchState("primaryUIC"))
         const firstName = get(SearchState("firstName"))
         const surname = get(SearchState("surname"))
-
         return {
             primaryUIC,
             firstName,
             surname
         }
     },
-    set: ({set,}, newValue) => {
+    set: ({set, reset}, newValue) => {
         if (!(newValue instanceof DefaultValue)) {
             set(SearchState("primaryUIC"), newValue.primaryUIC);
             set(SearchState("firstName"), newValue.firstName);
             set(SearchState("surname"), newValue.surname);
         } else {
-            set(SearchState("primaryUIC"), '');
-            set(SearchState("firstName"), '');
-            set(SearchState("surname"), '');
+            reset(SearchState("primaryUIC"));
+            reset(SearchState("firstName"));
+            reset(SearchState("surname"));
         }
     }
 })

@@ -34,7 +34,10 @@ export function SearchArea() {
                     </Button>)
                 }
             </ButtonStrip>
-            <SearchModal value={searchValue} hide={searchHidden} onClose={closeSearch} onUpdate={setSearchValue}/>
+            {
+                !searchHidden &&
+                <SearchModal value={searchValue} hide={searchHidden} onClose={closeSearch} onUpdate={setSearchValue}/>
+            }
         </>
     )
 }
@@ -61,6 +64,7 @@ export function SearchModal({
     const form = useForm<SearchCriteriaValues>({
         defaultValues: value
     });
+
 
     const onFormSubmit = (value: SearchCriteriaValues) => {
         onClose();
