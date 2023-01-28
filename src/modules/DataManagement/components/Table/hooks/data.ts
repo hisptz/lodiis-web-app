@@ -66,7 +66,7 @@ export function useTableData() {
     const {periods, program: programId, orgUnits: ou, dimensionsNotSelected} = useDimension();
     const program = useRecoilValue(KBProgramState)
     const [sortState, setSortState] = useState<{ name: string; direction: "asc" | "desc" | "default" }>();
-    const columnVisibility = useRecoilValue(ColumnState(programId));
+    const columnVisibility = useRecoilValue(ColumnState);
     const [response, setResponse] = useState<any>();
 
     const {page, pageSize, total, pageCount} = response?.pager ?? {page: 1, pageSize: 50};

@@ -41,7 +41,8 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
                 from: "trackedEntityAttribute",
                 id: ATTRIBUTES.FIRST_NAME,
             },
-            sortable: true
+            sortable: true,
+            mandatory: true
         },
         {
             label: i18n.t("Surname"),
@@ -50,7 +51,8 @@ export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
                 from: "trackedEntityAttribute",
                 id: ATTRIBUTES.SURNAME,
             },
-            sortable: true
+            sortable: true,
+            mandatory: true
         },
         {
             label: i18n.t("Date of Birth"),

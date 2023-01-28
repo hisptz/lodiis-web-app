@@ -1,12 +1,12 @@
-import {atomFamily, selectorFamily} from "recoil";
+import {atom, selector} from "recoil";
 import {KBProgramState} from "../../../../../shared/state/program";
 
 
-export const ColumnState = atomFamily<{ [key: string]: boolean } | undefined, string>({
+export const ColumnState = atom<{ [key: string]: boolean } | undefined>({
     key: "column-state",
-    default: selectorFamily({
+    default: selector({
         key: "column-state-default",
-        get: (programId: string) => ({get}) => {
+        get: ({get}) => {
             const kbProgram = get(KBProgramState);
             return kbProgram?.getDefaultColumnVisibility();
         }

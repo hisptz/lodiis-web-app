@@ -8,13 +8,11 @@ import {useBoolean} from "usehooks-ts";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {ColumnState} from "../../../Table/state/column";
 import {KBProgramState} from "../../../../../../shared/state/program";
-import {useDimension} from "../../../../../../shared/hooks/dimension";
 
 
 export function ColumnArea() {
-    const {program: programId} = useDimension();
     const kbProgram = useRecoilValue(KBProgramState)
-    const [columnVisibility, setColumnVisibility] = useRecoilState(ColumnState(programId))
+    const [columnVisibility, setColumnVisibility] = useRecoilState(ColumnState)
     const {value: hide, setTrue: hideModal, setFalse: showModal} = useBoolean(true);
     const columns = useMemo(() => {
         return kbProgram?.tableColumns ?? [];
