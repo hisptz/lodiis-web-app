@@ -98,8 +98,6 @@ export function Profile() {
     const {profile} = useProfileData();
     const {value: hide, setTrue: hideModal, setFalse: openModal} = useBoolean(true);
 
-    console.log(profile)
-
     return (<>
         <AreaContainer onEdit={openModal} heading={i18n.t("Profile")}>
             <div className="column gap-8">

@@ -83,7 +83,6 @@ export class ProfileData {
     }
 
     getProfileData() {
-        console.log(this.programConfig)
         return this.programConfig.profile.map(profileDetail => ({
             header: profileDetail.label,
             value: resolveDataConfigValue(profileDetail.get, this.trackedEntityInstance),
