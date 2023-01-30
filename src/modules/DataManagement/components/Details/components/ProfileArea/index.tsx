@@ -3,11 +3,18 @@ import i18n from '@dhis2/d2-i18n';
 import {DetailArea} from "../DetailArea";
 import {AreaContainer} from "../AreaContainer";
 import {useProfileData} from "../../hooks/data";
-import {Button, ButtonStrip, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
+import {Button, ButtonStrip, IconFullscreen24, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import {FormProvider, useForm} from "react-hook-form";
 import {useBoolean} from "usehooks-ts";
-import {RHFDHIS2FormField, VALUE_TYPE} from "@hisptz/dhis2-ui";
+import {CustomDataTable, CustomDataTableColumn, RHFDHIS2FormField, VALUE_TYPE} from "@hisptz/dhis2-ui";
 import {useAlert, useDataMutation} from "@dhis2/app-runtime";
+import {isEmpty} from "lodash";
+import {useProfileRelationships} from "../../hooks/relationships";
+import FullPageLoader from "../../../../../../shared/components/Loaders";
+import {getAttributeValue} from "../../../../../../shared/utils/metadata";
+import {ATTRIBUTES} from "../../../../../../constants/metadata";
+import {uid} from "@hisptz/dhis2-utils";
+import {useNavigate} from "react-router-dom";
 
 
 const teiMutation: any = {
@@ -213,10 +220,62 @@ export function Enrollment() {
     )
 }
 
+
+const columns: CustomDataTableColumn[] = [
+    {
+        key: "relationship",
+        label: i18n.t("Relationship"),
+    },
+    {
+        key: "name",
+        label: i18n.t("Name")
+    },
+    {
+        key: "actions",
+        label: i18n.t("Actions")
+    }
+]
+
 export function Relationships() {
+    const {teiRelationship, loading, hasRelationships} = useProfileRelationships();
+    const navigate = useNavigate();
+
+    if (!hasRelationships) {
+        return null;
+    }
+
+    if (loading) {
+        return (<AreaContainer heading={i18n.t("Relationships")}>
+            <FullPageLoader/>
+        </AreaContainer>);
+    }
+
+    if (isEmpty(teiRelationship)) {
+        return null;
+    }
+
+    const onLinkClick = ({id, program}: { id: string; program: string }) => () => {
+        navigate(`/data-management/view/${id}?program=${program}`,)
+    }
+
+
+    const rows = teiRelationship.map(({relationship, program, otherTei}) => {
+        return {
+            id: otherTei.trackedEntityInstance ?? uid(),
+            relationship: relationship.relationshipName ?? "",
+            name: `${getAttributeValue(otherTei.attributes ?? [], ATTRIBUTES.FIRST_NAME) ?? ""} ${getAttributeValue(otherTei.attributes ?? [], ATTRIBUTES.SURNAME) ?? ""}`,
+            actions: (<Button onClick={onLinkClick({id: otherTei.trackedEntityInstance, program})} small
+                              icon={<IconFullscreen24/>}/>)
+        }
+    })
+
     return (
         <AreaContainer heading={i18n.t("Relationships")}>
+            <CustomDataTable
+                columns={columns}
+                rows={rows}
 
+            />
         </AreaContainer>
     )
 }

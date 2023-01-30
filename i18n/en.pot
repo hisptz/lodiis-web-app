@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-27T06:18:58.349Z\n"
-"PO-Revision-Date: 2023-01-27T06:18:58.349Z\n"
+"POT-Creation-Date: 2023-01-30T08:15:38.541Z\n"
+"PO-Revision-Date: 2023-01-30T08:15:38.541Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -82,6 +82,9 @@ msgstr "Enrollment"
 
 msgid "Relationships"
 msgstr "Relationships"
+
+msgid "Service updated successfully"
+msgstr "Service updated successfully"
 
 msgid "Event details"
 msgstr "Event details"

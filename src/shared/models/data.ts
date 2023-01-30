@@ -83,6 +83,22 @@ export class ProfileData {
 
     }
 
+
+    get relationships() {
+
+
+        return this.trackedEntityInstance.relationships?.map((relationship) => {
+            const otherTeiKey = (relationship.to.trackedEntityInstance as unknown as TrackedEntityInstance).trackedEntityInstance === this.trackedEntityInstance.trackedEntityInstance ? "from" : "to"
+            const otherTei: TrackedEntityInstance = relationship?.[otherTeiKey]?.trackedEntityInstance as unknown as TrackedEntityInstance;
+
+            return {
+                relationship,
+                otherTei,
+                type: otherTeiKey
+            }
+        })
+    }
+
     getProfileData() {
         return this.programConfig.profile.map(profileDetail => ({
             header: profileDetail.label,
