@@ -1,31 +1,22 @@
 import {Button, ButtonStrip, IconLayoutColumns24, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import i18n from "@dhis2/d2-i18n";
 import React, {useMemo} from "react";
-import {ColumnConfig, columnsConfig} from "../../../../../../constants/metadata";
+import {ColumnConfig} from "../../../../../../constants/metadata";
 import {RHFCheckboxField} from "@hisptz/dhis2-ui";
 import {FormProvider, useForm, useFormContext} from "react-hook-form";
+import {useBoolean} from "usehooks-ts";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {ColumnState} from "../../../Table/state/column";
-import {useBoolean} from "usehooks-ts";
-import {head} from "lodash";
-import {DimensionState} from "../../../../../../shared/state/dimensions";
+import {KBProgramState} from "../../../../../../shared/state/program";
 
 
 export function ColumnArea() {
-    const [columnVisibility, setColumnVisibility] = useRecoilState(ColumnState);
+    const kbProgram = useRecoilValue(KBProgramState)
+    const [columnVisibility, setColumnVisibility] = useRecoilState(ColumnState)
     const {value: hide, setTrue: hideModal, setFalse: showModal} = useBoolean(true);
-    const program = head(useRecoilValue(DimensionState("program")));
     const columns = useMemo(() => {
-        if (!program) {
-            return []
-        }
-
-        const config = columnsConfig[program as string];
-        if (!config) {
-            throw Error(`There is no configuration for the program ${program}`)
-        }
-        return config?.columns;
-    }, [program]);
+        return kbProgram?.tableColumns ?? [];
+    }, [kbProgram]);
 
     return (
         <>

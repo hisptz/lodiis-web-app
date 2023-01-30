@@ -1,16 +1,17 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
-import {forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
-import {ATTRIBUTES, columnsConfig, TEI_FIELDS} from "../../../../../constants/metadata";
+import {compact, forIn, head, isEmpty, sortBy} from "lodash";
+import {TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {useRecoilValue} from "recoil";
-import {DimensionState} from "../../../../../shared/state/dimensions";
 import {useEffect, useMemo, useState} from "react";
 import {PeriodUtility, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {Interval} from "luxon";
 import {SearchValuesState} from "../../FilterArea/components/SearchArea/state/search";
-import {ColumnState} from "../state/column";
 import {useDownloadData} from "../../../hooks/download";
-
+import {ProfileData} from "../../../../../shared/models/data";
+import {useDimension} from "../../../../../shared/hooks/dimension";
+import {KBProgramState} from "../../../../../shared/state/program";
+import {ColumnState} from "../state/column";
 
 function sanitizeFilters(searchValues: SearchCriteriaValues) {
     const filter: string[] = [];
@@ -19,20 +20,10 @@ function sanitizeFilters(searchValues: SearchCriteriaValues) {
         if (!value) {
             return;
         }
-        switch (key) {
-            case "primaryUIC":
-                filter.push(`${ATTRIBUTES.PRIMARY_UIC}:like:${value}`);
-                break;
-            case "firstName":
-                filter.push(`${ATTRIBUTES.FIRST_NAME}:like:${value}`);
-                break;
-            case "surname":
-                filter.push(`${ATTRIBUTES.SURNAME}:like:${value}`)
-        }
+        filter.push(`${key}:like:${value}`)
     });
     return filter;
 }
-
 
 export const DATA_QUERY = {
     tei: {
@@ -56,8 +47,10 @@ export const DATA_QUERY = {
 }
 
 export function useTableData() {
-    const periods = useRecoilValue(DimensionState("pe"));
+    const {periods, program: programId, orgUnits: ou, dimensionsNotSelected} = useDimension();
+    const program = useRecoilValue(KBProgramState)
     const [sortState, setSortState] = useState<{ name: string; direction: "asc" | "desc" | "default" }>();
+    const columnVisibility = useRecoilValue(ColumnState);
     const [response, setResponse] = useState<any>();
 
     const {page, pageSize, total, pageCount} = response?.pager ?? {page: 1, pageSize: 50};
@@ -79,22 +72,11 @@ export function useTableData() {
             console.info("Could not merge the intervals", periods)
         }
     }, [periods]);
-    const searchValue = useRecoilValue(SearchValuesState);
+    const searchValue = useRecoilValue(SearchValuesState(program?.searchFieldKeys));
 
-
-    const ou = useRecoilValue(DimensionState("ou"));
-    const program = head(useRecoilValue(DimensionState("program")));
-    const columnVisibility = useRecoilValue(ColumnState);
 
     const columns = useMemo(() => {
-        if (!program) {
-            return [];
-        }
-        const config = columnsConfig[program as string];
-        if (!config) {
-            throw Error(`There is no configuration for the program ${program}`)
-        }
-        return config?.columns.filter((column) => columnVisibility?.[column.key]);
+        return program?.tableColumns.filter((column: { key: string | number; }) => columnVisibility?.[column.key]) ?? [];
     }, [program, columnVisibility]);
 
     const {download, downloading} = useDownloadData({
@@ -102,10 +84,11 @@ export function useTableData() {
         query: DATA_QUERY,
         queryKey: "tei",
         mapping: (data: TrackedEntityInstance) => {
-            console.log(data);
-            return fromPairs(columns?.map(column => ([column.label, column.get(data)])))
+            if (!program) {
+                return {};
+            }
+            return new ProfileData(data, program).getTableData()
         }
-
     });
 
     const onDownload = (type: string) => {
@@ -133,24 +116,24 @@ export function useTableData() {
         });
 
     useEffect(() => {
-        if (!isEmpty(ou) && !isEmpty(sanitizedPeriod) && !isEmpty(program)) {
+        if (!dimensionsNotSelected) {
             refetch({
                 ou,
                 pe: sanitizedPeriod,
-                program,
+                program: programId,
                 search: searchValue
             })
         }
-    }, [sanitizedPeriod, ou, program, searchValue]);
+    }, [dimensionsNotSelected, ou, sanitizedPeriod, programId, searchValue]);
 
     const sanitizedData = useMemo(() => {
+
         const teis: TrackedEntityInstance[] = response?.trackedEntityInstances ?? [];
-        const data = teis.map(tei => {
-            return {
-                ...fromPairs(columns?.map(column => [column.key, column.get(tei)])),
-                id: tei.trackedEntityInstance
-            }
-        });
+        const data = compact(teis.map(tei => {
+            if (!program) return;
+            const profile = new ProfileData(tei, program);
+            return profile.getTableData();
+        }));
 
         if (sortState) {
             if (sortState.direction === "default") {
@@ -166,7 +149,7 @@ export function useTableData() {
             return data;
         }
 
-    }, [response, columnVisibility, loading, fetching, sortState]);
+    }, [program, response, sortState]);
 
     const onPageChange = (page: number) => {
         refetch({page})

@@ -1,6 +1,7 @@
 import {RecoilSync} from "recoil-sync";
 import React from "react";
 import {useSearchParams} from "react-router-dom";
+import {DefaultValue} from "recoil";
 
 export function URLSync({
                             children,
@@ -20,13 +21,14 @@ export function URLSync({
             }}
             write={({diff}) => {
                 setSearchParams((prev) => {
+
                     const newValue = new Map(prev);
                     Array.from(diff.entries()).map(([key, value]) => {
                         let sanitizedValue = value;
                         if (Array.isArray(value)) {
                             sanitizedValue = value.join(";")
                         }
-                        if (value === undefined || value === null) {
+                        if (value === undefined || value === null || value instanceof DefaultValue || value === "") {
                             newValue.delete(key);
                             return;
                         }

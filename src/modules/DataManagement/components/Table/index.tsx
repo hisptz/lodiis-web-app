@@ -13,22 +13,24 @@ import EmptyList from "../../../../shared/components/EmptyList";
 import {useNavigate} from "react-router-dom";
 
 export function ErrorBoundedTable() {
-    const {orgUnits, search, program, periods} = useDimension();
+    const {orgUnits, program, periods} = useDimension();
+    const [ref, {height}] = useElementSize();
     return (
-        <ErrorBoundary resetKeys={[orgUnits, search, program, periods]} FallbackComponent={ErrorFallback}>
-            <Table/>
-        </ErrorBoundary>
+        <div ref={ref} className="w-100 h-100">
+            <ErrorBoundary resetKeys={[orgUnits, program, periods]} FallbackComponent={ErrorFallback}>
+                <Table height={height}/>
+            </ErrorBoundary>
+        </div>
     )
 }
 
-function Table() {
+function Table({height}: { height: number }) {
     const {data: rows, loading, pagination, error, columns, refetch, sortState, onSort} = useTableData();
-    const {dimensionsNotSelected} = useDimension();
-    const [ref, {height}] = useElementSize();
+    const {dimensionsNotSelected, program} = useDimension();
     const navigate = useNavigate();
 
     const onRowClick = (id: string) => {
-        navigate(`view/${id}`)
+        navigate(`view/${id}?program=${program}`);
     }
 
     if (isEmpty(rows) && loading) {
@@ -58,7 +60,7 @@ function Table() {
     }
 
     return (
-        <div ref={ref} style={{padding: "0 16px", flex: 1, margin: "32px 0"}}
+        <div style={{padding: "0 16px", flex: 1, margin: "32px 0"}}
              className=" w-100">
             <CustomDataTable
                 onRowClick={onRowClick}
@@ -69,7 +71,7 @@ function Table() {
                 columns={columns}
                 rows={rows}
                 tableProps={{
-                    scrollHeight: `${height - 64}px`
+                    scrollHeight: `${height - 80}px`
                 }}
             />
         </div>
