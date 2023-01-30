@@ -1,45 +1,32 @@
 import {Button, ButtonStrip, Modal, ModalActions, ModalContent, ModalTitle} from '@dhis2/ui'
 import i18n from '@dhis2/d2-i18n';
 import React, {useMemo} from 'react';
-import {Event as DHIS2Event, ProgramStage} from "@hisptz/dhis2-utils"
-import {compact, find} from "lodash";
+import {Event as DHIS2Event, ProgramStage, uid} from "@hisptz/dhis2-utils"
 import {DetailArea} from "../../../../../DetailArea";
+import {ProgramStageConfig} from "../../../../../../../../../../shared/interfaces/metadata";
+import {resolveDataConfigValue} from "../../../../../../../../../../shared/models/data";
 
 export function ViewEventModal({
                                    event,
                                    onClose,
                                    hide,
                                    stage,
-                                   onEdit,
-                               }: { event?: DHIS2Event; onClose: () => void; hide: boolean; stage: ProgramStage; onEdit: (event: DHIS2Event) => void }) {
+                               }: { event?: DHIS2Event; onClose: () => void; hide: boolean; stage: ProgramStageConfig & ProgramStage; onEdit: (event: DHIS2Event) => void }) {
 
-    const values = useMemo(() => compact(event?.dataValues.map(({dataElement, value}) => {
-        const dataElementConfig = find(stage.programStageDataElements, ['dataElement.id', dataElement])?.dataElement;
-        if (dataElementConfig) {
-            if (dataElementConfig.optionSet) {
-                const option = find(dataElementConfig.optionSet.options, ['code', value]);
 
+    const values = useMemo(() => {
+            if (!event) {
+                return;
+            }
+            return stage.view.map(({key, get, field}) => {
                 return {
-                    header: dataElementConfig?.formName ?? dataElementConfig.displayName,
-                    value: option?.name ?? value,
-                    id: dataElementConfig.id
+                    id: key ?? field?.name ?? uid(),
+                    value: resolveDataConfigValue(get, event),
+                    header: field?.label ?? ""
                 }
-
-            }
-            return {
-                header: dataElementConfig?.formName ?? dataElementConfig?.displayName,
-                value,
-                id: dataElementConfig.id
-            }
+            });
         }
-    })), [event, stage]);
-
-    const onEditClick = () => {
-        onClose();
-        if (event) {
-            onEdit(event);
-        }
-    }
+        , [event, stage]);
 
     return (
         <Modal position="middle" hide={hide} onClose={onClose}>
@@ -47,13 +34,12 @@ export function ViewEventModal({
             <ModalContent>
                 <div style={{display: "grid", gap: 8, gridTemplateColumns: "1fr"}}>
                     {
-                        values.map(detail => (<DetailArea key={detail.id} {...detail} />))
+                        values?.map(detail => (<DetailArea key={detail.id} {...detail} />))
                     }
                 </div>
             </ModalContent>
             <ModalActions>
                 <ButtonStrip>
-                    <Button onClick={onEditClick}> {i18n.t("Edit")}</Button>
                     <Button onClick={onClose}>{i18n.t("Cancel")}</Button>
                 </ButtonStrip>
             </ModalActions>

@@ -1,9 +1,8 @@
 import {SearchCriteriaValues} from "../../FilterArea/components/SearchArea";
-import {compact, find, forIn, fromPairs, head, isEmpty, sortBy} from "lodash";
-import {DEFAULT_PROGRAM_CONFIG, PROGRAM_CONFIG, TEI_FIELDS} from "../../../../../constants/metadata";
+import {compact, forIn, head, isEmpty, sortBy} from "lodash";
+import {TEI_FIELDS} from "../../../../../constants/metadata";
 import {useDataQuery} from "@dhis2/app-runtime";
-import {selector, useRecoilValue} from "recoil";
-import {DimensionState} from "../../../../../shared/state/dimensions";
+import {useRecoilValue} from "recoil";
 import {useEffect, useMemo, useState} from "react";
 import {PeriodUtility, TrackedEntityInstance} from "@hisptz/dhis2-utils";
 import {Interval} from "luxon";
@@ -13,21 +12,6 @@ import {ProfileData} from "../../../../../shared/models/data";
 import {useDimension} from "../../../../../shared/hooks/dimension";
 import {KBProgramState} from "../../../../../shared/state/program";
 import {ColumnState} from "../state/column";
-
-selector({
-    key: "column-state-default",
-    get: ({get}) => {
-        const program = get(DimensionState('program'));
-        if (!program) {
-            return;
-        }
-        const config = find(PROGRAM_CONFIG, ['id', program]) ?? DEFAULT_PROGRAM_CONFIG;
-        if (!config) {
-            throw Error(`There is no configuration for the program ${program}`)
-        }
-        return fromPairs(config?.columns.map(column => [column.key, !column.hidden]));
-    }
-})
 
 function sanitizeFilters(searchValues: SearchCriteriaValues) {
     const filter: string[] = [];

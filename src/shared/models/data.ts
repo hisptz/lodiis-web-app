@@ -21,7 +21,7 @@ function calculateAge(param: string) {
     return DateTime.fromJSDate(new Date(param)).diffNow('years').negate().years.toFixed(0);
 }
 
-function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event | TrackedEntityInstance) {
+export function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event | TrackedEntityInstance) {
 
     let value: string | number | undefined = "";
 
@@ -33,7 +33,7 @@ function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event | Tracke
             value = getAttributeValue(data.attributes ?? [], config.id as string);
             break;
         case "dataElement":
-            value = getDataElementValue(data.attributes ?? [], config.id as string);
+            value = getDataElementValue(data.dataValues ?? [], config.id as string);
             break;
         case "computed":
             const param = (data.attributes ? getAttributeValue(data.attributes, config.id as string) : getDataElementValue(data.dataValues, config.id as string)) ?? get(data, config.id);
@@ -43,6 +43,7 @@ function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event | Tracke
                     break;
             }
     }
+
     if (!config.formatAs) {
         return value;
     }
@@ -102,7 +103,7 @@ export class ProfileData {
 
 
     getProgramStages() {
-        return this.program.programStages?.filter((programStage) => !isEmpty(this.getEvents(programStage.id)))
+        return this.kbProgram.programStages?.filter((programStage) => !isEmpty(this.getEvents(programStage.id)))
     }
 
     getEnrollmentData() {

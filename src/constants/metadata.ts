@@ -200,7 +200,48 @@ export const programs: ProgramConfig[] = [
                     type: "trackedEntityAttribute"
                 }
             ]
-        }
+        },
+        programStages: [
+            ...DEFAULT_PROGRAM_CONFIG.programStages,
+            {
+                id: "RJTRRO0wg8H",
+                columns: [
+                    {
+                        key: "orgUnit",
+                        label: "Registering unit",
+                        get: {
+                            from: "attribute",
+                            id: 'orgUnitName',
+                        }
+                    }
+                ],
+                view: [
+                    {
+                        key: "lt88RMPaBPg",
+                        get: {
+                            from: "dataElement",
+                            id: "lt88RMPaBPg",
+                        },
+                        editable: true
+                    }, {
+                        key: "lcyyWZnfQNJ",
+                        get: {
+                            from: "dataElement",
+                            id: "lcyyWZnfQNJ",
+                        },
+                        editable: true
+                    }, {
+                        key: "XqG5ql9rK3T",
+                        get: {
+                            from: "dataElement",
+                            id: "XqG5ql9rK3T",
+                        },
+                        editable: true
+                    },
+
+                ]
+            }
+        ]
     },
     {
         ...DEFAULT_PROGRAM_CONFIG,
@@ -233,7 +274,6 @@ export interface ProfileConfig {
     get: DataGetConfig
     editable?: boolean
 }
-
 
 export const PROGRAM_CONFIG: ProgramConfig[] = [
     {

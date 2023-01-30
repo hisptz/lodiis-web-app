@@ -1,21 +1,23 @@
-import {ColumnConfig, ProfileConfig} from "../../constants/metadata";
-import {Event as DHIS2Event} from "@hisptz/dhis2-utils";
-import React from "react";
+import {ColumnConfig, DataGetConfig, ProfileConfig} from "../../constants/metadata";
+import {RHFDHIS2FormFieldProps} from "@hisptz/dhis2-ui";
 
 
-interface ProgramStageColumnConfig {
+export interface ProgramStageColumnConfig {
     label: string;
     key: string;
-    get: (event: DHIS2Event) => string | number | React.ReactNode
+    get: DataGetConfig
 }
 
-interface ProgramStageViewConfig {
-    key: 'string';
-    get: (event: DHIS2Event) => string | number | React.ReactNode;
-    editable: boolean
+export interface ProgramStageViewConfig {
+    key: string;
+    get: DataGetConfig;
+    editable: boolean;
+    field?: RHFDHIS2FormFieldProps
 }
 
 export interface ProgramStageConfig {
+    id: string;
+    label?: string;
     columns: ProgramStageColumnConfig[];
     view: ProgramStageViewConfig[]
 }

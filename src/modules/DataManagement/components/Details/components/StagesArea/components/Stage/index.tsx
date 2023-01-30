@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {ProgramStage} from "@hisptz/dhis2-utils";
 import i18n from '@dhis2/d2-i18n';
 import {useProfileData} from "../../../../hooks/data";
@@ -11,6 +11,9 @@ import {Button, ButtonStrip, Divider, IconChevronDown24, IconChevronUp24, IconEd
 import {useAlert, useDataMutation} from "@dhis2/app-runtime";
 import {ViewEventModal} from "./components/ViewEvent";
 import Collapsible from "react-collapsible";
+import {ProgramStageConfig} from "../../../../../../../../shared/interfaces/metadata";
+import {resolveDataConfigValue} from "../../../../../../../../shared/models/data";
+import {EditEventModal} from "./components/EditEvent";
 
 const eventDeleteMutation: any = {
     resource: "events",
@@ -51,12 +54,13 @@ const columns = [
     }
 ]
 
-export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOpen: boolean }) {
-    const {profileData: profile, refetch} = useProfileData();
+export function Stage({stage, initiallyOpen}: { stage: ProgramStageConfig & ProgramStage, initiallyOpen: boolean }) {
+    const {profile, refresh} = useProfileData();
+    const kbProgram = useMemo(() => profile?.kbProgram, [profile]);
     const [selectedForEdit, setSelectedForEdit] = useState<DHIS2Event | undefined>();
     const [selectedForView, setSelectedForView] = useState<DHIS2Event | undefined>();
 
-    const events = profile?.getEvents(stage.id) ?? [];
+    const events = useMemo(() => profile?.getEvents(stage.id) ?? [], [profile]);
 
     const {show, hide} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}))
 
@@ -64,7 +68,7 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOp
     const [deleteEvent] = useDataMutation(eventDeleteMutation, {
         onComplete: () => {
             show({message: i18n.t("Event deleted successfully"), type: {success: true}});
-            refetch();
+            refresh();
         },
         onError: (error) => {
             show({message: i18n.t(error.details.message ?? error.message), type: {critical: true}});
@@ -73,11 +77,11 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOp
     })
 
     const onEdit = (event: DHIS2Event) => () => {
-
+        setSelectedForEdit(event);
     }
 
     //Call this to implement delete
-    const onDelete = (event: DHIS2Event) => () => {
+    const onDelete = (event: DHIS2Event) => () => () => {
         confirm({
             title: i18n.t("Delete event"),
             message: i18n.t("Are you sure you want to delete this event"),
@@ -95,11 +99,16 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOp
         })
     }
 
-    const onView = (event: DHIS2Event) => {
+    const onView = (event: DHIS2Event) => () => {
         setSelectedForView(event)
     }
 
-    const sanitizedColumns = [...columns, {
+    const sanitizedColumns = useMemo(() => [...stage.columns.map(column => ({
+        ...column,
+        get: (event: DHIS2Event) => {
+            return resolveDataConfigValue(column.get, event)
+        }
+    })), {
         label: i18n.t("Actions"),
         key: "actions",
         get: (event: DHIS2Event) => {
@@ -110,12 +119,12 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOp
                 </ButtonStrip>
             )
         }
-    }]
+    }], [columns]);
 
-    const rows = events.map(event => ({
+    const rows = useMemo(() => events.map(event => ({
         ...fromPairs(sanitizedColumns.map(column => ([column.key, column.get(event)]))),
         id: event.event
-    }));
+    })), [events]);
 
     return (<>
         <Collapsible
@@ -159,5 +168,10 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStage, initiallyOp
         </Collapsible>
         <ViewEventModal onEdit={onEdit} event={selectedForView} onClose={() => setSelectedForView(undefined)}
                         hide={!selectedForView} stage={stage}/>
+        {
+            !!selectedForEdit && (<EditEventModal event={selectedForEdit} onClose={() => setSelectedForEdit(undefined)}
+                                                  hide={!selectedForEdit}
+                                                  stage={stage}/>)
+        }
     </>)
 }

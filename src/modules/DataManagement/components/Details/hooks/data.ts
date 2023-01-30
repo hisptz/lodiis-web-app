@@ -16,7 +16,7 @@ const query = {
                 'orgUnit',
                 'attributes[attribute,value]',
                 'trackedEntityType',
-                'enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,programStage,dueDate,orgUnit,orgUnitName,status,dataValues[dataElement,value],eventDate]]'
+                'enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,program,programStage,dueDate,orgUnit,orgUnitName,status,dataValues[dataElement,value],eventDate]]'
             ]
         })
     }

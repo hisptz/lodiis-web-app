@@ -8,7 +8,7 @@ import EmptyList from "../../../../../../shared/components/EmptyList";
 
 
 export function StagesArea() {
-    const {profileData: profile} = useProfileData();
+    const {profile} = useProfileData();
 
     const stages = profile?.getProgramStages();
 
