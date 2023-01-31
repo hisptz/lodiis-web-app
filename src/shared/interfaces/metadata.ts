@@ -1,6 +1,29 @@
-import {ColumnConfig, DataGetConfig, ProfileConfig} from "../../constants/metadata";
 import {RHFDHIS2FormFieldProps} from "@hisptz/dhis2-ui";
 
+export interface DataGetConfig {
+    //Where is the data coming from for the specific resource
+    from: "dataElement" | "trackedEntityAttribute" | "attribute" | "computed",
+    //id of the resource from, a path for type attribute
+    id: string | Array<string | number>;
+    formatAs?: "date";
+    as?: "age";
+}
+
+export interface ColumnConfig {
+    label: string;
+    key: string;
+    get: DataGetConfig;
+    mandatory?: boolean;
+    hidden?: boolean;
+    sortable?: boolean;
+}
+
+export interface ProfileConfig {
+    label: string;
+    key: string;
+    get: DataGetConfig
+    editable?: boolean
+}
 
 export interface ProgramStageColumnConfig {
     label: string;
@@ -22,6 +45,31 @@ export interface ProgramStageConfig {
     view: ProgramStageViewConfig[]
 }
 
+
+export interface VisualizationConfig {
+    id: string;
+    dimension: {
+        dx?: string[],
+        ou?: string[],
+        pe?: string[]
+    },
+    filter?: {
+        dx?: string[],
+        ou?: string[],
+        pe?: string[]
+    },
+    type: "chart" | "table" | "map" | "single-value",
+    options?: Record<string, any>;
+    span: 1 | 2
+}
+
+export interface DashboardConfig {
+    id: string;
+    label?: string;
+    visualizations: VisualizationConfig[]
+
+}
+
 export interface ProgramConfig {
     id: string;
     name: string;
@@ -30,5 +78,6 @@ export interface ProgramConfig {
     }
     columns: ColumnConfig[];
     profile: ProfileConfig[];
-    programStages: ProgramStageConfig[]
+    programStages: ProgramStageConfig[];
+    dashboard?: DashboardConfig
 }

@@ -35,6 +35,10 @@ export class KBProgram {
 
     }
 
+    get dashboard() {
+        return this.config.dashboard;
+    }
+
     get programStages() {
         const configuredProgramStages = this.config.programStages;
         return configuredProgramStages.map((programStage) => {

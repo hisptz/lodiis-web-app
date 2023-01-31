@@ -10,6 +10,7 @@ export enum ATTRIBUTES {
 
 }
 
+
 export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {
     id: "",
     name: "",
@@ -128,23 +129,8 @@ export const TEI_FIELDS = [
 export const programs: ProgramConfig[] = [
     {
         ...DEFAULT_PROGRAM_CONFIG,
-        id: "dwtPhZrg2k7",
-        name: "0-19 OGAC Module",
-    },
-    {
-        ...DEFAULT_PROGRAM_CONFIG,
         id: "hOEIHJDrrvz",
         name: "AGYW/DREAMS"
-    },
-    {
-        ...DEFAULT_PROGRAM_CONFIG,
-        id: "tkL2hvIRwMy",
-        name: "Education(LBSE) Module"
-    },
-    {
-        ...DEFAULT_PROGRAM_CONFIG,
-        id: "CK4iMK8b0aZ",
-        name: "NON-AGYW/DREAMS"
     },
     {
         ...DEFAULT_PROGRAM_CONFIG,
@@ -241,90 +227,151 @@ export const programs: ProgramConfig[] = [
 
                 ]
             }
-        ]
-    },
-    {
-        ...DEFAULT_PROGRAM_CONFIG,
-        id: "iR6hbkQABMk",
-        name: "PP_PREV"
+        ],
+        dashboard: {
+            id: "em38qztTI8s",
+            visualizations: [
+                {
+                    type: "single-value",
+                    dimension: {
+                        dx: ["iGqe7b1PpBo", "bAy9bNvtJGF", "B0aWooj09XR", "gbd5A0977cj", "eTVEURqZgQ2"],
+                    },
+                    filter: {
+                        pe: ["2020", "2021", "2022"],
+                        ou: ["USER_ORGUNIT"]
+                    },
+                    id: "total-enrollments",
+                    span: 2,
+                    options: {
+                        title: "Beneficiary enrollments",
+                        singleValueItems: [
+                            {
+                                id: "iGqe7b1PpBo",
+                                label: "Total Enrolled Beneficiaries",
+                                total: true
+                            },
+                            {
+                                id: "bAy9bNvtJGF",
+                                label: "KB Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "B0aWooj09XR",
+                                label: "PSI Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "bAy9bNvtJGF",
+                                label: "KB Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "B0aWooj09XR",
+                                label: "PSI Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "bAy9bNvtJGF",
+                                label: "KB Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "B0aWooj09XR",
+                                label: "PSI Enrolled Beneficiaries",
+                                percentage: true
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: "beneficiary-by-gender-by-districts",
+                    dimension: {
+                        ou: ["LEVEL-2"],
+                        dx: ["hpmyVQU4mtH", "wgNsiLa7jJ9"]
+                    },
+                    filter: {
+                        pe: ["2020", "2021", "2022"]
+                    },
+                    span: 2,
+                    type: "chart",
+                    options: {
+                        title: "Enrolled Beneficiaries by Gender by District",
+                        config: {
+                            layout: {
+                                series: ["dx"],
+                                category: ["ou"],
+                                filter: [
+                                    "pe"
+                                ]
+                            },
+                            type: "column",
+                        }
+                    }
+                },
+                {
+                    id: "beneficiary-in-community-last-3-years",
+                    dimension: {
+                        ou: ["LEVEL-3"],
+                        dx: ["hpmyVQU4mtH", "wgNsiLa7jJ9"]
+                    },
+                    span: 2,
+                    type: "map",
+                    options: {
+                        title: "Enrolled OVC Beneficiaries in each community councils for the last 3 years",
+                        orgUnitSelection: {
+                            levels: ["3"]
+                        },
+                        thematicLayers: [{
+                            type: "choropleth",
+                            enabled: true,
+                            dataItem: {
+                                id: "iGqe7b1PpBo",
+                                displayName: "OVC Beneficiaries",
+                                type: "indicator"
+                            },
+                            control: {
+                                enabled: true,
+                                position: "topright"
+                            }
+                        }],
+                        periodSelection: {
+                            periods: ["2020", "2021", "2022"]
+                        },
+                        legends: {
+                            enabled: true,
+                            position: "bottomright",
+                            collapsible: false
+                        }
+                    }
+                },
+
+            ]
+        }
     },
     {
         ...DEFAULT_PROGRAM_CONFIG,
         id: "BNsDaCclOiu",
         name: "Household/Caregiver"
     },
-]
-
-export interface DataGetConfig {
-    //Where is the data coming from for the specific resource
-    from: "dataElement" | "trackedEntityAttribute" | "attribute" | "computed",
-    //id of the resource from, a path for type attribute
-    id: string | Array<string | number>;
-    formatAs?: "date";
-    as?: "age";
-}
-
-export interface ColumnConfig {
-    label: string;
-    key: string;
-    get: DataGetConfig;
-    mandatory?: boolean;
-    hidden?: boolean;
-    sortable?: boolean;
-}
-
-export interface ProfileConfig {
-    label: string;
-    key: string;
-    get: DataGetConfig
-    editable?: boolean
-}
-
-export const PROGRAM_CONFIG: ProgramConfig[] = [
     {
         ...DEFAULT_PROGRAM_CONFIG,
-        id: "em38qztTI8s",
-        columns: [
-            ...DEFAULT_PROGRAM_CONFIG.columns,
-            {
-                label: i18n.t("Primary UIC"),
-                key: "primaryUIC",
-                get: {
-                    from: "trackedEntityAttribute",
-                    id: ATTRIBUTES.PRIMARY_UIC,
-                },
-                mandatory: true
-            },
-            {
-                label: i18n.t("Secondary UIC"),
-                key: "secondaryUIC",
-                get: {
-                    from: "trackedEntityAttribute",
-                    id: ATTRIBUTES.SECONDARY_UIC,
-                },
-            },
-        ],
-        profile: [
-            ...DEFAULT_PROGRAM_CONFIG.profile,
-            {
-                label: i18n.t("Primary UIC"),
-                key: ATTRIBUTES.PRIMARY_UIC,
-                get: {
-                    from: "trackedEntityAttribute",
-                    id: ATTRIBUTES.PRIMARY_UIC,
-                },
-                editable: false
-            },
-            {
-                label: i18n.t("Secondary UIC"),
-                key: ATTRIBUTES.SECONDARY_UIC,
-                get: {
-                    from: "trackedEntityAttribute",
-                    id: ATTRIBUTES.SECONDARY_UIC,
-                },
-                editable: false
-            },
-        ],
-
-    }
+        id: "CK4iMK8b0aZ",
+        name: "NON-AGYW/DREAMS"
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "dwtPhZrg2k7",
+        name: "0-19 OGAC Module",
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "tkL2hvIRwMy",
+        name: "Education(LBSE) Module"
+    },
+    {
+        ...DEFAULT_PROGRAM_CONFIG,
+        id: "iR6hbkQABMk",
+        name: "PP_PREV"
+    },
 ]
+

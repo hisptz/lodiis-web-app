@@ -12,7 +12,7 @@ export function DashboardList() {
     const navigate = useNavigate();
 
     const onChipClick = (id: string) => () => {
-        navigate(`/dashboard/${id}`)
+        navigate(`/dashboard/${id}?program=${id}`)
     }
 
     return (
