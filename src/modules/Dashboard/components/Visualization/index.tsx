@@ -1,10 +1,18 @@
 import {VisualizationConfig} from "../../../../shared/interfaces/metadata";
 import {Analytics} from "@hisptz/dhis2-utils";
 import React, {useEffect} from "react";
-import {ChartAnalytics, ChartConfig, Map, MapProps, SingleValueContainer} from "@hisptz/dhis2-analytics";
+import {
+    ChartAnalytics,
+    ChartConfig,
+    CustomPivotTable,
+    Map,
+    MapProps,
+    SingleValueContainer
+} from "@hisptz/dhis2-analytics";
 import {filter, find, findIndex, forIn, get, isEmpty, reduce} from "lodash";
 import {useDataQuery} from "@dhis2/app-runtime";
 import FullPageLoader from "../../../../shared/components/Loaders";
+import {useElementSize} from "usehooks-ts";
 
 function getDataValueFromAnalytics(id: string, data?: Analytics) {
 
@@ -18,9 +26,11 @@ function getDataValueFromAnalytics(id: string, data?: Analytics) {
     }, 0);
 }
 
-function resolveVisualization(type: "chart" | "table" | "map" | "single-value", {options, data}: {
+function resolveVisualization(type: "chart" | "table" | "map" | "single-value", {options, data, height, width}: {
     options?: Record<
-        string, any>, data?: Analytics
+        string, any>, data?: Analytics,
+    height: number;
+    width: number
 }) {
     switch (type) {
         case "chart":
@@ -29,12 +39,31 @@ function resolveVisualization(type: "chart" | "table" | "map" | "single-value", 
             }
             const config: ChartConfig = {
                 ...(options?.config as ChartConfig),
-                height: options?.config?.height ?? 500
+                height: options?.config?.height ?? height
             }
             return (
                 <ChartAnalytics
                     config={config}
                     analytics={data}
+                />
+            )
+        case "table":
+            if (!data) {
+                return null;
+            }
+            const tableConfig: any = {
+                ...(options?.config ?? {}),
+            }
+            return (
+                <CustomPivotTable
+                    config={tableConfig}
+                    analytics={data}
+                    tableProps={
+                        {
+                            scrollHeight: `${height}px`,
+                            scrollWidth: `${width}px`
+                        }
+                    }
                 />
             )
         case "map":
@@ -94,13 +123,16 @@ const analyticsQuery = {
         resource: "analytics",
         params: ({dimension, filter}: any) => ({
             dimension: getDimensions(dimension),
-            filter: getDimensions(filter)
+            filter: getDimensions(filter),
+            includeNumDen: true,
+            includeMetadataDetails: true
         })
     }
 }
 
 export function Visualization(config: VisualizationConfig) {
     const {dimension, filter, type, options} = config ?? {};
+    const [containerRef, {height, width}] = useElementSize();
     const {data, loading, refetch} = useDataQuery(analyticsQuery, {
         lazy: true,
         variables: {
@@ -122,10 +154,10 @@ export function Visualization(config: VisualizationConfig) {
     }
 
     return (
-        <div className="column gap-8">
+        <div ref={containerRef} style={{maxHeight: 800}} className="column gap-8">
             <h2 style={{margin: "8px 8px"}}>{config?.options?.title}</h2>
             {
-                resolveVisualization(type, {options, data: data?.analytics as Analytics})
+                resolveVisualization(type, {options, data: data?.analytics as Analytics, height, width})
             }
         </div>
     )

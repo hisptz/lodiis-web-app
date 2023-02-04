@@ -48,7 +48,7 @@ export interface ProgramStageConfig {
 
 export interface VisualizationConfig {
     id: string;
-    dimension: {
+    dimension?: {
         dx?: string[],
         ou?: string[],
         pe?: string[]

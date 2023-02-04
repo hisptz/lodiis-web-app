@@ -1,5 +1,6 @@
 import i18n from '@dhis2/d2-i18n';
 import {ProgramConfig} from "../shared/interfaces/metadata";
+import {CHART_COLORS} from "./config";
 
 export enum ATTRIBUTES {
     FIRST_NAME = "WTZ7GLTrE8Q",
@@ -130,7 +131,159 @@ export const programs: ProgramConfig[] = [
     {
         ...DEFAULT_PROGRAM_CONFIG,
         id: "hOEIHJDrrvz",
-        name: "AGYW/DREAMS"
+        name: "AGYW/DREAMS",
+        dashboard: {
+            id: "hOEIHJDrrvz",
+            visualizations: [
+                {
+                    type: "single-value",
+                    dimension: {
+                        dx: ["Gm50lvf5Oxi", "VF63tnFeULs", "DbRzS15NqhM", "WeiI4j6sr2y", "j7xsRV4hBUU"],
+                    },
+                    filter: {
+                        pe: ["2020", "2021", "2022"],
+                        ou: ["USER_ORGUNIT"]
+                    },
+                    id: "total-enrollments",
+                    span: 2,
+                    options: {
+                        title: "Beneficiary enrollments",
+                        singleValueItems: [
+                            {
+                                id: "Gm50lvf5Oxi",
+                                label: "Total Enrolled Beneficiaries",
+                                total: true
+                            },
+                            {
+                                id: "VF63tnFeULs",
+                                label: "KB Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "DbRzS15NqhM",
+                                label: "PSI Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "WeiI4j6sr2y",
+                                label: "EGPAF Enrolled Beneficiaries",
+                                percentage: true
+                            },
+                            {
+                                id: "j7xsRV4hBUU",
+                                label: "JHPIEGO Enrolled Beneficiaries",
+                                percentage: true
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: "beneficiary-by-age-by-districts",
+                    dimension: {
+                        ou: ["LEVEL-2"],
+                        dx: ["WBDE3ECUY0T", "A6OeVyHyBYW", "JGdxWlIRa28"]
+                    },
+                    filter: {
+                        pe: ["2020", "2021", "2022"]
+                    },
+                    span: 2,
+                    type: "chart",
+                    options: {
+                        title: "Enrolled Beneficiaries by Gender by District",
+                        config: {
+                            layout: {
+                                series: ["dx"],
+                                category: ["ou"],
+                                filter: [
+                                    "pe"
+                                ]
+                            },
+                            type: "column",
+                            colors: CHART_COLORS
+                        }
+                    }
+                },
+                {
+                    id: "beneficiary-in-community-last-12-months",
+                    span: 2,
+                    type: "map",
+                    options: {
+                        title: "Enrolled AGYW/DREAMS Beneficiaries in each community councils for the last 3 years",
+                        orgUnitSelection: {
+                            levels: ["2"]
+                        },
+                        thematicLayers: [{
+                            type: "choropleth",
+                            id: "enrollment",
+                            enabled: true,
+                            dataItem: {
+                                id: "Gm50lvf5Oxi",
+                                displayName: "Enrolled AGYW/DREAMS Beneficiaries",
+                                type: "indicator"
+                            },
+                            control: {
+                                enabled: true,
+                                position: "topright"
+                            }
+                        }],
+                        periodSelection: {
+                            periods: ["LAST_12_MONTHS"]
+                        },
+                        legends: {
+                            enabled: true,
+                            position: "bottomright",
+                            collapsible: false
+                        }
+                    }
+                },
+                {
+                    id: "beneficiary-by-layering-by-districts",
+                    dimension: {
+                        ou: ["LEVEL-2"],
+                        dx: ["WBDE3ECUY0T", "A6OeVyHyBYW", "JGdxWlIRa28"]
+                    },
+                    filter: {
+                        pe: ["LAST_12_MONTHS"]
+                    },
+                    span: 1,
+                    type: "chart",
+                    options: {
+                        title: "Enrolled Beneficiaries by Gender by District",
+                        config: {
+                            layout: {
+                                series: ["dx"],
+                                category: ["ou"],
+                                filter: [
+                                    "pe"
+                                ]
+                            },
+                            type: "stacked-column",
+                            colors: CHART_COLORS
+                        }
+                    }
+                },
+                {
+                    id: "table-by-layering-by-districts",
+                    dimension: {
+                        ou: ["LEVEL-2"],
+                        dx: ["wEelmVeGByt", "UrfERV5OKXQ", "asvwIHSEl5F", "b69S1KvmO0a", "yoSGcrclQYD", "quBQhOPqBUf", "PzBpn8adDud", "mwYdO1cIaTh", "PV9mj7G3Rly", "g9Ufw2VYZUC", "G9nHEZTB6zO", "TNf9GBn7TVJ"],
+                        pe: ["2020", "2021", "2022"]
+                    },
+                    span: 1,
+                    type: "table",
+                    options: {
+                        title: "AGYW/DREAMS Service Provision by District",
+                        config: {
+                            layout: {
+                                columns: [{dimension: "ou"}, {dimension: "pe"}],
+                                rows: [{dimension: "dx", label: "Services"}],
+                                filter: []
+                            },
+                        }
+                    }
+                },
+            ]
+        }
     },
     {
         ...DEFAULT_PROGRAM_CONFIG,
@@ -305,6 +458,7 @@ export const programs: ProgramConfig[] = [
                                 ]
                             },
                             type: "column",
+                            colors: CHART_COLORS
                         }
                     }
                 },

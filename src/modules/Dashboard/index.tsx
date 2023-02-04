@@ -19,8 +19,6 @@ export function DashboardRouting() {
 
     return <Navigate to={`/dashboard/${firstProgram?.id}?program=${firstProgram.id}`}/>
 }
-
-
 export default function Dashboard() {
     const kbProgram = useRecoilValue(KBProgramState);
     const visualizations = kbProgram?.dashboard?.visualizations;
@@ -30,7 +28,7 @@ export default function Dashboard() {
             {
                 visualizations?.map((visualization) => (
                     <div key={`${visualization.id}-visualization-container`}
-                         style={{gridColumn: `1 / span ${visualization.span}`}}>
+                         style={{gridColumn: `auto / span ${visualization.span}`}}>
                         <Box height="100%" width="100%">
                             <Card>
                                 <div style={{padding: 8}}>
