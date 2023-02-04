@@ -10,6 +10,7 @@ import "./locales"
 import {DataStoreProvider} from "@dhis2/app-service-datastore";
 import FullPageLoader from "./shared/components/Loaders";
 import {programs} from "./constants/metadata";
+import {customReportConfig} from "./constants/reports";
 
 const MyApp = () => {
     const engine = useDataEngine();
@@ -19,7 +20,8 @@ const MyApp = () => {
     }
 
     return (<DataStoreProvider defaultGlobalSettings={{
-        programs
+        programs,
+        reports: customReportConfig
     }} namespace={"kb-web-app"} loadingComponent={<FullPageLoader/>}>
         <RecoilRoot initializeState={initState}>
             <ConfirmDialogProvider>
