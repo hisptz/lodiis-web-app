@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2023-01-30T08:15:38.541Z\n"
-"PO-Revision-Date: 2023-01-30T08:15:38.541Z\n"
+"POT-Creation-Date: 2023-01-30T10:43:33.674Z\n"
+"PO-Revision-Date: 2023-01-30T10:43:33.674Z\n"
 
 msgid "Registration Unit"
 msgstr "Registration Unit"
@@ -80,6 +80,15 @@ msgstr "Enrollment updated successfully"
 msgid "Enrollment"
 msgstr "Enrollment"
 
+msgid "Relationship"
+msgstr "Relationship"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Actions"
+msgstr "Actions"
+
 msgid "Relationships"
 msgstr "Relationships"
 
@@ -115,9 +124,6 @@ msgstr "Deleting"
 
 msgid "Delete"
 msgstr "Delete"
-
-msgid "Actions"
-msgstr "Actions"
 
 msgid "Last updated"
 msgstr "Last updated"
