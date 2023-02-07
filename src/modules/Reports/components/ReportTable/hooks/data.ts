@@ -7,10 +7,10 @@ import {useBoolean, useCounter} from "usehooks-ts";
 
 
 const reportEnrollmentQuery = {
-    enrollments: {
+    data: {
         resource: "analytics",
         id: ({program}: any) => `enrollments/query/${program}`,
-        params: ({ou, pe, dx, startDate, endDate, stage}: any) => {
+        params: ({ou, pe, dx, startDate, endDate, stage, page, pageSize}: any) => {
             const dimensions = [
                 `ou:${ou.join(';')}`,
                 `pe:${pe.join(';')}`,
@@ -23,17 +23,20 @@ const reportEnrollmentQuery = {
                 dimension: dimensions,
                 stage,
                 startDate,
-                endDate
+                endDate,
+                page,
+                pageSize,
+                totalPages: true
             }
         }
 
     },
 }
 const reportEventQuery = {
-    events: {
+    data: {
         resource: "analytics",
         id: ({program}: any) => `events/query/${program}`,
-        params: ({ou, pe, dx, startDate, endDate, stage}: any) => ({
+        params: ({ou, pe, dx, startDate, endDate, stage, page, pageSize}: any) => ({
             displayProperty: "NAME",
             outputType: "EVENT",
             desc: "eventdate",
@@ -44,7 +47,10 @@ const reportEventQuery = {
             ],
             stage,
             startDate,
-            endDate
+            endDate,
+            page,
+            pageSize,
+            totalPages: true
         })
 
     }
@@ -96,19 +102,31 @@ export function useReportData() {
     const {periods, orgUnits, report} = useReportDimension();
     const {value: loading, setTrue: setIsLoading, setFalse: setIsNotLoading} = useBoolean(false)
     const {refetch: getEnrollments} = useDataQuery(reportEnrollmentQuery, {
-        lazy: true
+        lazy: true,
+        onError: (error) => {
+            console.error(error.message)
+        }
     });
     const {refetch: getProgramStages} = useDataQuery(programStagesQuery, {
         lazy: true
     });
     const {refetch: getEvents} = useDataQuery(reportEventQuery, {
-        lazy: true
+        lazy: true,
+        onError: (error) => {
+            console.error(error.message)
+        }
     });
     const {refetch: getPrograms} = useDataQuery(programQuery, {
-        lazy: true
+        lazy: true,
+        onError: (error) => {
+            console.error(error.message)
+        }
     });
     const {refetch: getOrgUnits} = useDataQuery(orgUnitQuery, {
-        lazy: true
+        lazy: true,
+        onError: (error) => {
+            console.error(error.message)
+        }
     });
     const {show, hide} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}));
     const [data, setData] = useState<Array<{ id: string; [key: string]: any }>>();

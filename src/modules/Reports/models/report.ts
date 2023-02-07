@@ -17,7 +17,7 @@ import {
     uniqBy,
     values
 } from "lodash";
-import {CUSTOM_DX_CONFIG_IDS, DEFAULT_ANALYTICS_KEYS} from "../../../constants/reports";
+import {CUSTOM_DX_CONFIG_IDS, DEFAULT_ANALYTICS_KEYS, PAGE_SIZE} from "../../../constants/reports";
 import {Analytics, Program} from "@hisptz/dhis2-utils";
 import {asyncify, mapSeries} from "async-es";
 import {getFormattedEventAnalyticDataForReport} from "../helpers/get-formatted-analytics-data";
@@ -189,14 +189,30 @@ export class CustomReport {
                                                                         program,
                                                                         dx
                                                                     }: { program: string, dx: string[] }) => {
-            const dxChunks: string[][] = chunk(dx, 10);
+            const dxChunks: string[][] = chunk(dx, 20);
             return await mapSeries(dxChunks, asyncify(async (dxChunk: string[]) => {
-                return await getEnrollments({
-                    program,
-                    dx: dxChunk,
-                    ou: orgUnits,
-                    pe: periods
-                }).then(({enrollments}) => this.sanitizeAnalyticsData(enrollments))
+                try {
+                    const pagination = await this.getPagination({
+                        program,
+                        dx: dxChunk,
+                        ou: orgUnits,
+                        pe: periods
+                    }, {getter: getEnrollments});
+                    const pages = Array.from(Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()).map(index => index + 1);
+                    return await mapSeries(pages, asyncify(async (page: number) => await getEnrollments({
+                        program,
+                        dx: dxChunk,
+                        ou: orgUnits,
+                        pe: periods,
+                        page,
+                        pageSize: PAGE_SIZE
+                    }).then(({data}) => this.sanitizeAnalyticsData(data)).catch((error) => {
+                        console.error(error)
+                    })))
+                } catch (e) {
+                    console.error(e)
+                    return []
+                }
             }))
         }));
     }
@@ -221,13 +237,29 @@ export class CustomReport {
                                                                 }: { program: string, dx: string[]; stage: string }) => {
             const dxChunks: string[][] = chunk(dx, 20);
             return await mapSeries(dxChunks, asyncify(async (dxChunk: string[]) => {
-                return await getEvents({
-                    program,
-                    stage,
-                    dx: dxChunk,
-                    ou: orgUnits,
-                    pe: periods
-                }).then(({events}) => this.sanitizeAnalyticsData(events, {stage}))
+                try {
+                    const pagination = await this.getPagination({
+                        program,
+                        dx: dxChunk,
+                        ou: orgUnits,
+                        pe: periods
+                    }, {getter: getEvents});
+                    const pages = Array.from(Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()).map(index => index + 1);
+
+                    return await mapSeries(pages, asyncify(async (page: number) => await getEvents({
+                        program,
+                        stage,
+                        dx: dxChunk,
+                        ou: orgUnits,
+                        pe: periods,
+                        page,
+                        pageSize: PAGE_SIZE
+                    }).then(({data}) => this.sanitizeAnalyticsData(data, {stage})).catch((error) => {
+                        console.error(error)
+                    })));
+                } catch (e) {
+                    return []
+                }
             }))
         }));
     }
@@ -257,4 +289,12 @@ export class CustomReport {
         }), 'key')
     }
 
+    private async getPagination(variables: { dx: string[]; pe: string[]; ou: string[]; program: string }, {getter}: { getter: (options: Record<string, any>) => Promise<Record<string, any>> }) {
+        const response = await getter({
+            ...variables,
+            page: 1,
+            pageSize: PAGE_SIZE,
+        });
+        return response?.data?.metaData?.pager;
+    }
 }

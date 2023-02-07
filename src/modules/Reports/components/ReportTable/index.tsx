@@ -9,15 +9,13 @@ export function ReportTable() {
     const {loading, columns, rows, pagination, chunking} = useReportPaginatedData();
     const [containerRef, {width, height}] = useElementSize();
 
-
     if (loading && isEmpty(rows)) {
         return <FullPageLoader/>
     }
 
     return (
-        <div ref={containerRef} style={{maxHeight: "calc(100vh - 224px)"}} className="p-16 w-100 h-100">
+        <div ref={containerRef} style={{maxHeight: "calc(100vh - 280px)"}} className="p-16 w-100 h-100">
             <CustomDataTable
-
                 pagination={pagination}
                 tableProps={{
                     scrollHeight: `${height - 80}px`,
