@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from "react";
 import {Pagination, Program} from "@hisptz/dhis2-utils";
 import {chunk, isEmpty} from "lodash";
 import {useBoolean, useCounter} from "usehooks-ts";
+import {atomFamily, useRecoilState} from "recoil";
 
 
 const reportEnrollmentQuery = {
@@ -98,6 +99,11 @@ const programQuery = {
     }
 }
 
+export const ReportDataState = atomFamily<Array<{ id: string; [key: string]: any }>, string | undefined>({
+    key: "report-data-state",
+    default: undefined
+})
+
 export function useReportData() {
     const {periods, orgUnits, report} = useReportDimension();
     const {value: loading, setTrue: setIsLoading, setFalse: setIsNotLoading} = useBoolean(false)
@@ -129,7 +135,7 @@ export function useReportData() {
         }
     });
     const {show, hide} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}));
-    const [data, setData] = useState<Array<{ id: string; [key: string]: any }>>();
+    const [data, setData] = useRecoilState(ReportDataState(report?.id));
     const columns = useMemo(() => report?.getColumns() ?? [], [report]);
     const [totalRequests, setTotalRequests] = useState(0);
     const [progress, setProgress] = useState(0);
@@ -186,7 +192,6 @@ export function useReportPaginatedData(): { percentage?: number; chunking: boole
     const [pageSize, setPageSize] = useState(50);
     const {value: chunking, setTrue: setChunkingTrue, setFalse: setChunkingFalse} = useBoolean(false);
 
-
     const chunkWorker = async ({rows, pageSize}: any): Promise<any> => {
         return await new Promise((resolve, reject) => {
             try {
@@ -199,7 +204,6 @@ export function useReportPaginatedData(): { percentage?: number; chunking: boole
 
     const [rowChunks, setRowChunks] = useState<Array<typeof rows>>([]);
     const {count: page, setCount} = useCounter(1);
-
 
     useEffect(() => {
         async function getChunks() {

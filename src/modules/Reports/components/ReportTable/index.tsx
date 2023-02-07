@@ -17,7 +17,7 @@ export function ReportTable() {
     }
 
     return (
-        <div ref={containerRef} style={{maxHeight: "calc(100vh - 280px)"}} className="p-16 w-100 h-100">
+        <div ref={containerRef} style={{maxHeight: "calc(100vh - 324px)"}} className="p-16 w-100 h-100">
             <CustomDataTable
                 pagination={pagination}
                 tableProps={{
