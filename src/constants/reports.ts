@@ -1,4 +1,7 @@
-export const customReportConfig = [
+import {CustomReportInterface} from "../shared/interfaces/report";
+
+
+export const customReportConfig: CustomReportInterface[] = [
     {
         "id": "Consolidate_DREAM_services",
         "name": "Consolidated DREAMS services",
@@ -9689,3 +9692,41 @@ export const customReportConfig = [
         "includeEnrollmentWithoutService": true
     }
 ]
+
+export const MANDATORY_COLUMNS: string[] = [
+    'First Name',
+    'Surname',
+    'Date of Birth',
+    'Sex',
+    'Age',
+];
+
+export enum CUSTOM_DX_CONFIG_IDS {
+    DATE_OF_LAST_SERVICE = 'date_of_last_service_received',
+    BENEFICIARY_AGE = 'beneficiary_age',
+    BENEFICIARY_AGE_RANGE = 'beneficiary_age_range',
+    BENEFICIARY_AGE_RANGES = 'beneficiary_age_ranges',
+    IS_SERVICES_PROVIDED = 'is_service_provided',
+    IS_AGYW_BENEFICIARY = 'isAgywBeneficiary',
+    DISTRICT_OF_SERVICE = 'district_of_service',
+    FACILITY_NAME = 'facility_name',
+    LAST_SERVICE_COMMUNITY_COUNCIL = 'last_service_community_council',
+    DISTRICT_OF_RESIDENCE = 'district_of_residence',
+    FOLLOW_UP_VISIT = 'following_up_visit',
+    COMMUNITY_COUNCIL_OF_RESIDENCE = 'community_council_of_residence',
+    IS_ELIGIBLE_FOR_PREP = 'is_eligible_for_prep',
+    ASSESSMENT_DATE = 'assessmment_date',
+    IS_ASSESSMENT_CONDUCTED = 'is_assemmenet_conducted',
+    PREP_BENEFICIARY_STATUS = 'prep_beneficairy_status',
+    ENROLLMENT_DATE = "enrollmentdate",
+    TOTAL_SERVICES = "total-services"
+}
+
+export enum DEFAULT_ANALYTICS_KEYS {
+    EVENT_DATE = 'eventdate',
+    ENROLLMENT_DATE = 'enrollmentdate',
+    TEI = 'tei',
+    OU_NAME = 'ouname',
+    OU = 'ou',
+    PSI = 'psi',
+}

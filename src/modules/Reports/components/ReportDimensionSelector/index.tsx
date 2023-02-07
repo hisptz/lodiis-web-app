@@ -1,5 +1,5 @@
 import {DimensionsSelector} from "../../../../shared/components/DimensionsSelector";
-import React, {useMemo} from "react";
+import React from "react";
 import {
     OrgUnitDimensionSelector
 } from "../../../../shared/components/DimensionsSelector/components/OrgUnitDimensionSelector";
@@ -7,18 +7,10 @@ import {
     PeriodDimensionSelector
 } from "../../../../shared/components/DimensionsSelector/components/PeriodDimensionSelector";
 import {ReportDimensionSelector} from "./components/ReportSelector";
-import {useSetting} from "@dhis2/app-service-datastore";
-import {useRecoilValue} from "recoil";
-import {DimensionState} from "../../../../shared/state/dimensions";
-import {find, head} from "lodash";
+import {useReportDimension} from "../ReportTable/hooks/dimension";
 
 export function ReportDimensionsSelector() {
-    const [reports] = useSetting("reports", {global: true});
-    const selectedReportId = head(useRecoilValue(DimensionState("report")));
-
-    const selectedReport = useMemo(() => find(reports, ['id', selectedReportId]), [selectedReportId, reports]);
-
-    console.log({selectedReport, reports, selectedReportId})
+    const {report: selectedReport,} = useReportDimension();
 
     return (
         <DimensionsSelector>

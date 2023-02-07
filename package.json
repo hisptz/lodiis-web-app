@@ -28,6 +28,7 @@
     "@hisptz/dhis2-analytics": "^1.0.12",
     "@hisptz/dhis2-ui": "^1.0.5",
     "@hisptz/dhis2-utils": "^1.0.0",
+    "@koale/useworker": "^4.0.2",
     "@recoiljs/refine": "^0.1.1",
     "async-es": "^3.2.4",
     "file-saver": "^2.0.5",
