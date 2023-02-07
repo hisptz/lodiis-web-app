@@ -131,6 +131,9 @@ export function useReportData() {
     const {show, hide} = useAlert(({message}) => message, ({type}) => ({...type, duration: 3000}));
     const [data, setData] = useState<Array<{ id: string; [key: string]: any }>>();
     const columns = useMemo(() => report?.getColumns() ?? [], [report]);
+    const [totalRequests, setTotalRequests] = useState(0);
+    const [progress, setProgress] = useState(0);
+
     useEffect(() => {
         async function get() {
             try {
@@ -142,7 +145,7 @@ export function useReportData() {
                     programIds: report.programs
                 })
                 report.setProgramMetadata((programMetadata?.programs as any)?.programs as Program[]);
-                await report.getData({orgUnits, periods}, {getEvents, getEnrollments});
+                await report.getData({orgUnits, periods}, {getEvents, getEnrollments, setTotalRequests, setProgress});
                 const allOrgUnits = ((await getOrgUnits())?.ou as any)?.organisationUnits;
                 const formattedData = report.getFormattedData(allOrgUnits);
                 setData(formattedData);
@@ -153,22 +156,34 @@ export function useReportData() {
                 });
                 setTimeout(() => hide(), 5000);
             } finally {
-                setIsNotLoading()
+                setIsNotLoading();
+                setTotalRequests(0);
+                setProgress(0)
             }
         }
 
         get();
-    }, [report, orgUnits, periods])
+    }, [report, orgUnits, periods]);
+
+    const percentage = useMemo(() => {
+        if (totalRequests === 0) {
+            return;
+        }
+
+        return Math.floor((progress / totalRequests) * 100)
+    }, [totalRequests, progress]);
+
     return {
         loading,
         rows: data,
-        columns
+        columns,
+        percentage
     }
 }
 
-export function useReportPaginatedData(): { chunking: boolean, pagination: Pagination & { onPageChange: (page: number) => void; onPageSizeChange: (pageSize: number) => void }, rows: { id: string; [key: string]: any }[], loading: boolean, columns: Array<{ label: string; key: string }> } {
-    const {loading, rows, columns} = useReportData();
-    const [pageSize, setPageSize] = useState(10);
+export function useReportPaginatedData(): { percentage?: number; chunking: boolean, pagination: Pagination & { onPageChange: (page: number) => void; onPageSizeChange: (pageSize: number) => void }, rows: { id: string; [key: string]: any }[], loading: boolean, columns: Array<{ label: string; key: string }> } {
+    const {loading, rows, columns, ...props} = useReportData();
+    const [pageSize, setPageSize] = useState(50);
     const {value: chunking, setTrue: setChunkingTrue, setFalse: setChunkingFalse} = useBoolean(false);
 
 
@@ -205,6 +220,7 @@ export function useReportPaginatedData(): { chunking: boolean, pagination: Pagin
     }
 
     return {
+        ...props,
         pagination: {
             pageSize,
             page,

@@ -11,7 +11,6 @@ import {
     isEmpty,
     keys,
     mapValues,
-    merge,
     omit,
     uniq,
     uniqBy,
@@ -21,6 +20,7 @@ import {CUSTOM_DX_CONFIG_IDS, DEFAULT_ANALYTICS_KEYS, PAGE_SIZE} from "../../../
 import {Analytics, Program} from "@hisptz/dhis2-utils";
 import {asyncify, mapSeries} from "async-es";
 import {getFormattedEventAnalyticDataForReport} from "../helpers/get-formatted-analytics-data";
+import {CustomDataTableColumn} from "@hisptz/dhis2-ui";
 
 
 export class CustomReport {
@@ -95,7 +95,7 @@ export class CustomReport {
                 program,
                 dx: uniq(attributes.map(({id}) => id))
             }
-        });
+        }).filter(({dx}) => !isEmpty(dx));
     }
 
     get eventAnalyticsParameters() {
@@ -119,7 +119,7 @@ export class CustomReport {
                 program: this.getProgramByStage(stage),
                 stage
             }
-        }).filter(({program}) => !!program);
+        }).filter(({program}) => !!program).filter(({dx}) => !isEmpty(dx));
     }
 
     get programToProgramStages() {
@@ -177,9 +177,12 @@ export class CustomReport {
 
     async getEnrollmentData({
                                 orgUnits,
-                                periods
-                            }: { orgUnits: string[], periods: string[] }, {getEnrollments}: { getEnrollments: (options: Record<string, any>) => Promise<Record<string, any>> }) {
-        const enrollmentVariables: { program: string; dx: string[] }[] = this.enrollmentAnalyticsParameters.filter(({dx}) => !isEmpty(dx));
+                                periods,
+                            }: { orgUnits: string[], periods: string[] }, {
+                                getEnrollments,
+                                setProgress
+                            }: { getEnrollments: (options: Record<string, any>) => Promise<Record<string, any>>; setProgress: any }) {
+        const enrollmentVariables: { program: string; dx: string[] }[] = this.enrollmentAnalyticsParameters;
 
         if (isEmpty(enrollmentVariables)) {
             return [];
@@ -213,19 +216,24 @@ export class CustomReport {
                     console.error(e)
                     return []
                 }
-            }))
+            })).then(data => {
+                setProgress((prevProgress: number) => {
+                    return prevProgress + 1;
+                })
+                return data;
+            })
         }));
     }
 
-    sanitizeResults(results: any) {
-        return flattenDeep(results).reduce((acc, value) => merge(acc, value), {})
-    }
 
     async getEventsData({
                             orgUnits,
-                            periods
-                        }: { orgUnits: string[], periods: string[] }, {getEvents}: { getEvents: (options: Record<string, any>) => Promise<Record<string, any>> }) {
-        const eventsVariables: { program: string; dx: string[]; stage: string }[] = this.eventAnalyticsParameters.filter(({dx}) => !isEmpty(dx));
+                            periods,
+                        }: { orgUnits: string[], periods: string[] }, {
+                            getEvents,
+                            setProgress
+                        }: { getEvents: (options: Record<string, any>) => Promise<Record<string, any>>; setProgress: any }) {
+        const eventsVariables: { program: string; dx: string[]; stage: string }[] = this.eventAnalyticsParameters;
         if (isEmpty(eventsVariables)) {
             return []
         }
@@ -245,7 +253,6 @@ export class CustomReport {
                         pe: periods
                     }, {getter: getEvents});
                     const pages = Array.from(Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()).map(index => index + 1);
-
                     return await mapSeries(pages, asyncify(async (page: number) => await getEvents({
                         program,
                         stage,
@@ -260,17 +267,25 @@ export class CustomReport {
                 } catch (e) {
                     return []
                 }
-            }))
+            })).then(data => {
+                setProgress((prevProgress: number) => {
+                    return prevProgress + 1;
+                })
+                return data;
+            })
         }));
     }
 
     async getData(dimensions: { orgUnits: string[], periods: string[] }, {
         getEnrollments,
-        getEvents
-    }: { getEvents: (options: Record<string, any>) => Promise<Record<string, any>>; getEnrollments: (options: Record<string, any>) => Promise<Record<string, any>> }) {
+        getEvents,
+        setProgress,
+        setTotalRequests
+    }: { getEvents: (options: Record<string, any>) => Promise<Record<string, any>>; getEnrollments: (options: Record<string, any>) => Promise<Record<string, any>>; setProgress: any, setTotalRequests: any }) {
+        setTotalRequests(this.enrollmentAnalyticsParameters.length + this.eventAnalyticsParameters.length)
         const data = await Promise.all([
-            this.getEnrollmentData(dimensions, {getEnrollments}),
-            this.getEventsData(dimensions, {getEvents})
+            this.getEnrollmentData(dimensions, {getEnrollments, setProgress}),
+            this.getEventsData(dimensions, {getEvents, setProgress})
         ]);
         this.data = flattenDeep(data) as Record<string, any>[];
         return this;
@@ -280,11 +295,12 @@ export class CustomReport {
         return uniqBy(getFormattedEventAnalyticDataForReport(this.data ?? [], this.config, orgUnits, this.programToProgramStages), 'id')
     }
 
-    getColumns() {
+    getColumns(): CustomDataTableColumn[ ] {
         return uniqBy(this.config.dxConfigs.map((item) => {
             return {
                 key: item.name,
                 label: item.name,
+                width: 300
             }
         }), 'key')
     }

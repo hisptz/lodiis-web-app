@@ -2,15 +2,18 @@ import React from "react";
 import {useReportPaginatedData} from "./hooks/data";
 import {CustomDataTable} from "@hisptz/dhis2-ui";
 import {useElementSize} from "usehooks-ts";
-import FullPageLoader from "../../../../shared/components/Loaders";
-import {isEmpty} from "lodash";
+import FullPageLoader, {FullPageProgressLoader} from "../../../../shared/components/Loaders";
 
 export function ReportTable() {
-    const {loading, columns, rows, pagination, chunking} = useReportPaginatedData();
+    const {loading, columns, rows, pagination, chunking, percentage} = useReportPaginatedData();
     const [containerRef, {width, height}] = useElementSize();
 
-    if (loading && isEmpty(rows)) {
+    if (loading && percentage === undefined) {
         return <FullPageLoader/>
+    }
+
+    if (percentage !== undefined) {
+        return (<FullPageProgressLoader percentage={percentage}/>)
     }
 
     return (
