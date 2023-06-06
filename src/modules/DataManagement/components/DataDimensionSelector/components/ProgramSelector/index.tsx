@@ -42,7 +42,7 @@ export function ProgramSelectorModal({
                                          hide,
                                          onUpdate,
                                          selected
-                                     }: { onClose: () => void, hide: boolean; onUpdate: (selected: string[]) => void, selected: string[] }) {
+                                     }: { onClose: () => void, hide: boolean; onUpdate: (selected: string[]) => void, selected: string[] | null | undefined }) {
     const [selectedPrograms, setSelectedPrograms] = useState(selected ?? []);
 
     const onUpdateClick = () => {
