@@ -4,7 +4,7 @@ import {useAlert, useDataQuery} from "@dhis2/app-runtime";
 import {useCallback, useEffect, useState} from "react";
 import {Pagination} from "@hisptz/dhis2-utils";
 import {flattenDeep, get, isEmpty, range} from "lodash";
-import {saveAs} from 'file-saver';
+import {downloadFile} from "../../../shared/utils/download";
 
 async function getPagination(
     refetch: any,
@@ -68,7 +68,7 @@ export function useDownloadData({
     }, [progress, show, downloading, pageCount, hide]);
 
     const download = useCallback(
-        async (type: string, queryVariables: Record<string, any>) => {
+        async (type: "xlsx" | "csv" | "json", queryVariables: Record<string, any>) => {
             try {
                 setDownloading(true);
                 const pagination = await getPagination(refetch, {
@@ -100,26 +100,7 @@ export function useDownloadData({
                         const data = flattenDeep(
                             await mapSeries(range(1, pageCount + 1), asyncify(dataFetch))
                         );
-                        if (type === 'json') {
-                            saveAs(
-                                new File([JSON.stringify(data)] as any, 'data.json', {
-                                    type: 'json',
-                                }),
-                                'data.json'
-                            );
-                        } else if (type === 'xlsx') {
-                            const excel = await import('xlsx');
-                            const workbook = excel.utils.book_new();
-                            const worksheet = excel.utils.json_to_sheet(data);
-                            excel.utils.book_append_sheet(workbook, worksheet, 'data');
-                            excel.writeFile(workbook, 'data.xlsx');
-                        } else if (type === 'csv') {
-                            const excel = await import('xlsx');
-                            const workbook = excel.utils.book_new();
-                            const worksheet = excel.utils.json_to_sheet(data);
-                            excel.utils.book_append_sheet(workbook, worksheet, 'data');
-                            excel.writeFile(workbook, 'data.csv');
-                        }
+                        await downloadFile(type, data)
                     }
                 }
             } catch (e: any) {

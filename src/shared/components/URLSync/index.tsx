@@ -10,6 +10,7 @@ export function URLSync({
                         }: { children: React.ReactNode, storeKey: string; dataType?: "string" | "array" }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
+
     return (
         <RecoilSync
             storeKey={storeKey}
