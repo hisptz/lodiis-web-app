@@ -27,11 +27,13 @@ export function DimensionSelector({
       <Tooltip
         content={
           <div>
-            {(selectedItems?.length ? selectedItems : [label]).map((label) => (
-              <p style={{ margin: 4 }} key={`${id}-tooltip`}>
-                {label}
-              </p>
-            ))}
+            {(selectedItems?.length ? selectedItems : [label]).map(
+              (label, index) => (
+                <p style={{ margin: 4 }} key={`${id}-${index}-tooltip`}>
+                  {label}
+                </p>
+              )
+            )}
           </div>
         }
       >
@@ -43,8 +45,8 @@ export function DimensionSelector({
             width="90%"
             height="40%"
           >
-            {itemsToDisplay?.map((item) => (
-              <Chip key={id}>{item}</Chip>
+            {itemsToDisplay?.map((item, index) => (
+              <Chip key={`${id}-${index}`}>{item}</Chip>
             ))}
             {selectedItems?.length > ITEM_DISPLAY_NO && (
               <Chip>
