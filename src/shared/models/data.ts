@@ -1,9 +1,18 @@
 import {Enrollment, Event as DHIS2Event, Program, TrackedEntityInstance} from "@hisptz/dhis2-utils";
-import {ProgramConfig} from "../interfaces/metadata";
-import {filter, find, forIn, fromPairs, get, head, isEmpty, set} from "lodash";
-import {DateTime} from "luxon";
-import i18n from '@dhis2/d2-i18n';
-import {DataGetConfig} from "../../constants/metadata";
+import { DataGetConfig, ProgramConfig } from "../interfaces/metadata";
+import {
+  filter,
+  find,
+  compact,
+  forIn,
+  fromPairs,
+  get,
+  head,
+  isEmpty,
+  set,
+} from "lodash";
+import { DateTime } from "luxon";
+import i18n from "@dhis2/d2-i18n";
 import {getAttributeValue, getDataElementValue} from "../utils/metadata";
 import {KBProgram} from "./program";
 import {CustomDataTableRow} from "@hisptz/dhis2-ui";
@@ -150,13 +159,23 @@ export class ProfileData {
     }
 
     getProfileFormFields() {
-        return this.programConfig.profile.filter(({editable}) => editable).map((config) => {
-            const attributeField = find(this.program.programTrackedEntityAttributes, ['trackedEntityAttribute.id', config.key]);
-            return {
-                ...attributeField?.trackedEntityAttribute,
-                mandatory: attributeField?.mandatory
-            };
-        })
+        return compact(
+          this.programConfig.profile
+            .filter(({ editable }) => editable)
+            .map((config) => {
+              const attributeField = find(
+                this.program.programTrackedEntityAttributes,
+                ["trackedEntityAttribute.id", config.key]
+              );
+
+              return attributeField
+                ? {
+                    ...attributeField.trackedEntityAttribute,
+                    mandatory: attributeField.mandatory,
+                  }
+                : null;
+            })
+        );
     }
 
     updateProfile(newValues: Record<string, any>) {
