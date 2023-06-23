@@ -5,7 +5,7 @@ export interface DataGetConfig {
   from: "dataElement" | "trackedEntityAttribute" | "attribute" | "computed";
   //id of the resource from, a path for type attribute
   id: string | Array<string | number>;
-  formatAs?: "date";
+  formatAs?: "date" | "boolean";
   as?: "age";
 }
 

@@ -62,6 +62,10 @@ export function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event |
     switch (config.formatAs) {
       case "date":
         return DateTime.fromJSDate(new Date(value)).toFormat("yyyy-MM-dd");
+        break;
+
+      case "boolean":
+        return `${value}` === "true" ? "Yes" : `${value}` === "false" ? "No" : value;
 
       default:
         return value;
