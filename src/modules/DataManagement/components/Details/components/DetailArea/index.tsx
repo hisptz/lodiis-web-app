@@ -5,7 +5,7 @@ export function DetailArea({header, value}: { header: string; value: string | Re
 
     return value ? (
       <div className={classes["detail-area"]}>
-        <span className={classes["detail-area-header"]}>{header}</span>
+        <span className={classes["detail-area-header"]}>{header}: </span>
         <span className={classes["detail-area-value"]}>{value}</span>
       </div>
     ) : null;

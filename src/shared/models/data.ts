@@ -60,8 +60,11 @@ export function resolveDataConfigValue(config: DataGetConfig, data: DHIS2Event |
         return value;
     }
     switch (config.formatAs) {
-        case "date":
-            return DateTime.fromJSDate(new Date(value)).toFormat('yyyy-MM-dd');
+      case "date":
+        return DateTime.fromJSDate(new Date(value)).toFormat("yyyy-MM-dd");
+
+      default:
+        return value;
     }
 
 }
@@ -193,25 +196,25 @@ export class ProfileData {
 
     getEnrollmentFormFields() {
         return [
-            {
-                label: i18n.t("Organisation unit"),
-                valueType: "ORG_UNIT_FIELD",
-                name: "orgUnit",
-                required: true,
-                validations: {
-                    required: i18n.t("Organisation unit is required")
-                }
+          {
+            label: i18n.t("Organisation unit"),
+            valueType: "ORGANIZATION_UNIT",
+            name: "orgUnit",
+            required: true,
+            validations: {
+              required: i18n.t("Organisation unit is required"),
             },
-            {
-                label: i18n.t("Date of enrollment"),
-                valueType: "DATE",
-                name: "enrollmentDate",
-                required: true,
-                validations: {
-                    required: i18n.t("Enrollment date is required")
-                }
-            }
-        ]
+          },
+          {
+            label: i18n.t("Date of enrollment"),
+            valueType: "DATE",
+            name: "enrollmentDate",
+            required: true,
+            validations: {
+              required: i18n.t("Enrollment date is required"),
+            },
+          },
+        ];
     }
 
     getEvents(programStageId: string) {

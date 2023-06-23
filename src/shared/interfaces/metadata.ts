@@ -35,6 +35,7 @@ export interface ProgramStageViewConfig {
   key: string;
   get: DataGetConfig;
   editable: boolean;
+  label: string;
   field?: RHFDHIS2FormFieldProps;
 }
 
