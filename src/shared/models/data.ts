@@ -198,7 +198,7 @@ export class ProfileData {
         return [
           {
             label: i18n.t("Organisation unit"),
-            valueType: "ORGANIZATION_UNIT",
+            valueType: "ORGANISATION_UNIT",
             name: "orgUnit",
             required: true,
             validations: {
