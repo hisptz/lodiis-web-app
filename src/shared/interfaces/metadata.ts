@@ -23,6 +23,7 @@ export interface ProfileConfig {
   key: string;
   get: DataGetConfig;
   editable?: boolean;
+  identifiableObject?: boolean;
 }
 
 export interface ProgramStageColumnConfig {
@@ -35,6 +36,7 @@ export interface ProgramStageViewConfig {
   key: string;
   get: DataGetConfig;
   editable: boolean;
+  identifiableObject?: boolean;
   label: string;
   field?: RHFDHIS2FormFieldProps;
 }
