@@ -17,6 +17,7 @@ import { EngineState } from "../../../../../shared/state/engine";
 import {
   ProfileConfig,
   ProgramConfig,
+  ProgramStageConfig,
 } from "../../../../../shared/interfaces/metadata";
 
 interface TeiAttribute {
@@ -83,24 +84,10 @@ const KBProfileState = selectorFamily<
     },
 });
 
-async function getSanitizedTei(
-  tei: TrackedEntityInstance,
-  programConfig: ProgramConfig,
-  queryEngine: any
-): Promise<TrackedEntityInstance> {
-  let santizedAttributes: Array<TeiAttribute> = [];
-  let sanitizedEnrollments: Array<Enrollment> = [];
-
-  const { profile, programStages } = programConfig;
-  const { attributes, enrollments } = tei;
-
-  const identifiableAttributes = uniq(
-    map(
-      filter(profile, ({ identifiableObject }) => identifiableObject),
-      (profileData) => (profileData as ProfileConfig).key ?? ""
-    )
-  );
-  const identifiableDataElements = uniq(
+const getIdentifiableDataElements = (
+  programStages: ProgramStageConfig[]
+): string[] => {
+  return uniq(
     map(
       flattenDeep(
         map(programStages, ({ view: viewableColumns }) =>
@@ -116,6 +103,32 @@ async function getSanitizedTei(
       ({ key }) => key
     )
   );
+};
+
+const getIdentifiableAttributes = (
+  profileConfigs: ProfileConfig[]
+): string[] => {
+  return uniq(
+    map(
+      filter(profileConfigs, ({ identifiableObject }) => identifiableObject),
+      (profileData) => (profileData as ProfileConfig).key ?? ""
+    )
+  );
+};
+
+async function getSanitizedTei(
+  tei: TrackedEntityInstance,
+  programConfig: ProgramConfig,
+  queryEngine: any
+): Promise<TrackedEntityInstance> {
+  let santizedAttributes: Array<TeiAttribute> = [];
+  let sanitizedEnrollments: Array<Enrollment> = [];
+
+  const { profile, programStages } = programConfig;
+  const { attributes, enrollments } = tei;
+
+  const identifiableAttributes = getIdentifiableAttributes(profile);
+  const identifiableDataElements = getIdentifiableDataElements(programStages);
 
   if (identifiableAttributes && identifiableAttributes.length) {
     for (const { attribute, value } of attributes ?? []) {
