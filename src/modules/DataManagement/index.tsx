@@ -9,18 +9,18 @@ import {KBProgramSync} from "../../shared/state/program";
 export default function DataManagement() {
 
     return (
-        <URLSync storeKey="filter">
-            <URLSync dataType="string" storeKey="search">
-                <div className="column w-100 h-100 gap-16">
-                    <DataDimensionSelector/>
-                    <KBProgramSync>
-                        <FilterArea/>
-                        <div style={{height: 'calc(100vh - 292px)'}} className="w-100">
-                            <ErrorBoundedTable/>
-                        </div>
-                    </KBProgramSync>
-                </div>
-            </URLSync>
+      <URLSync storeKey="filter">
+        <URLSync dataType="string" storeKey="search">
+          <div className="column w-100 h-100 gap-16">
+            <DataDimensionSelector />
+            <KBProgramSync>
+              <FilterArea />
+              <div style={{ height: "calc(100vh - 292px)" }} className="w-100">
+                <ErrorBoundedTable />
+              </div>
+            </KBProgramSync>
+          </div>
         </URLSync>
-    )
+      </URLSync>
+    );
 }

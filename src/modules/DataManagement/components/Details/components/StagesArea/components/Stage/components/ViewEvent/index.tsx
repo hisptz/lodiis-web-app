@@ -18,12 +18,12 @@ export function ViewEventModal({
             if (!event) {
                 return;
             }
-            return stage.view.map(({key, get, field}) => {
-                return {
-                    id: key ?? field?.name ?? uid(),
-                    value: resolveDataConfigValue(get, event),
-                    header: field?.label ?? ""
-                }
+            return stage.view.map(({ key, get, field, label }) => {
+              return {
+                id: key ?? field?.name ?? uid(),
+                value: resolveDataConfigValue(get, event),
+                header: label ?? field?.label ?? "",
+              };
             });
         }
         , [event, stage]);
