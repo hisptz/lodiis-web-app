@@ -17,7 +17,7 @@ const query = {
             fields: [
                 'id',
                 'displayName',
-                'programTrackedEntityAttributes[mandatory,trackedEntityAttribute[id,displayName,formName,valueType]]',
+                'programTrackedEntityAttributes[mandatory,trackedEntityAttribute[id,displayName,formName,valueType,optionSet[code,name]]]',
                 'programStages[displayName,id,lastUpdated,programStageDataElements[dataElement[id,formName,valueType,displayName,optionSet[code,name]]]]'
             ]
         }

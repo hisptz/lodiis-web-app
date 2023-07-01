@@ -126,52 +126,82 @@ export function Stage({stage, initiallyOpen}: { stage: ProgramStageConfig & Prog
         id: event.event
     })), [events]);
 
-    return (<>
+    return (
+      <>
         <Collapsible
-            open={initiallyOpen}
-            triggerWhenOpen={
-                <>
-                    <div className="row space-between">
-                        <div style={{alignItems: 'flex-end'}} className="row gap-16">
-                            <h2 style={{margin: 0}}>{stage.displayName}</h2>
-                            {
-                                stage.lastUpdated ? (
-                                    <h4 style={{margin: 0}}>{i18n.t("Last updated")} {DateTime.fromISO(stage.lastUpdated as string).diffNow('days').negate().rescale().toFormat('dd \'days\' ago')}</h4>
-                                ) : null
-                            }
-                        </div>
-                        <div className="icon-button">
-                            <IconChevronUp24/>
-                        </div>
-                    </div>
-                    <Divider/>
-                </>
-            }
-            trigger={
-                <>
-                    <div className="row space-between">
-                        <div style={{alignItems: 'flex-end'}} className="row gap-16">
-                            <h2 style={{margin: 0}}>{stage.displayName}</h2>
-                            {
-                                stage.lastUpdated ? (
-                                    <h4 style={{margin: 0}}>{i18n.t("Last updated")} {DateTime.fromISO(stage.lastUpdated as string).diffNow('days').negate().rescale().toFormat('dd \'days\' ago')}</h4>
-                                ) : null
-                            }
-                        </div>
-                        <div>
-                            <IconChevronDown24/>
-                        </div>
-                    </div>
-                    <Divider/>
-                </>}>
-            <CustomDataTable tableProps={{scrollHeight: "320px"}} rows={rows} columns={sanitizedColumns}/>
+          open={initiallyOpen}
+          triggerWhenOpen={
+            <>
+              <div className="row space-between">
+                <div style={{ alignItems: "flex-end" }} className="row gap-16">
+                  <h3 style={{ margin: 0 }}>
+                    {stage.label ?? stage.displayName}
+                  </h3>
+                  {stage.lastUpdated ? (
+                    <p style={{ margin: 0 }}>
+                      {i18n.t("Last updated")}{" "}
+                      {DateTime.fromISO(stage.lastUpdated as string)
+                        .diffNow("days")
+                        .negate()
+                        .rescale()
+                        .toFormat("dd 'days' ago")}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="icon-button">
+                  <IconChevronUp24 />
+                </div>
+              </div>
+              <Divider />
+            </>
+          }
+          trigger={
+            <>
+              <div className="row space-between">
+                <div style={{ alignItems: "flex-end" }} className="row gap-16">
+                  <h3 style={{ margin: 0 }}>
+                    {stage.label ?? stage.displayName}
+                  </h3>
+                  {stage.lastUpdated ? (
+                    <p style={{ margin: 0 }}>
+                      {i18n.t("Last updated")}{" "}
+                      {DateTime.fromISO(stage.lastUpdated as string)
+                        .diffNow("days")
+                        .negate()
+                        .rescale()
+                        .toFormat("dd 'days' ago")}
+                    </p>
+                  ) : null}
+                </div>
+                <div>
+                  <IconChevronDown24 />
+                </div>
+              </div>
+              <Divider />
+            </>
+          }
+        >
+          <CustomDataTable
+            tableProps={{ scrollHeight: "320px" }}
+            rows={rows}
+            columns={sanitizedColumns}
+          />
         </Collapsible>
-        <ViewEventModal onEdit={onEdit} event={selectedForView} onClose={() => setSelectedForView(undefined)}
-                        hide={!selectedForView} stage={stage}/>
-        {
-            !!selectedForEdit && (<EditEventModal event={selectedForEdit} onClose={() => setSelectedForEdit(undefined)}
-                                                  hide={!selectedForEdit}
-                                                  stage={stage}/>)
-        }
-    </>)
+        <ViewEventModal
+          onEdit={onEdit}
+          event={selectedForView}
+          onClose={() => setSelectedForView(undefined)}
+          hide={!selectedForView}
+          stage={stage}
+        />
+        {!!selectedForEdit && (
+          <EditEventModal
+            event={selectedForEdit}
+            onClose={() => setSelectedForEdit(undefined)}
+            hide={!selectedForEdit}
+            stage={stage}
+          />
+        )}
+      </>
+    );
 }
