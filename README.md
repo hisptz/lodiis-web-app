@@ -1,12 +1,17 @@
 # KB WEB APPLICATION
 
-This is a DHIS2 custom application that facilitates tracking of beneficiaries along with service provision within
-different
-interventions across all implementing partners. It is an essential part of the Lesotho OVC-DREAMS Integrated Information
-System (LODIIS) since it is the primary source of data within the system where it offers offline data capture from
-different implementing partners, with support for data synchronization.
+### Contents:
 
-The mobile app is divided into multiple modules based on the interventions. These interventions includes:
+- [Introduction](#introduction)
+- [Pre-requisites](#pre-requisites)
+- [Getting started](#getting-started)
+- [Configurations](#configuration)
+- [Running the application](#run-app)
+- [Build and deployment](#build-deploy)
+
+## Introduction <a name="intro"></a>
+
+This is a custom DHIS2 web application that facilitates management, tracking and monitoring of beneficiaries along side service provision on different interventions across multiple implementing partners. The interventions being tracked by this systems are:
 
 <li>DREAMS Module</li>
 <li>OVC Module</li>
@@ -19,53 +24,278 @@ The mobile app is divided into multiple modules based on the interventions. Thes
 <li>PP_PREV Module</li>
 <li>OGAC Module</li>
 
-The access to these interventions is basing on user implementing partner, since the KB Mobile application allows access
-to multiple modules.
+It is part of the Lesotho OVC-DREAMS Integrated Information
+System (LODIIS) that allows data managers and administrators to to validate entered data from the [KB mobile applications](https://play.google.com/store/apps/details?id=org.hisptanzania.kb_mobile_app) and view reports and different dashboards showing progress and quality of service provided to beneficiaries of the programme.
 
-# Getting Started
+## Pre-requisites <a name="pre-requisites"></a>
 
-This project was bootstrapped with [DHIS2 Application Platform](https://github.com/dhis2/app-platform).
+This application was developed with [React](https://reactjs.org/) using the [DHIS2 Application Platform](https://platform.dhis2.nu/). The source code was written using [Typescript](https://www.typescriptlang.org/) with [yarn]() as the package manager.
 
-## Available Scripts
+<strong>Note:</strong> The react version used with this app should be at most v16.
 
-In the project directory, you can run:
+## Getting started <a name="getting-started"></a>
 
-### `yarn start`
+To get started with the project, you need to follow the instructions below
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Clone the project from github with the command
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```
+git clone https://github.com/hisptz/kb-web-app.git
+```
 
-### `yarn test`
+- Navigate into the project folder and install the app dependencies:
 
-Launches the test runner and runs all available tests found in `/src`.<br />
+```
+cd kb-web-app && yarn
+```
 
-See the section about [running tests](https://platform.dhis2.nu/#/scripts/test) for more information.
+## Configurations <a name="configuration"></a>
 
-### `yarn build`
+There are two sorts of configurations that needs to be done for this project.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Source code configurations
+- DHIS2 instance configurations
 
-The build is minified and the filenames include the hashes.<br />
-A deployable `.zip` file can be found in `build/bundle`!
+### Source code configuration
 
-See the section about [building](https://platform.dhis2.nu/#/scripts/build) for more information.
+These are in-app configurations that needs to be done to initiate connection with the DHIS2 instance during development. These configuration can be done by creating `.env` file in the root directory of the project with contents similar to the `.env.example` files or as elaborated bellow
 
-### `yarn deploy`
+```
+REACT_APP_DHIS2_BASE_URL=<base-url-for-app>
+DHIS2_PROXY=<url-to-proxy-dhis2>
+```
 
-Deploys the built app in the `build` folder to a running DHIS2 instance.<br />
-This command will prompt you to enter a server URL as well as the username and password of a DHIS2 user with the App Management authority.<br/>
-You must run `yarn build` before running `yarn deploy`.<br />
+- <strong>REACT_APP_DHIS2_BASE_URL</strong> is the url that will be provide a proxy to all the API requests to the DHIS2 instance. For example `http://localhost:8080`
+- <strong>DHIS2_PROXY</strong> is the url where the actual DHIS2 is found so as to proxy it during development.
 
-See the section about [deploying](https://platform.dhis2.nu/#/scripts/deploy) for more information.
+### DHIS2 instance configurations
 
-## Learn More
+These configurations are done in the DHIS2 instance to configure reports, dashboards and what data are visible and editable on the data management module. These configurations can be made through the Datastore management app in the DHIS2 instance. Inside the Datastore management, select the `kb-web-app` namespace and `settings` key. After this selections the configurations will be displayed as:
 
-You can learn more about the platform in the [DHIS2 Application Platform Documentation](https://platform.dhis2.nu/).
+```
+{
+  "reports" : [...],
+  "programs" : [...]
+}
+```
 
-You can learn more about the runtime in the [DHIS2 Application Runtime Documentation](https://runtime.dhis2.nu/).
+- Report configurations
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  These are configuration of custom reports that can be extracted from the app. A single report configurations can be as shown below:
+
+```
+{
+  "id": "<report-id>",
+  "name": "<report-name>",
+  "program": [<list-of-program-ids-associated-with-report>],
+  "allowedImplementingPartners": [<list-of-implementing-partner-ids-to-access-report>],
+  "includeEnrollmentWithoutService": <boolean-value-to-wether-show-enrollment-without-service>,
+  "disablePeriodSelection": <boolean-value-to-wether-disable-period-selection>,
+  "dxConfigs":[
+    ...,
+    {
+      "id": "<dataElement-or-attribute-id>",
+      "name": "<label-to-display-on-report>",
+      "isDate":<boolean-to-wether-show-as-date>,
+      "isBoolean":<boolean-to-wether-show-as-boolean>,
+      "isAttribute":<boolean-wether-a-dx-is-attribute>,
+      "programStage": "<program-stage-id-if-data-element>",
+    },
+    ...
+  ]
+}
+```
+
+- Program Configurations
+
+This is the configuration of programs and what data from the programs can be accessible on the dashboard and data management modules. The configuration for a single program can be as show below:
+
+```
+{
+  "id": "<program-id>",
+  "name": "<program-name-as-label>",
+  "search": {...},
+  "columns": [...],
+  "profile": [...],
+  "dashboard": {
+    "id": "<program-id>",
+    "visualizations": [...]
+  },
+  "programStages": [...]
+}
+```
+
+From the above configuration
+
+<ol>
+  <li>
+    <strong>search: </strong> This specifies the list of attributes that can be searched from the data management list. Is is configured as below:
+
+      {
+        "fields": [
+          ...,
+          {
+            "id": "<attribute-id>",
+            "type": "<type-of-attribute>"
+          },
+          ...
+        ]
+      }
+
+<strong>Note</strong>: type of attributes supported are: `trackedEntityAttribute` (for tracked entity attributes) and `attribute` (for metadata attributes like enrollment date) only.
+
+  </li>
+  <li>
+    <strong>columns: </strong> This specifies the columns to be displayed on the data management table. The configuration of a single column can be as below:
+
+      {
+        "key": "<column-id>",
+        "label": "column-label",
+        "sortable": <boolean-wether-a-column-is-sortable>,
+        "mandatory": <boolean-wether-a-column-must-be-shown>,
+        "get": {
+          "id": "<attribute-id>"
+          "from": "<type-of-attribute>"
+        }
+      }
+
+  </li>
+<strong>Note</strong>:
+
+  <ul>
+    <li>
+     On the <code>get</code> property, the <code>id</code> can be passed as a list of strings if it is to fetch data from a nested attribute; for examples for enrollment data, it can be specified as <code>{"id": ["enrollments", 0, ""enrollmentDate""], "from": "attribute"}</code>. This is only applicable if <code>from</code> is specified as <code>attribute</code>.
+    </li>
+    <li>
+      <code>from</code> attribute in the <code>get</code> can be <code>trackedEntityAttribute</code> or <code>attribute</code>
+    </li>
+  </ul>
+
+  </li>
+  <li>
+    <strong>profile: </strong> This specifies the fields to be displayed and enabled as editable on the beneficiary profile page. The configuration for a single profile attribute can be as below:
+
+       {
+        "key": "<attribute-id>",
+        "label": "attribute-label",
+        "editable": <boolean-wether-an-attribute-is-editable>,
+        "identifiableObject": <boolean-to-show-dhis2-identifiable-objects>
+        "get": {
+          "id": "<attribute-id>"
+          "from": "<type-of-attribute>"
+        }
+      }
+
+  </li>
+    <strong>Note: </strong> The <code>get</code> attribute will be as in the <code>column</code> attribute. The <strong>identifiableObjects</strong> attribute marks the attributes that are stored as DHIS2 ids hence requires refetching to display user friendly values.
+
+  <li>
+    <strong>programStages: </strong> This specified the details to be displayed on the services that are displayed on the beneficiary page. Below is the example of the configuration:
+
+    {
+      "id": "<program-stage-id>",
+      "label": "<program-stage-label>",
+      "view": [...],
+      "columns":[...]
+    }
+
+  </li>
+
+<strong>Note: </strong> The configuration of of `view` is the same as how `profile` was configured for a program, where as the `columns` as also configured in the same way as program's columns above. It should be well noted that for `programStage` configurations, all `get` attributes that should fetch data elements values needs to have `"from": "dataElement"` attribute.
+
+  <li>
+    <strong>dashboard: </strong> This configuration allows setting up of how and what data should be displayed on the dashboard module. Bellow is an example of dashboard configuration:
+
+    {
+      "id": "<program-id>",
+      "visualizations": [
+        ...,
+        {
+          "id": "<visualization-id>",
+          "span": "<col-span-ratio>",
+          "type": "<visualization-type>",
+          "options": {
+            "title": "<visualization-title>",
+            "config": {
+              "type": "visualization-sub-type",
+              "colors": [<list-of-color-codes>],
+              "layout": {
+                "filter": [<list-of-filter-dimensions>],
+                "columns": [<list-of-columns-dimensions>],
+                "rows": [<list-of-rows-dimensions>],
+                "series": [<list-of-series-dimensions>],
+                "category": [<list-of-category-dimensions>]
+              }
+            },
+            "legends": {
+              "enabled": <boolean-wether-legends-are-enabled>,
+              "collapsible": <boolean-wether-legends-are-collapsible>,
+              "position": "<legends-position>"
+            },
+            "periodSelection": {
+              "period": [<period-id-selections>]
+            },
+            "thematicLayers": [
+              ...,
+              {
+                "id": "<thematic-layer-id>",
+                "type": "<layer-type>",
+                "enabled": <boolean-wether-thematic-layer-is-enabled>,
+                "controls": {
+                  "enabled": <boolean-wether-controls-enabled>,
+                  "position": "<controlsPosition>"
+                },
+                "dataItem": {
+                  "id": "<data-item-id>",
+                  "type": "data-item-type",
+                  "displayName": "<data-item-display-name>"
+                }
+              },
+              ...
+            ]
+            "orgUnitSelection": {
+              levels: [<org-unit-levels>],
+              orgUnits: [<org-unit-ids>]
+            }
+          },
+          "dimension": {
+            "dx": [<list-of-dx-dimensions>],
+            "pe": [<list-of-pe-dimensions>],
+            "ou": [<list-of-ou-dimensions>]
+          }
+        },
+        ...
+      ]
+    }
+
+</li>
+
+<strong>Note: </strong> These configurations may differ depending on the type of visualization.
+
+</ol>
+
+<strong>Note</strong> These configurations can be done after the application has been run.
+
+## Running the application <a name="run-app"></a>
+
+The application can be run by running the below command at the root directory of the project:
+
+```
+yarn start
+```
+
+This runs the application and it can be accessible through the browser using: [http://localhost:3000](http://localhost:3000) address. Since the application uses ReactJs, it will be refreshing on files changes saving.
+
+## Build and deployment <a name="build-deploy"></a>
+
+To build and deploy the application, the following commands can be used respectively:
+
+```
+yarn build
+yarn deploy
+
+```
+
+Check on these links for more information on [building](https://platform.dhis2.nu/#/scripts/build) and [deploying](https://platform.dhis2.nu/#/scripts/deploy).
+
+<strong>Note: </strong> You must run `yarn build` before running `yarn deploy`.<br />
