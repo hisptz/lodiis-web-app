@@ -276,6 +276,6 @@ export function useReportPaginatedData(): {
     columns,
     chunking,
     loading,
-    rows: rowChunks?.[page] ?? [],
+    rows: rowChunks?.[page - 1] ?? [],
   };
 }
