@@ -152,12 +152,19 @@ export class CustomReport {
         }
       }
     );
+
     return keys(sanitizedDataElements)
       .map((stage) => {
         const elements = groupedDataElements[stage];
         return {
           dx: uniq(
-            elements.map((element) => `${element.programStage}.${element.id}`)
+            flattenDeep(
+              elements.map((element) =>
+                (element.ids ?? []).length
+                  ? element.ids?.map((id) => `${element.programStage}.${id}`)
+                  : `${element.programStage}.${element.id}`
+              ) as string[]
+            )
           ),
           program: this.getProgramByStage(stage),
           stage,
@@ -302,18 +309,14 @@ export class CustomReport {
           setProgress((prevProgress: number) => {
             return prevProgress + 1;
           });
-          return data;
+          return flattenDeep(data);
         });
       })
     );
   }
 
   async getEventsData(
-    {
-      orgUnits,
-
-      periods,
-    }: { orgUnits: string[]; periods: string[] },
+    { orgUnits, periods }: { orgUnits: string[]; periods: string[] },
     {
       getEvents,
       setProgress,
@@ -385,7 +388,7 @@ export class CustomReport {
             setProgress((prevProgress: number) => {
               return prevProgress + 1;
             });
-            return data;
+            return flattenDeep(data);
           });
         }
       )
@@ -412,10 +415,12 @@ export class CustomReport {
       this.enrollmentAnalyticsParameters.length +
         this.eventAnalyticsParameters.length
     );
+
     const data = await Promise.all([
       this.getEnrollmentData(dimensions, { getEnrollments, setProgress }),
       this.getEventsData(dimensions, { getEvents, setProgress }),
     ]);
+
     this.data = flattenDeep(data) as Record<string, any>[];
     return this;
   }
