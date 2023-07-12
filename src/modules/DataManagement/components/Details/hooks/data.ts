@@ -160,14 +160,11 @@ async function getSanitizedTei(
         for (let dataValue of event.dataValues) {
           const { dataElement, value } = dataValue;
           if (identifiableDataElements.includes(dataElement)) {
-            console.log(dataValue);
-
             const fetchedIdentifiableObject = (
               await queryEngine.query(identifiableObjectsQuery, {
                 variables: { id: value },
               })
             ).identifiableObjects;
-            console.log(fetchedIdentifiableObject);
             const { displayName } = fetchedIdentifiableObject;
             sanitizedDataValues = [
               ...sanitizedDataValues,
