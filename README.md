@@ -1,4 +1,4 @@
-# KB WEB APPLICATION
+# LODIIS WEB APPLICATION
 
 ### Contents:
 
@@ -25,7 +25,7 @@ This is a custom DHIS2 web application that facilitates management, tracking and
 <li>OGAC Module</li>
 
 It is part of the Lesotho OVC-DREAMS Integrated Information
-System (LODIIS) that allows data managers and administrators to to validate entered data from the [KB mobile applications](https://play.google.com/store/apps/details?id=org.hisptanzania.kb_mobile_app) and view reports and different dashboards showing progress and quality of service provided to beneficiaries of the programme.
+System (LODIIS) that allows data managers and administrators to to validate entered data from the [LODIIS mobile applications](https://play.google.com/store/apps/details?id=org.hisptanzania.kb_mobile_app) and view reports and different dashboards showing progress and quality of service provided to beneficiaries of the programme.
 
 ## Pre-requisites <a name="pre-requisites"></a>
 
@@ -40,13 +40,13 @@ To get started with the project, you need to follow the instructions below
 - Clone the project from github with the command
 
 ```
-git clone https://github.com/hisptz/kb-web-app.git
+git clone https://github.com/hisptz/lodiis-web-app.git
 ```
 
 - Navigate into the project folder and install the app dependencies:
 
 ```
-cd kb-web-app && yarn
+cd lodiis-web-app && yarn
 ```
 
 ## Configurations <a name="configuration"></a>
@@ -70,7 +70,7 @@ DHIS2_PROXY=<url-to-proxy-dhis2>
 
 ### DHIS2 instance configurations
 
-These configurations are done in the DHIS2 instance to configure reports, dashboards and what data are visible and editable on the data management module. These configurations can be made through the Datastore management app in the DHIS2 instance. Inside the Datastore management, select the `kb-web-app` namespace and `settings` key. After this selections the configurations will be displayed as:
+These configurations are done in the DHIS2 instance to configure reports, dashboards and what data are visible and editable on the data management module. These configurations can be made through the Datastore management app in the DHIS2 instance. Inside the Datastore management, select the `lodiis-web-app` namespace and `settings` key. After this selections the configurations will be displayed as:
 
 ```
 {
