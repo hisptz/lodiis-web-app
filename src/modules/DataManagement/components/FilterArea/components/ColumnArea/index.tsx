@@ -45,8 +45,23 @@ export function ColumnArea() {
   );
 }
 
-function ColumnSelector({ columns }: { columns: ColumnConfig[] }) {
+function ColumnSelector({
+  columns,
+  previousSelectedColumns,
+}: {
+  columns: ColumnConfig[];
+  previousSelectedColumns: { [key: string]: boolean };
+}) {
   const { setValue } = useFormContext();
+
+  for (const column of columns) {
+    if (column.mandatory) {
+      setValue(column.key, true);
+    } else {
+      const isPreviousSelected = previousSelectedColumns[column.key] ?? false;
+      setValue(column.key, isPreviousSelected);
+    }
+  }
   const onAllClick = (action: "check" | "uncheck") => () => {
     columns.forEach((column) => {
       if (!column.mandatory) {
@@ -54,6 +69,7 @@ function ColumnSelector({ columns }: { columns: ColumnConfig[] }) {
       }
     });
   };
+
   return (
     <div className="column gap-8">
       <ButtonStrip>
@@ -90,12 +106,10 @@ export function ColumnModal({
   const form = useForm<{ [key: string]: boolean }>({
     defaultValues: value,
   });
-
   const onSubmit = (value: { [key: string]: boolean }) => {
     onClose();
     onChange(value);
   };
-
   return (
     <Modal hide={hide} position="middle" onClose={onClose}>
       <ModalTitle>
@@ -103,7 +117,10 @@ export function ColumnModal({
       </ModalTitle>
       <ModalContent>
         <FormProvider {...form}>
-          <ColumnSelector columns={columns} />
+          <ColumnSelector
+            columns={columns}
+            previousSelectedColumns={value ?? {}}
+          />
         </FormProvider>
       </ModalContent>
       <ModalActions>
