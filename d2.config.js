@@ -1,6 +1,6 @@
 const config = {
     type: 'app',
-    title: "KB Web app",
+    title: "LODIIS Web app",
     entryPoints: {
         app: './src/App.tsx',
     },
