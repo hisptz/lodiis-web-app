@@ -1,7 +1,6 @@
 import {
   Button,
   ButtonStrip,
-  IconCheckmarkCircle24,
   Checkbox,
   Menu,
   MenuItem,
