@@ -126,9 +126,7 @@ export function Stage({
     })
   }
 
-  const remainingFields = stage.view.slice(2)
-
-  const shouldDisplayButton = remainingFields.some(
+  const shouldDisplayEditButton = stage.view.some(
     (obj) => obj.editable && obj.field !== undefined
   )
 
@@ -150,7 +148,7 @@ export function Stage({
         get: (event: DHIS2Event) => {
           return (
             <ButtonStrip>
-              {shouldDisplayButton && (
+              {shouldDisplayEditButton && (
                 <Button
                   small
                   onClick={onEdit(event)}
