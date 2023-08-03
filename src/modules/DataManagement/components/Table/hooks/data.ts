@@ -115,7 +115,7 @@ export function useTableData() {
       download(type, {
         ou,
         pe: sanitizedPeriod,
-        program,
+        program: program?.program.id,
         search: searchValue,
       })
     }
