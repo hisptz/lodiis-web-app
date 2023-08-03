@@ -6,7 +6,6 @@ import { Event as DHIS2Event } from "@hisptz/dhis2-utils/build/types/interfaces/
 import { CustomDataTable, useConfirmDialog } from "@hisptz/dhis2-ui"
 import { fromPairs } from "lodash"
 import { DateTime } from "luxon"
-
 import {
   Button,
   ButtonStrip,
