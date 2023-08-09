@@ -84,7 +84,7 @@ const orgUnitQuery = {
   ou: {
     resource: "organisationUnits",
     params: {
-      fields: ["id", "level", "ancestors[name,level]"],
+      fields: ["id", "name", "level", "ancestors[name,level]"],
       paging: false,
     },
   },

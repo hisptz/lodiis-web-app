@@ -246,7 +246,9 @@ function getLocationNameByIdAndLevel(
     locations,
     (data: any) => data && data.id && data.id === locationId
   );
-  if (locationObj && locationObj.ancestors) {
+  if (level === locationObj?.level) {
+    locationName = locationObj.name || locationName;
+  } else if (locationObj && locationObj.ancestors) {
     const location = _.find(
       locationObj.ancestors || [],
       (data: any) => data && data.level === level
