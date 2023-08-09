@@ -186,7 +186,7 @@ function getLastServiceFromAnalyticData(
                 data.programStage && data.programStage === programStage
             )
           : analyticDataByBeneficiary,
-        (data: any) => data && data.hasOwnProperty("eventdate")
+        (data: any) => data && data["eventdate"] !== undefined
       ),
       ["eventdate"]
     )
@@ -408,7 +408,7 @@ export function getFormattedEventAnalyticDataForReport(
   programToProgramStageObject: any
 ) {
   const groupedAnalyticDataByBeneficiary = _.groupBy(analyticData, "tei");
-  return  _.map(
+  return _.map(
     _.flattenDeep(
       _.map(_.keys(groupedAnalyticDataByBeneficiary), (tei: string) => {
         const analyticDataByBeneficiary = groupedAnalyticDataByBeneficiary[tei];
