@@ -211,10 +211,7 @@ function getLongFormPrEPValue(
 
   if (programStageData) {
     for (const field of prepFields) {
-      if (
-        !programStageData.hasOwnProperty(field) ||
-        programStageData[field] !== "1"
-      ) {
+      if (!(field in programStageData) || programStageData[field] !== "1") {
         return "0";
       }
     }
@@ -259,8 +256,8 @@ function getLocationNameByIdAndLevel(
 }
 
 function getBeneficiaryAge(dob: string) {
-  var ageDifMs = Date.now() - new Date(dob).getTime();
-  var ageDate = new Date(ageDifMs);
+  let ageDifMs = Date.now() - new Date(dob).getTime();
+  let ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
@@ -273,12 +270,12 @@ function getValueFromAnalyticalData(
   for (const data of _.filter(
     analyticData || [],
     (dataObjet: any) =>
-      dataObjet.programStage &&
-      (dataObjet.programStage === programStage || programStage === "")
+      !dataObjet.programStage ||
+      dataObjet?.programStage === programStage ||
+      programStage === ""
   )) {
     for (const id of ids) {
-      value =
-        data.hasOwnProperty(id) && `${data[id]}` !== "" ? data[id] : value;
+      value = id in data && `${data[id]}` !== "" ? data[id] : value;
     }
   }
   return value;
@@ -339,7 +336,7 @@ function getBeneficiaryTypeValue(
   const eventProgramStages = _.uniq(
     _.flattenDeep(
       _.map(analyticDataByBeneficiary || [], (data: any) =>
-        data && data.hasOwnProperty("programStage") ? data.programStage : []
+        data && "programStage" in data ? data.programStage : []
       )
     )
   );
