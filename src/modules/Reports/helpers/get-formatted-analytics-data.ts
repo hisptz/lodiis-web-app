@@ -186,7 +186,7 @@ function getLastServiceFromAnalyticData(
                 data.programStage && data.programStage === programStage
             )
           : analyticDataByBeneficiary,
-        (data: any) => data && data.hasOwnProperty("eventdate")
+        (data: any) => data && data["eventdate"] !== undefined
       ),
       ["eventdate"]
     )
@@ -211,10 +211,7 @@ function getLongFormPrEPValue(
 
   if (programStageData) {
     for (const field of prepFields) {
-      if (
-        !programStageData.hasOwnProperty(field) ||
-        programStageData[field] !== "1"
-      ) {
+      if (!(field in programStageData) || programStageData[field] !== "1") {
         return "0";
       }
     }
@@ -246,7 +243,9 @@ function getLocationNameByIdAndLevel(
     locations,
     (data: any) => data && data.id && data.id === locationId
   );
-  if (locationObj && locationObj.ancestors) {
+  if (level === locationObj?.level) {
+    locationName = locationObj.name || locationName;
+  } else if (locationObj && locationObj.ancestors) {
     const location = _.find(
       locationObj.ancestors || [],
       (data: any) => data && data.level === level
@@ -257,8 +256,8 @@ function getLocationNameByIdAndLevel(
 }
 
 function getBeneficiaryAge(dob: string) {
-  var ageDifMs = Date.now() - new Date(dob).getTime();
-  var ageDate = new Date(ageDifMs);
+  let ageDifMs = Date.now() - new Date(dob).getTime();
+  let ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
@@ -271,12 +270,12 @@ function getValueFromAnalyticalData(
   for (const data of _.filter(
     analyticData || [],
     (dataObjet: any) =>
-      dataObjet.programStage &&
-      (dataObjet.programStage === programStage || programStage === "")
+      !dataObjet.programStage ||
+      dataObjet?.programStage === programStage ||
+      programStage === ""
   )) {
     for (const id of ids) {
-      value =
-        data.hasOwnProperty(id) && `${data[id]}` !== "" ? data[id] : value;
+      value = id in data && `${data[id]}` !== "" ? data[id] : value;
     }
   }
   return value;
@@ -334,10 +333,12 @@ function getBeneficiaryTypeValue(
   programToProgramStageObject: any
 ) {
   let beneficiaryType = "";
-  const eventProgramStages = _.uniq(
-    _.flattenDeep(
-      _.map(analyticDataByBeneficiary || [], (data: any) =>
-        data && data.hasOwnProperty("programStage") ? data.programStage : []
+  const eventProgramStages = _.compact(
+    _.uniq(
+      _.flattenDeep(
+        _.map(analyticDataByBeneficiary || [], (data: any) =>
+          data && "programStage" in data ? data.programStage : []
+        )
       )
     )
   );
@@ -346,23 +347,36 @@ function getBeneficiaryTypeValue(
   if (eventProgramStages.length > 0) {
     const stageId = eventProgramStages[0];
     for (const programId of _.keys(programToProgramStageObject)) {
-      if (programToProgramStageObject[programId].includes(stageId)) {
+      const programStages = _.map(
+        programToProgramStageObject[programId],
+        ({ id }) => id
+      );
+      if (programStages.includes(stageId)) {
         beneficiaryProgramId = programId;
       }
     }
   }
 
+  const isBeneficiaryPrimaryChild = getValueFromAnalyticalData(
+    analyticDataByBeneficiary,
+    [primaryChildCheckReference],
+    ""
+  );
+
   if (beneficiaryProgramId === "BNsDaCclOiu") {
     beneficiaryType = "Caregiver";
   } else if (beneficiaryProgramId === "em38qztTI8s") {
-    const isPrimaryChild = getValueFromAnalyticalData(
-      analyticDataByBeneficiary,
-      [primaryChildCheckReference],
-      ""
-    );
     beneficiaryType =
-      `${isPrimaryChild}`.toLowerCase() === "true" ||
-      `${isPrimaryChild}`.toLowerCase() === "1"
+      `${isBeneficiaryPrimaryChild}`.toLowerCase() === "true" ||
+      `${isBeneficiaryPrimaryChild}`.toLowerCase() === "1"
+        ? "Primary Child"
+        : "Child";
+  } else if (beneficiaryProgramId === "") {
+    beneficiaryType =
+      isBeneficiaryPrimaryChild === ""
+        ? "Caregiver"
+        : `${isBeneficiaryPrimaryChild}`.toLowerCase() === "true" ||
+          `${isBeneficiaryPrimaryChild}`.toLowerCase() === "1"
         ? "Primary Child"
         : "Child";
   }
@@ -408,7 +422,7 @@ export function getFormattedEventAnalyticDataForReport(
   programToProgramStageObject: any
 ) {
   const groupedAnalyticDataByBeneficiary = _.groupBy(analyticData, "tei");
-  return  _.map(
+  return _.map(
     _.flattenDeep(
       _.map(_.keys(groupedAnalyticDataByBeneficiary), (tei: string) => {
         const analyticDataByBeneficiary = groupedAnalyticDataByBeneficiary[tei];

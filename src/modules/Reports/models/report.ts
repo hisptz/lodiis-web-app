@@ -155,7 +155,7 @@ export class CustomReport {
 
     return keys(sanitizedDataElements)
       .map((stage) => {
-        const elements = groupedDataElements[stage];
+        const elements = sanitizedDataElements[stage];
         return {
           dx: uniq(
             flattenDeep(
