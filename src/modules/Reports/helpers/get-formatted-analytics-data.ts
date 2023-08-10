@@ -333,10 +333,12 @@ function getBeneficiaryTypeValue(
   programToProgramStageObject: any
 ) {
   let beneficiaryType = "";
-  const eventProgramStages = _.uniq(
-    _.flattenDeep(
-      _.map(analyticDataByBeneficiary || [], (data: any) =>
-        data && "programStage" in data ? data.programStage : []
+  const eventProgramStages = _.compact(
+    _.uniq(
+      _.flattenDeep(
+        _.map(analyticDataByBeneficiary || [], (data: any) =>
+          data && "programStage" in data ? data.programStage : []
+        )
       )
     )
   );
@@ -345,23 +347,36 @@ function getBeneficiaryTypeValue(
   if (eventProgramStages.length > 0) {
     const stageId = eventProgramStages[0];
     for (const programId of _.keys(programToProgramStageObject)) {
-      if (programToProgramStageObject[programId].includes(stageId)) {
+      const programStages = _.map(
+        programToProgramStageObject[programId],
+        ({ id }) => id
+      );
+      if (programStages.includes(stageId)) {
         beneficiaryProgramId = programId;
       }
     }
   }
 
+  const isBeneficiaryPrimaryChild = getValueFromAnalyticalData(
+    analyticDataByBeneficiary,
+    [primaryChildCheckReference],
+    ""
+  );
+
   if (beneficiaryProgramId === "BNsDaCclOiu") {
     beneficiaryType = "Caregiver";
   } else if (beneficiaryProgramId === "em38qztTI8s") {
-    const isPrimaryChild = getValueFromAnalyticalData(
-      analyticDataByBeneficiary,
-      [primaryChildCheckReference],
-      ""
-    );
     beneficiaryType =
-      `${isPrimaryChild}`.toLowerCase() === "true" ||
-      `${isPrimaryChild}`.toLowerCase() === "1"
+      `${isBeneficiaryPrimaryChild}`.toLowerCase() === "true" ||
+      `${isBeneficiaryPrimaryChild}`.toLowerCase() === "1"
+        ? "Primary Child"
+        : "Child";
+  } else if (beneficiaryProgramId === "") {
+    beneficiaryType =
+      isBeneficiaryPrimaryChild === ""
+        ? "Caregiver"
+        : `${isBeneficiaryPrimaryChild}`.toLowerCase() === "true" ||
+          `${isBeneficiaryPrimaryChild}`.toLowerCase() === "1"
         ? "Primary Child"
         : "Child";
   }
