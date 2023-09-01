@@ -1,6 +1,6 @@
-import { CustomReportInterface } from "../shared/interfaces/report";
+import { CustomReportInterface } from "../shared/interfaces/report"
 
-export const PAGE_SIZE = 1000;
+export const PAGE_SIZE = 1000
 
 export const customReportConfig: CustomReportInterface[] = [
   {
@@ -8894,7 +8894,7 @@ export const customReportConfig: CustomReportInterface[] = [
     allowedImplementingPartners: ["H2CE3Iwdf7v"],
     includeEnrollmentWithoutService: true,
   },
-];
+]
 
 export const MANDATORY_COLUMNS: string[] = [
   "First Name",
@@ -8902,7 +8902,7 @@ export const MANDATORY_COLUMNS: string[] = [
   "Date of Birth",
   "Sex",
   "Age",
-];
+]
 
 export enum CUSTOM_DX_CONFIG_IDS {
   DATE_OF_LAST_SERVICE = "date_of_last_service_received",
