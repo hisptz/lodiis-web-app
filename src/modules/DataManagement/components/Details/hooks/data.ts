@@ -37,7 +37,7 @@ const teiQuery = {
         "attributes[attribute,value]",
         "trackedEntityType",
         "relationships[relationship,relationshipName,relationshipType,to[trackedEntityInstance[trackedEntityInstance]],from[trackedEntityInstance[trackedEntityInstance]]]",
-        "enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,program,programStage,dueDate,orgUnit,orgUnitName,status,dataValues[dataElement,value],eventDate]]",
+        "enrollments[program,trackedEntityInstance,enrollment,orgUnitName,enrollmentDate,orgUnit,events[event,program,lastUpdated,programStage,dueDate,orgUnit,orgUnitName,status,dataValues[dataElement,value],eventDate]]",
       ],
     }),
   },
