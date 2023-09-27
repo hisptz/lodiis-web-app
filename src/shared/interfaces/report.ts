@@ -6,17 +6,19 @@ export interface ReportDxConfig {
   isDate?: boolean;
   isBoolean?: boolean;
   isAttribute?: boolean;
-  combinedValues?: {
-    displayValue: string;
-    dataValues: Array<{
-      id: string;
-      value: string;
-    }>;
-  };
+  combinedValues?: CombineValues;
   programStage?: string;
   programStages?: { id: string; dataElements: string[] }[];
   displayValues?: { value: string; displayName: string }[];
   codes?: string[];
+}
+
+export interface CombineValues {
+  displayValue: string;
+  dataValues: Array<{
+    id: string;
+    value: string;
+  }>;
 }
 
 export interface CustomReportInterface {

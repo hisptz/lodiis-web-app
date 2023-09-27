@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import { evaluationOfPrimaryPackageCompletionAtLeastOneSecondary } from "./primary-package-completion-at-least-secondary-helper";
 import { evaluationOfPrimaryPackageCompletion } from "./primary-package-completion-helper";
 import { evaluationOfSecondaryPrimaryPackageCompletion } from "./secondary-primary-package-completion-helper";
+import { CombineValues } from "../../../shared/interfaces/report";
 
 export function getSanitizesReportValue(
   value: any,
@@ -35,6 +36,34 @@ export function getSanitizesReportValue(
         skipSanitizationOfDisplayName
       )
     : sanitizedValue;
+}
+
+export function getValueFromCombinedDataValues(
+  analyticDataByBeneficiary: any[],
+  ids: string[],
+  combineValues: CombineValues,
+  programStage: string
+): string {
+  let value = "";
+
+  const filteredAnalyticDataByBeneficiary = _.filter(
+    analyticDataByBeneficiary,
+    ({ programStage: programStageId }) => programStageId === programStage
+  );
+
+  for (const analyticsData of filteredAnalyticDataByBeneficiary) {
+    value = _.every(ids, (id) => {
+      const requiredValue = _.find(
+        combineValues.dataValues,
+        ({ id: dataElement }) => dataElement === id
+      )?.value;
+
+      return requiredValue && requiredValue === analyticsData[id];
+    })
+      ? combineValues.displayValue
+      : value;
+  }
+  return value;
 }
 
 export function getSanitizedDisplayValue(
@@ -453,8 +482,10 @@ export function getFormattedEventAnalyticDataForReport(
             isDate,
             displayValues,
             programStages,
+            combinedValues,
           } = dxConfigs;
           let value = "";
+
           if (id === "completed_primary_package") {
             value = evaluationOfPrimaryPackageCompletion(
               analyticDataByBeneficiary,
@@ -625,6 +656,13 @@ export function getFormattedEventAnalyticDataForReport(
                 : value;
           } else if (id === "isAgywBeneficiary") {
             value = !isNotAgywBeneficiary ? "Yes" : "No";
+          } else if (ids && combinedValues) {
+            value = getValueFromCombinedDataValues(
+              analyticDataByBeneficiary,
+              ids,
+              combinedValues,
+              programStage
+            );
           } else {
             // Take consideration of services codes
             const eventReportData =
