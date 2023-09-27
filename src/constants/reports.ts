@@ -1,6 +1,6 @@
-import { CustomReportInterface } from "../shared/interfaces/report"
+import { CustomReportInterface } from "../shared/interfaces/report";
 
-export const PAGE_SIZE = 1000
+export const PAGE_SIZE = 1000;
 
 export const customReportConfig: CustomReportInterface[] = [
   {
@@ -252,6 +252,15 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
+        id: "RB8Wx75hGa4",
+        name: "Village",
+        isDate: false,
+        program: "",
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
         id: "service_from_referral",
         ids: ["rsh5Kvx6qAU", "OrC9Bh2bcFz", "hXyqgOWZ17b"],
         name: "Educational Subsidies ",
@@ -301,6 +310,22 @@ export const customReportConfig: CustomReportInterface[] = [
         id: "Eug4BXDFLym",
         name: "Violence prevention education",
         codes: ["ViolencePreventionEducation"],
+        isDate: false,
+        isBoolean: true,
+        programStage: "bDJq2JWVTbC",
+      },
+      {
+        id: "Eug4BXDFLym",
+        name: "GBV Legal Messaging",
+        codes: ["GBVLegalMessaging"],
+        isDate: false,
+        isBoolean: true,
+        programStage: "bDJq2JWVTbC",
+      },
+      {
+        id: "Eug4BXDFLym",
+        name: "VAC Legal Messaging",
+        codes: ["VACLegalMessaging"],
         isDate: false,
         isBoolean: true,
         programStage: "bDJq2JWVTbC",
@@ -854,6 +879,15 @@ export const customReportConfig: CustomReportInterface[] = [
         name: "Facility Name",
         isDate: false,
         isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "RB8Wx75hGa4",
+        name: "Village",
+        isDate: false,
+        program: "",
+        isBoolean: false,
+        isAttribute: true,
         programStage: "",
       },
       {
@@ -1963,8 +1997,24 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
+        id: "s1HaiT6OllL",
+        name: "BENEFICIARY MIDDLE NAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
         id: "rSP9c21JsfC",
         name: "BENEFICIARY SURNAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "vIX4GTSCX4P",
+        name: "SEX",
         isDate: false,
         isBoolean: false,
         isAttribute: true,
@@ -2106,8 +2156,8 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
-        id: "ZKMhrjWoXnD",
-        name: "CHILD OF PLHIV",
+        id: "Gkjp5XZD70V",
+        name: "CHILD EXPOSED/EXPERIENCING VIOLENCE AND ABUSE",
         isDate: false,
         program: "",
         isBoolean: true,
@@ -2115,8 +2165,8 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
-        id: "Gkjp5XZD70V",
-        name: "CHILD EXPOSED/EXPERIENCING VIOLENCE AND ABUSE",
+        id: "ZKMhrjWoXnD",
+        name: "CHILD OF PLHIV",
         isDate: false,
         program: "",
         isBoolean: true,
@@ -2133,15 +2183,6 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
-        id: "UeF4OvjIIEK",
-        name: "ORPHANS(SINGLE & DOUBLE)",
-        isDate: false,
-        program: "",
-        isBoolean: true,
-        isAttribute: true,
-        programStage: "",
-      },
-      {
         id: "YR7Xxk14qoP",
         name: "CHILDREN LIVING WITH DISABILITIES",
         isDate: false,
@@ -2151,11 +2192,11 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
-        id: "WsmWkkFBiT6",
-        name: "SIBLINGS OF OTHER SUB-POPULATIONS",
+        id: "UeF4OvjIIEK",
+        name: "ORPHANS(SINGLE & DOUBLE)",
         isDate: false,
         program: "",
-        isBoolean: false,
+        isBoolean: true,
         isAttribute: true,
         programStage: "",
       },
@@ -2170,12 +2211,26 @@ export const customReportConfig: CustomReportInterface[] = [
       },
       {
         id: "assessmment_date",
-        name: "ASSESSMENT DATE",
+        name: "ENROLLEMENT DATE",
         isDate: false,
         program: "",
         isBoolean: false,
         isAttribute: true,
-        programStage: "",
+        "program stage": "",
+      },
+      {
+        id: "date_case_plan",
+        name: "CASE PLAN UPDATE DATE",
+        isDate: true,
+        isBoolean: false,
+        programStage: "gkNKXUxpyv9",
+      },
+      {
+        id: "date_case_plan",
+        name: "CASE PLAN UPDATE DATE",
+        isDate: true,
+        isBoolean: false,
+        programStage: "vjF07cZNST3",
       },
       {
         id: "yJQi4cbzeBF",
@@ -2341,6 +2396,20 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "qTf8VSoojJ2",
         name: "SOAKAGE PIT Case plan",
+        isDate: false,
+        isBoolean: true,
+        programStage: "vjF07cZNST3",
+      },
+      {
+        id: "Hvq9oisH7Gt",
+        name: "WASH MESSAGING Case plan",
+        isDate: false,
+        isBoolean: true,
+        programStage: "gkNKXUxpyv9",
+      },
+      {
+        id: "Hvq9oisH7Gt",
+        name: "WASH MESSAGING Case plan",
         isDate: false,
         isBoolean: true,
         programStage: "vjF07cZNST3",
@@ -2728,6 +2797,27 @@ export const customReportConfig: CustomReportInterface[] = [
         name: "SOAKAGE PIT Service",
         isDate: false,
         isBoolean: true,
+        programStage: "CHFwighOquA",
+      },
+      {
+        id: "qL9c5r7c6kK",
+        name: "SOAKAGE PIT Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "vcaHzmUuYzU",
+      },
+      {
+        id: "gV77yUM8NK8",
+        name: "WASH MESSAGING Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "CHFwighOquA",
+      },
+      {
+        id: "gV77yUM8NK8",
+        name: "WASH MESSAGING Service",
+        isDate: false,
+        isBoolean: true,
         programStage: "vcaHzmUuYzU",
       },
       {
@@ -2736,6 +2826,13 @@ export const customReportConfig: CustomReportInterface[] = [
         isDate: false,
         isBoolean: true,
         programStage: "vcaHzmUuYzU",
+      },
+      {
+        id: "FRWCmEerPic",
+        name: "TIPPY TAP Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "CHFwighOquA",
       },
       {
         id: "xTO562B5g53",
@@ -2915,39 +3012,32 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "dVdlJNtNLIQ",
       },
       {
+        id: "uRsImCXXDXe",
+        name: "CURRENT HIV STATUS",
+        isDate: false,
+        isBoolean: false,
+        programStage: "v9Vrc5exzam",
+      },
+      {
+        id: "uRsImCXXDXe",
+        name: "CURRENT HIV STATUS",
+        isDate: false,
+        isBoolean: false,
+        programStage: "JQ74V6yd9On",
+      },
+      {
         id: "vNeOE9abQBB",
-        name: "INITIAL HIV STATUS",
+        name: "HIV RISK ASSESSMENT RESULT",
         isDate: false,
         isBoolean: false,
         programStage: "uEwup8PaVBd",
       },
       {
         id: "eSJhbqT1NQb",
-        name: "INITIAL HIV STATUS",
-        isDate: false,
-        isBoolean: false,
-        programStage: "RJTRRO0wg8H",
-      },
-      {
-        id: "hiv_risk_assessment_result",
-        ids: [
-          "Fz89mIraWIl",
-          "mIcseDgrIlJ",
-          "Hi9fp222l2D",
-          "YAugNMbMe2c",
-          "niqNMJrfFDs",
-          "NhjnHO0IyqY",
-          "LA4G0A6fkNF",
-          "dL8ts5GQcMI",
-          "W64q5maeL6o",
-          "VJh6KDlBkfb",
-          "SDPCwdDB9yX",
-          "v0ArPi4Rk4o",
-        ],
         name: "HIV RISK ASSESSMENT RESULT",
         isDate: false,
         isBoolean: false,
-        programStage: "Pb1Gb4Aky92",
+        programStage: "RJTRRO0wg8H",
       },
       {
         id: "PN92g65TkVI",
@@ -2970,6 +3060,13 @@ export const customReportConfig: CustomReportInterface[] = [
         isDate: false,
         isBoolean: false,
         programStage: "IHc7aMmyTvq",
+      },
+      {
+        id: "aEJnSplwvsw",
+        name: "HOUSEHOLD CATEGORIZATION",
+        isDate: false,
+        isBoolean: false,
+        programStage: "vjF07cZNST3",
       },
       {
         id: "Sa0KVprHUr7",
@@ -3070,6 +3167,70 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "OLbwYRoywcZ",
         name: "Case completed?",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "YR7Xxk14qoP",
+        name: "Is the child living with disabilities",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "dufGxx0KVg0",
+        name: "Acquired brain injury",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "nfp9NHLf25K",
+        name: "Autism spectrum disorder",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "tbLVGG4zDrJ",
+        name: "Deaf or hard hearing",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "ULr0tYkjTTB",
+        name: "Intellectual disability",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "BfbiOanp9Pi",
+        name: "Mental health conditions",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "X3MQhmVA1Jt",
+        name: "Physical disability",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "TPRVr4ua9f9",
+        name: "Vision impairment",
         isDate: false,
         isBoolean: true,
         isAttribute: true,
@@ -8894,7 +9055,622 @@ export const customReportConfig: CustomReportInterface[] = [
     allowedImplementingPartners: ["H2CE3Iwdf7v"],
     includeEnrollmentWithoutService: true,
   },
-]
+  {
+    id: "education_report",
+    name: "Education Custom Report",
+    program: "tkL2hvIRwMy",
+    dxConfigs: [
+      {
+        id: "WTZ7GLTrE8Q",
+        name: "First Name",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "rSP9c21JsfC",
+        name: "Surname",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "vIX4GTSCX4P",
+        name: "Sex",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Male",
+            displayName: "M",
+          },
+          {
+            value: "Female",
+            displayName: "F",
+          },
+        ],
+      },
+      {
+        id: "beneficiary_age",
+        name: "Age",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "district_of_service",
+        name: "District of Residence",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "last_service_community_council",
+        name: "Community Council of Residence",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "RB8Wx75hGa4",
+        name: "Village",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "jCtTXW1Ig6P",
+        name: "National ID/Passport",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "district_of_service",
+        name: "District",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "last_service_community_council",
+        name: "Community Council",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "EwZil0AnlYo",
+        name: "School Name",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "UhZhN6s0SNg",
+        name: "School Level",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "BUPSEpJySPR",
+        name: "Grade",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "mmY2WLON5MF",
+        name: "Centre Name",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "date_of_last_service_received",
+        name: "Date Monitored",
+        isDate: true,
+        isBoolean: true,
+        programStage: "",
+      },
+      {
+        id: "pKF9sVeUuuE",
+        name: "Mode",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        displayValues: [
+          {
+            value: "Face to face",
+            displayName: "FACE TO FACE",
+          },
+          {
+            value: "Virtual",
+            displayName: "VIRTUAL",
+          },
+        ],
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH1-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 1",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH1-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 1",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO2",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH1-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 1",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH1-LO4",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 1",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO4",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH2-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 2",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH2-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 2",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO2",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH2-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 2",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH3-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 3",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH3-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 3",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO2",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH3-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 3",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH4-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 4",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH4-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 4",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO4",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH4-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 4",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH5-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              id: "kuMzFGnDULh",
+              value: "Theme 5",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH5-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 5",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO2",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH5-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 5",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH5-LO4",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 5",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO4",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH6-LO1",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 6",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO1",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH6-LO2",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 6",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO2",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH6-LO3",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 6",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO3",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        ids: ["kuMzFGnDULh", "mm5ZvlsZ6Sx"],
+        name: "TH6-LO4",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+        combinedValues: {
+          displayValue: "1",
+          dataValues: [
+            {
+              value: "Theme 6",
+              id: "kuMzFGnDULh",
+            },
+            {
+              value: "LO4",
+              id: "mm5ZvlsZ6Sx",
+            },
+          ],
+        },
+      },
+      {
+        id: "WJOfRtIYU2p",
+        name: "Comments",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+      },
+      {
+        id: "GsWaSx1t3Qs",
+        name: "Name of Data Capturer",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "dEnBak74Hj7",
+      },
+    ],
+    disablePeriodSelection: false,
+    disableOrgUnitSelection: false,
+    allowedImplementingPartners: ["H2CE3Iwdf7v", "cGenMNiLKqM"],
+    includeEnrollmentWithoutService: true,
+  },
+];
 
 export const MANDATORY_COLUMNS: string[] = [
   "First Name",
@@ -8902,7 +9678,7 @@ export const MANDATORY_COLUMNS: string[] = [
   "Date of Birth",
   "Sex",
   "Age",
-]
+];
 
 export enum CUSTOM_DX_CONFIG_IDS {
   DATE_OF_LAST_SERVICE = "date_of_last_service_received",
@@ -8919,6 +9695,7 @@ export enum CUSTOM_DX_CONFIG_IDS {
   COMMUNITY_COUNCIL_OF_RESIDENCE = "community_council_of_residence",
   IS_ELIGIBLE_FOR_PREP = "is_eligible_for_prep",
   ASSESSMENT_DATE = "assessmment_date",
+  DATE_OF_CASE_PLAN = "date_case_plan",
   IS_ASSESSMENT_CONDUCTED = "is_assemmenet_conducted",
   PREP_BENEFICIARY_STATUS = "prep_beneficairy_status",
   ENROLLMENT_DATE = "enrollmentdate",
