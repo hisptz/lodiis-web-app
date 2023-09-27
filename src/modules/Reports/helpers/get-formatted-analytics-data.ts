@@ -614,6 +614,15 @@ export function getFormattedEventAnalyticDataForReport(
               lastService && _.keys(lastService).length > 0
                 ? lastService["eventdate"] || value
                 : value;
+          } else if (id === "date_case_plan") {
+            const lastService: any = getLastServiceFromAnalyticData(
+              analyticDataByBeneficiary,
+              programStage
+            );
+            value =
+              lastService && _.keys(lastService).length > 0
+                ? lastService["eventdate"] || value
+                : value;
           } else if (id === "isAgywBeneficiary") {
             value = !isNotAgywBeneficiary ? "Yes" : "No";
           } else {
