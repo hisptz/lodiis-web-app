@@ -47,19 +47,19 @@ export class CustomReport {
   }
 
   get programs() {
-    return flattenDeep(this.config.program);
+    return flattenDeep([this.config.program]);
   }
 
   get dataItems(): ReportDxConfig[] {
     return uniqBy(
       flattenDeep(
-        this.config.dxConfigs.map((attribute) => {
+        this.config.dxConfigs.map((attribute: ReportDxConfig) => {
           if (!attribute.ids || isEmpty(attribute.ids)) {
             return attribute;
           } else {
-            return attribute.ids?.map((id) => ({ ...attribute, id }));
+            return attribute.ids?.map((id: string) => ({ ...attribute, id }));
           }
-        })
+        }) as ReportDxConfig[]
       ),
       "id"
     ).filter((config) => {
