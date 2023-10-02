@@ -256,7 +256,7 @@ export class CustomReport {
     }
   ) {
     const enrollmentVariables: { program: string; dx: string[] }[] =
-      this.enrollmentAnalyticsParameters;
+      this.enrollmentAnalyticsParameters as { program: string; dx: string[] }[];
 
     if (isEmpty(enrollmentVariables)) {
       return [];
@@ -365,7 +365,6 @@ export class CustomReport {
                     async (page: number) =>
                       await getEvents({
                         program,
-                        stage,
                         dx: dxChunk,
                         ou: orgUnits,
                         pe: periods,
@@ -381,6 +380,7 @@ export class CustomReport {
                   )
                 );
               } catch (e) {
+                console.error(e)
                 return [];
               }
             })
@@ -420,6 +420,7 @@ export class CustomReport {
       this.getEnrollmentData(dimensions, { getEnrollments, setProgress }),
       this.getEventsData(dimensions, { getEvents, setProgress }),
     ]);
+
 
     this.data = flattenDeep(data) as Record<string, any>[];
     return this;
