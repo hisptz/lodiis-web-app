@@ -5,6 +5,7 @@ const defaultCustomDxConfigIds = [
   "beneficiary_age",
   "beneficiary_age_range",
   "beneficiary_age_ranges",
+  "date_case_plan",
   "is_service_provided",
   "isAgywBeneficiary",
   "district_of_service",

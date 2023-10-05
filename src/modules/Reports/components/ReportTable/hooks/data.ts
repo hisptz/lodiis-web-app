@@ -194,7 +194,9 @@ export function useReportData() {
       }
     }
 
-    get();
+    setTimeout(async ()  => {
+     await get();
+      }, 300);
   }, [report, orgUnits, periods]);
 
   const percentage = useMemo(() => {
