@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-const defaultCustomDxConfigIds = [
+export const defaultCustomDxConfigIds = [
   "date_of_last_service_received",
   "beneficiary_age",
   "beneficiary_age_range",
