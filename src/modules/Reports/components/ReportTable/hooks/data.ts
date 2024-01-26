@@ -19,6 +19,7 @@ const reportEnrollmentQuery = {
       stage,
       page,
       pageSize,
+      ...params
     }: any) => {
       const dimensions = [
         `ou:${ou.join(";")}`,
@@ -36,6 +37,7 @@ const reportEnrollmentQuery = {
         page,
         pageSize,
         totalPages: true,
+        ...params,
       };
     },
   },
@@ -53,6 +55,7 @@ const reportEventQuery = {
       stage,
       page,
       pageSize,
+      ...params
     }: any) => ({
       displayProperty: "NAME",
       outputType: "EVENT",
@@ -68,6 +71,7 @@ const reportEventQuery = {
       page,
       pageSize,
       totalPages: true,
+      ...params,
     }),
   },
 };
@@ -194,9 +198,9 @@ export function useReportData() {
       }
     }
 
-    setTimeout(async ()  => {
-     await get();
-      }, 300);
+    setTimeout(async () => {
+      await get();
+    }, 300);
   }, [report, orgUnits, periods]);
 
   const percentage = useMemo(() => {
