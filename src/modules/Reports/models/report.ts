@@ -3,8 +3,8 @@ import {
   ReportDxConfig,
 } from "../../../shared/interfaces/report";
 import {
-  chunk,
   concat,
+  compact,
   filter,
   find,
   findIndex,
@@ -28,6 +28,7 @@ import { Analytics, Program } from "@hisptz/dhis2-utils";
 import { asyncify, mapSeries } from "async-es";
 import { getFormattedEventAnalyticDataForReport } from "../helpers/get-formatted-analytics-data";
 import { CustomDataTableColumn } from "@hisptz/dhis2-ui";
+import { defaultCustomDxConfigIds } from "../helpers/get-analytics-parameters";
 
 interface EventVariables {
   program: string;
@@ -158,12 +159,17 @@ export class CustomReport {
         const elements = sanitizedDataElements[stage];
         return {
           dx: uniq(
-            flattenDeep(
-              elements.map((element) =>
-                (element.ids ?? []).length
-                  ? element.ids?.map((id) => `${element.programStage}.${id}`)
-                  : `${element.programStage}.${element.id}`
-              ) as string[]
+            compact(
+              flattenDeep(
+                elements.map((element) => {
+                  if (defaultCustomDxConfigIds.includes(element.id ?? "")) {
+                    return undefined;
+                  }
+                  return (element.ids ?? []).length
+                    ? element.ids?.map((id) => `${element.programStage}.${id}`)
+                    : `${element.programStage}.${element.id}`;
+                }) as string[]
+              )
             )
           ),
           program: this.getProgramByStage(stage),
@@ -255,8 +261,8 @@ export class CustomReport {
       setProgress: any;
     }
   ) {
-    const enrollmentVariables: { program: string; dx: string[] }[] =
-      this.enrollmentAnalyticsParameters as { program: string; dx: string[] }[];
+    const enrollmentVariables: { program: string; dx: string[] }[] = this
+      .enrollmentAnalyticsParameters as { program: string; dx: string[] }[];
 
     if (isEmpty(enrollmentVariables)) {
       return [];
@@ -265,52 +271,50 @@ export class CustomReport {
     return await mapSeries(
       enrollmentVariables,
       asyncify(async ({ program, dx }: { program: string; dx: string[] }) => {
-        const dxChunks: string[][] = chunk(dx, 20);
-        return await mapSeries(
-          dxChunks,
-          asyncify(async (dxChunk: string[]) => {
-            try {
-              const pagination = await this.getPagination(
-                {
+        try {
+          const pagination = await this.getPagination(
+            {
+              program,
+              dx,
+              ou: orgUnits,
+              pe: periods,
+            },
+            { getter: getEnrollments }
+          );
+          const pages = Array.from(
+            Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()
+          ).map((index) => index + 1);
+          return await mapSeries(
+            pages,
+            asyncify(
+              async (page: number) =>
+                await getEnrollments({
                   program,
-                  dx: dxChunk,
+                  dx,
                   ou: orgUnits,
                   pe: periods,
-                },
-                { getter: getEnrollments }
-              );
-              const pages = Array.from(
-                Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()
-              ).map((index) => index + 1);
-              return await mapSeries(
-                pages,
-                asyncify(
-                  async (page: number) =>
-                    await getEnrollments({
-                      program,
-                      dx: dxChunk,
-                      ou: orgUnits,
-                      pe: periods,
-                      page,
-                      pageSize: PAGE_SIZE,
-                    })
-                      .then(({ data }) => this.sanitizeAnalyticsData(data))
-                      .catch((error) => {
-                        console.error(error);
-                      })
-                )
-              );
-            } catch (e) {
-              console.error(e);
-              return [];
-            }
-          })
-        ).then((data) => {
-          setProgress((prevProgress: number) => {
-            return prevProgress + 1;
+                  page,
+                  pageSize: PAGE_SIZE,
+                  skipMeta: true,
+                  skipData: false,
+                })
+                  .then(({ data }) => {
+                    return this.sanitizeAnalyticsData(data);
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  })
+            )
+          ).then((data) => {
+            setProgress((prevProgress: number) => {
+              return prevProgress + 1;
+            });
+            return data;
           });
-          return flattenDeep(data);
-        });
+        } catch (e) {
+          console.error(e);
+          return [];
+        }
       })
     );
   }
@@ -342,54 +346,52 @@ export class CustomReport {
           dx: string[];
           stage: string;
         }) => {
-          const dxChunks: string[][] = chunk(dx, 20);
-          return await mapSeries(
-            dxChunks,
-            asyncify(async (dxChunk: string[]) => {
-              try {
-                const pagination = await this.getPagination(
-                  {
+          try {
+            const pagination = await this.getPagination(
+              {
+                program,
+                stage,
+                dx,
+                ou: orgUnits,
+                pe: periods,
+              },
+              { getter: getEvents }
+            );
+            const pages = Array.from(
+              Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()
+            ).map((index) => index + 1);
+            return await mapSeries(
+              pages,
+              asyncify(
+                async (page: number) =>
+                  await getEvents({
                     program,
-                    dx: dxChunk,
+                    stage,
+                    dx,
                     ou: orgUnits,
                     pe: periods,
-                  },
-                  { getter: getEvents }
-                );
-                const pages = Array.from(
-                  Array(Math.ceil(pagination.total / PAGE_SIZE)).keys()
-                ).map((index) => index + 1);
-                return await mapSeries(
-                  pages,
-                  asyncify(
-                    async (page: number) =>
-                      await getEvents({
-                        program,
-                        dx: dxChunk,
-                        ou: orgUnits,
-                        pe: periods,
-                        page,
-                        pageSize: PAGE_SIZE,
-                      })
-                        .then(({ data }) =>
-                          this.sanitizeAnalyticsData(data, { stage })
-                        )
-                        .catch((error) => {
-                          console.error(error);
-                        })
-                  )
-                );
-              } catch (e) {
-                console.error(e)
-                return [];
-              }
-            })
-          ).then((data) => {
-            setProgress((prevProgress: number) => {
-              return prevProgress + 1;
+                    page,
+                    pageSize: PAGE_SIZE,
+                    skipMeta: true,
+                    skipData: false,
+                  })
+                    .then(({ data }) => {
+                      return this.sanitizeAnalyticsData(data, { stage });
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    })
+              )
+            ).then((data) => {
+              setProgress((prevProgress: number) => {
+                return prevProgress + 1;
+              });
+              return data;
             });
-            return flattenDeep(data);
-          });
+          } catch (e) {
+            console.error(e);
+            return [];
+          }
         }
       )
     );
@@ -416,11 +418,11 @@ export class CustomReport {
         this.eventAnalyticsParameters.length
     );
 
+    // TODO fix pagination for report fetching
     const data = await Promise.all([
       this.getEnrollmentData(dimensions, { getEnrollments, setProgress }),
       this.getEventsData(dimensions, { getEvents, setProgress }),
     ]);
-
 
     this.data = flattenDeep(data) as Record<string, any>[];
     return this;
@@ -452,7 +454,13 @@ export class CustomReport {
   }
 
   private async getPagination(
-    variables: { dx: string[]; pe: string[]; ou: string[]; program: string },
+    variables: {
+      dx: string[];
+      pe: string[];
+      ou: string[];
+      program: string;
+      stage?: string;
+    },
     {
       getter,
     }: {
@@ -463,6 +471,8 @@ export class CustomReport {
       ...variables,
       page: 1,
       pageSize: PAGE_SIZE,
+      skipData: true,
+      skipMeta: false,
     });
     return response?.data?.metaData?.pager;
   }
