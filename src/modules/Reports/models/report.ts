@@ -3,7 +3,6 @@ import {
   ReportDxConfig,
 } from "../../../shared/interfaces/report";
 import {
-  chunk,
   concat,
   compact,
   filter,
@@ -419,6 +418,7 @@ export class CustomReport {
         this.eventAnalyticsParameters.length
     );
 
+    // TODO fix pagination for report fetching
     const data = await Promise.all([
       this.getEnrollmentData(dimensions, { getEnrollments, setProgress }),
       this.getEventsData(dimensions, { getEvents, setProgress }),
