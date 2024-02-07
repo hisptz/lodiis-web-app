@@ -6,6 +6,7 @@ export interface ReportDxConfig {
   isDate?: boolean;
   isBoolean?: boolean;
   isAttribute?: boolean;
+  crossStages?: boolean;
   combinedValues?: CombineValues;
   programStage?: string;
   programStages?: { id: string; dataElements: string[] }[];

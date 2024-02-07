@@ -18,6 +18,7 @@ import {
   uniq,
   uniqBy,
   values,
+  map,
 } from "lodash";
 import {
   CUSTOM_DX_CONFIG_IDS,
@@ -89,7 +90,7 @@ export class CustomReport {
   get attributes(): ReportDxConfig[] {
     return filter(
       this.dataItems,
-      ({ isAttribute }) => isAttribute
+      ({ isAttribute }) => isAttribute === true
     ) as ReportDxConfig[];
   }
 
@@ -133,7 +134,24 @@ export class CustomReport {
   }
 
   get eventAnalyticsParameters(): EventVariables[] {
-    const groupedDataElements = groupBy(this.dataElements, "programStage");
+    const groupedDataElements = omit(
+      mapValues(
+        groupBy(this.dataElements, "programStage"),
+        (dataElements, programStage) => [
+          ...dataElements,
+          ...map(
+            filter(
+              this.dataElements,
+              ({ crossStages, programStage }) => crossStages && !programStage
+            ),
+            (dataElement: ReportDxConfig) => ({ ...dataElement, programStage })
+          ),
+        ]
+      ),
+      ""
+    );
+
+    console.log({ groupedDataElements });
     const sanitizedDataElements = mapValues(
       groupedDataElements,
       (dataElements, stage) => {
