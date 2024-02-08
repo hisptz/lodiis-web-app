@@ -118,6 +118,8 @@ function getAssessmentDate(analyticDataByBeneficiary: Array<any>) {
       analyticDataByBeneficiary,
       programStage
     );
+
+   
     if (_.keys(serviceData).length > 0) {
       date =
         serviceData && _.keys(serviceData).length > 0
@@ -485,8 +487,17 @@ export function getFormattedEventAnalyticDataForReport(
             combinedValues,
           } = dxConfigs;
           let value = "";
-
-          if (id === "completed_primary_package") {
+         
+          if(id === "GsWaSx1t3Qs"){
+            const lastService: any = getLastServiceFromAnalyticData(
+              analyticDataByBeneficiary,
+              programStage  
+            );
+            value = lastService && _.keys(lastService).length > 0
+              ? lastService["eventdate"] || value
+              : value;  
+          }
+          else if (id === "completed_primary_package") {
             value = evaluationOfPrimaryPackageCompletion(
               analyticDataByBeneficiary,
               programStages
@@ -592,7 +603,7 @@ export function getFormattedEventAnalyticDataForReport(
               ids,
               programStage
             );
-          } else if (id === "is_service_provided") {
+          }else if (id === "is_service_provided") {
             const lastService = getLastServiceFromAnalyticData(
               analyticDataByBeneficiary,
               programStage

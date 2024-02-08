@@ -152,6 +152,7 @@ export class CustomReport {
     );
 
     console.log({ groupedDataElements });
+    
     const sanitizedDataElements = mapValues(
       groupedDataElements,
       (dataElements, stage) => {
