@@ -2075,6 +2075,25 @@ export const customReportConfig: CustomReportInterface[] = [
         isAttribute: false,
         programStage: "",
       },
+
+      // {
+      //   id:"Wbf2eer2DoD",
+      //   name: "PRIMARY CAREGIVER NAME",
+      //   isDate: false,
+      //   isBoolean: false,
+      //   isAttribute: false,
+      //   programStage: "",
+      // },
+      // {
+      //   id:"QATqUC6i5x2",
+      //   name: "PRIMARY CAREGIVER SURNAME",
+      //   isDate: false,
+      //   isBoolean: false,
+      //   isAttribute: false,
+      //   programStage: "",
+      // },
+
+
       {
         id: "district_of_service",
         name: "DISTRICT",
@@ -2112,6 +2131,17 @@ export const customReportConfig: CustomReportInterface[] = [
         isAttribute: true,
         programStage: "",
       },
+
+      {
+        id:"household_id",
+        name: "HOUSEHOLD ID",
+        isDate: false,
+        program: "",
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+
       {
         id: "eIU7KMx4Tu3",
         name: "BENEFICIARY CODE",
@@ -2204,7 +2234,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
       {
         id: "RDobagXItZ6",
-        name: "NEW OR RETURNING",
+        name: "NEW OR RE-ENROLLED",
         isDate: false,
         program: "",
         isBoolean: false,
@@ -2527,6 +2557,17 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "gkNKXUxpyv9",
       },
+
+      {
+        id:"",
+        name: "VAC LEGAL MESSAGING Case plan",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+      },
+
+
       {
         id: "Ccp4Odlh3BE",
         name: "COUNSELLING Case plan",
@@ -2625,20 +2666,52 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: false,
         programStage: "vcaHzmUuYzU",
       },
+      // {
+      //   id: "date_of_last_service_received",
+      //   name: "DATE OF SERVICE (YYYY/MM/DD)",
+      //   isDate: true,
+      //   isBoolean: false,
+      //   programStage: "CHFwighOquA",
+      // },
+      // {
+      //   id: "date_of_last_service_received",
+      //   name: "DATE OF SERVICE (YYYY/MM/DD)",
+      //   isDate: true,
+      //   isBoolean: false,
+      //   programStage: "vcaHzmUuYzU",
+      // },
       {
         id: "date_of_last_service_received",
-        name: "DATE OF SERVICE (YYYY/MM/DD)",
+        name: "DATE OF KAST SERVICE IN Q1",
         isDate: true,
         isBoolean: false,
         programStage: "CHFwighOquA",
       },
       {
         id: "date_of_last_service_received",
-        name: "DATE OF SERVICE (YYYY/MM/DD)",
+        name: "DATE OF KAST SERVICE IN Q2",
         isDate: true,
         isBoolean: false,
-        programStage: "vcaHzmUuYzU",
+        programStage: "CHFwighOquA",
       },
+      {
+        id: "date_of_last_service_received",
+        name: "DATE OF KAST SERVICE IN Q3",
+        isDate: true,
+        isBoolean: false,
+        programStage: "CHFwighOquA",
+      },
+      {
+        id: "date_of_last_service_received",
+        name: "DATE OF KAST SERVICE IN Q4",
+        isDate: true,
+        isBoolean: false,
+        programStage: "CHFwighOquA",
+      },
+
+
+
+
       {
         id: "BYu8pI5kGXF",
         name: "HIVSCREEN Service",
@@ -2898,20 +2971,9 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "vcaHzmUuYzU",
       },
-      {
-        id: "QDFZ03HbjGj",
-        name: "VAC LEGAL MESSAGING Service",
-        isDate: false,
-        isBoolean: true,
-        programStage: "CHFwighOquA",
-      },
-      {
-        id: "QDFZ03HbjGj",
-        name: "VAC LEGAL MESSAGING Service",
-        isDate: false,
-        isBoolean: true,
-        programStage: "vcaHzmUuYzU",
-      },
+
+
+
       {
         id: "rMtSykWZ4HB",
         name: "VAC Service",
@@ -2926,6 +2988,31 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "CHFwighOquA",
       },
+      {
+        id: "QDFZ03HbjGj",
+        name: "VAC LEGAL MESSAGING Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "CHFwighOquA",
+      },
+      {
+        id: "QDFZ03HbjGj",
+        name: "VAC LEGAL MESSAGING Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "vcaHzmUuYzU",
+      },
+
+      {
+        id: "",
+        name: "COUNSELLING Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "",
+      },
+
+
+      
       {
         id: "JlRnllAlSk0",
         name: "SHELTER Service",
@@ -3239,7 +3326,16 @@ export const customReportConfig: CustomReportInterface[] = [
       },
       {
         id: "GsWaSx1t3Qs",
-        name: "Service Provider",
+        name: "Last Service Provider",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        crossStages: true,
+        programStage: "",
+      },
+      {
+        id: "GsWaSx1t3Qs",
+        name: "implementing Partner",
         isDate: false,
         isBoolean: false,
         isAttribute: false,
@@ -3265,6 +3361,14 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "WTZ7GLTrE8Q",
         name: "BENEFICIARY NAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "s1HaiT6OllL",
+        name: "BENEFICIARY MIDDLE NAME",
         isDate: false,
         isBoolean: false,
         isAttribute: true,
@@ -3504,6 +3608,14 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "WTZ7GLTrE8Q",
         name: "BENEFICIARY NAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "s1HaiT6OllL",
+        name: "BENEFICIARY MIDDLE NAME",
         isDate: false,
         isBoolean: false,
         isAttribute: true,

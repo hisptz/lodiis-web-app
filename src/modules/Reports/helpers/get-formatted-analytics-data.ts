@@ -373,6 +373,7 @@ function getBeneficiaryTypeValue(
       )
     )
   );
+  
 
   let beneficiaryProgramId = "";
   if (eventProgramStages.length > 0) {
@@ -411,8 +412,33 @@ function getBeneficiaryTypeValue(
         ? "Primary Child"
         : "Child";
   }
+  console.log("beneficiaryType", beneficiaryType);
+  console.log("beneficiaryProgramId", beneficiaryProgramId);
+  console.log("analyticDataByBeneficiary", analyticDataByBeneficiary);
+  console.log("programToProgramStageObject", programToProgramStageObject);
   return beneficiaryType;
 }
+
+function getBeneficiaryCodeValue(analyticDataByBeneficiary: any) {
+  let beneficiaryCode = "";
+  const id = "eIU7KMx4Tu3"; 
+
+
+  for (const data of analyticDataByBeneficiary) {
+    if (data && data[id]) {
+      beneficiaryCode = data[id];
+      break; 
+    }
+  }
+  if (beneficiaryCode) {
+    beneficiaryCode = beneficiaryCode.slice(0, -1);
+  }
+
+  return beneficiaryCode;
+}
+
+
+
 
 export function getServiceFromReferral(
   analyticsDataByBeneficiary: Array<any>,
@@ -592,6 +618,10 @@ export function getFormattedEventAnalyticDataForReport(
               const age = getBeneficiaryAge(dob);
               value = getBeneficiaryAgeRanges(age);
             }
+          }  else if(id === "household_id"){
+            value = getBeneficiaryCodeValue(
+              analyticDataByBeneficiary,
+            );
           } else if (id === "beneficiary_type") {
             value = getBeneficiaryTypeValue(
               analyticDataByBeneficiary,

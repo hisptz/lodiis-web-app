@@ -51,7 +51,6 @@ export class CustomReport {
   get programs() {
     return flattenDeep([this.config.program]);
   }
-
   get dataItems(): ReportDxConfig[] {
     return uniqBy(
       flattenDeep(
