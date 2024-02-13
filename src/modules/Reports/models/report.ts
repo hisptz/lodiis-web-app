@@ -418,8 +418,8 @@ export class CustomReport {
   async getData(
     dimensions: { orgUnits: string[]; periods: string[] },
     {
-      getEnrollments,
       getEvents,
+      getEnrollments,
       setProgress,
       setTotalRequests,
     }: {
@@ -431,20 +431,21 @@ export class CustomReport {
       setTotalRequests: any;
     }
   ) {
-    setTotalRequests(
-      this.enrollmentAnalyticsParameters.length +
-        this.eventAnalyticsParameters.length
-    );
-
     // TODO fix pagination for report fetching
-    const data = await Promise.all([
-      this.getEnrollmentData(dimensions, { getEnrollments, setProgress }),
+    const promises = [
       this.getEventsData(dimensions, { getEvents, setProgress }),
-    ]);
-
+      ...this.config.includeEnrollmentWithoutService ? [this.getEnrollmentData(dimensions, { getEnrollments, setProgress })] : [],
+    ];
+  
+    setTotalRequests(promises.length);
+  
+    const data = await Promise.all(promises);
+  
+    // Update the class's data property
     this.data = flattenDeep(data) as Record<string, any>[];
     return this;
   }
+  
 
   getFormattedData(orgUnits: any[]) {
     return uniqBy(

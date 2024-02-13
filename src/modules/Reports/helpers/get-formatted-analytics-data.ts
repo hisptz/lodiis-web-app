@@ -412,10 +412,7 @@ function getBeneficiaryTypeValue(
         ? "Primary Child"
         : "Child";
   }
-  console.log("beneficiaryType", beneficiaryType);
-  console.log("beneficiaryProgramId", beneficiaryProgramId);
-  console.log("analyticDataByBeneficiary", analyticDataByBeneficiary);
-  console.log("programToProgramStageObject", programToProgramStageObject);
+ 
   return beneficiaryType;
 }
 
@@ -522,6 +519,17 @@ export function getFormattedEventAnalyticDataForReport(
             value = lastService && _.keys(lastService).length > 0
               ? lastService["eventdate"] || value
               : value;  
+           
+          }
+          else if (id === "lcyyWZnfQNJ"){
+            const lastService: any = getLastServiceFromAnalyticData(
+              analyticDataByBeneficiary,
+              programStage  
+            );
+            value = lastService && _.keys(lastService).length > 0
+              ? lastService["eventdate"] || value
+              : value;  
+          
           }
           else if (id === "completed_primary_package") {
             value = evaluationOfPrimaryPackageCompletion(

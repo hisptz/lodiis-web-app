@@ -2666,52 +2666,48 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: false,
         programStage: "vcaHzmUuYzU",
       },
+      {
+        id: "date_of_last_service_received",
+        name: "DATE OF SERVICE (YYYY/MM/DD)",
+        isDate: true,
+        isBoolean: false,
+        programStage: "CHFwighOquA",
+      },
+      {
+        id: "date_of_last_service_received",
+        name: "DATE OF SERVICE (YYYY/MM/DD)",
+        isDate: true,
+        isBoolean: false,
+        programStage: "vcaHzmUuYzU",
+      },
       // {
       //   id: "date_of_last_service_received",
-      //   name: "DATE OF SERVICE (YYYY/MM/DD)",
+      //   name: "DATE OF KAST SERVICE IN Q1",
       //   isDate: true,
       //   isBoolean: false,
       //   programStage: "CHFwighOquA",
       // },
       // {
       //   id: "date_of_last_service_received",
-      //   name: "DATE OF SERVICE (YYYY/MM/DD)",
+      //   name: "DATE OF KAST SERVICE IN Q2",
       //   isDate: true,
       //   isBoolean: false,
-      //   programStage: "vcaHzmUuYzU",
+      //   programStage: "CHFwighOquA",
       // },
-      {
-        id: "date_of_last_service_received",
-        name: "DATE OF KAST SERVICE IN Q1",
-        isDate: true,
-        isBoolean: false,
-        programStage: "CHFwighOquA",
-      },
-      {
-        id: "date_of_last_service_received",
-        name: "DATE OF KAST SERVICE IN Q2",
-        isDate: true,
-        isBoolean: false,
-        programStage: "CHFwighOquA",
-      },
-      {
-        id: "date_of_last_service_received",
-        name: "DATE OF KAST SERVICE IN Q3",
-        isDate: true,
-        isBoolean: false,
-        programStage: "CHFwighOquA",
-      },
-      {
-        id: "date_of_last_service_received",
-        name: "DATE OF KAST SERVICE IN Q4",
-        isDate: true,
-        isBoolean: false,
-        programStage: "CHFwighOquA",
-      },
-
-
-
-
+      // {
+      //   id: "date_of_last_service_received",
+      //   name: "DATE OF KAST SERVICE IN Q3",
+      //   isDate: true,
+      //   isBoolean: false,
+      //   programStage: "CHFwighOquA",
+      // },
+      // {
+      //   id: "date_of_last_service_received",
+      //   name: "DATE OF KAST SERVICE IN Q4",
+      //   isDate: true,
+      //   isBoolean: false,
+      //   programStage: "CHFwighOquA",
+      // },
       {
         id: "BYu8pI5kGXF",
         name: "HIVSCREEN Service",
@@ -2971,9 +2967,6 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "vcaHzmUuYzU",
       },
-
-
-
       {
         id: "rMtSykWZ4HB",
         name: "VAC Service",
@@ -3010,9 +3003,6 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "",
       },
-
-
-      
       {
         id: "JlRnllAlSk0",
         name: "SHELTER Service",
@@ -3334,7 +3324,7 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
       {
-        id: "GsWaSx1t3Qs",
+        id: "lcyyWZnfQNJ",
         name: "implementing Partner",
         isDate: false,
         isBoolean: false,
@@ -3351,7 +3341,7 @@ export const customReportConfig: CustomReportInterface[] = [
       "NuxoYkqopE2",
       "RoLA6GyxTlS",
     ],
-    includeEnrollmentWithoutService: true,
+    includeEnrollmentWithoutService: false,
   },
   {
     id: "OVC_Interverntion_enrollment",
