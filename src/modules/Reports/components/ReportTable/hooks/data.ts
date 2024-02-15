@@ -2,7 +2,7 @@ import { useReportDimension } from "./dimension";
 import { useAlert, useDataQuery } from "@dhis2/app-runtime";
 import { useEffect, useMemo, useState } from "react";
 import { Pagination, Program } from "@hisptz/dhis2-utils";
-import { chunk, isEmpty } from "lodash";
+import { chunk, isEmpty, set } from "lodash";
 import { useBoolean, useCounter } from "usehooks-ts";
 import { atomFamily, useRecoilState } from "recoil";
 
@@ -122,32 +122,29 @@ export function useReportData() {
     setTrue: setIsLoading,
     setFalse: setIsNotLoading,
   } = useBoolean(false);
+  const [error, setError] = useState(null);
+  const handleError = (error:any) => {
+    console.error(error.message);
+    setError(error.message); 
+  };
   const { refetch: getEnrollments } = useDataQuery(reportEnrollmentQuery, {
     lazy: true,
-    onError: (error) => {
-      console.error(error.message);
-    },
+    onError: handleError,
   });
   const { refetch: getProgramStages } = useDataQuery(programStagesQuery, {
     lazy: true,
   });
   const { refetch: getEvents } = useDataQuery(reportEventQuery, {
     lazy: true,
-    onError: (error) => {
-      console.error(error.message);
-    },
+    onError: handleError,
   });
   const { refetch: getPrograms } = useDataQuery(programQuery, {
     lazy: true,
-    onError: (error) => {
-      console.error(error.message);
-    },
+    onError: handleError,
   });
   const { refetch: getOrgUnits } = useDataQuery(orgUnitQuery, {
     lazy: true,
-    onError: (error) => {
-      console.error(error.message);
-    },
+    onError: handleError,
   });
   const { show, hide } = useAlert(
     ({ message }) => message,
@@ -160,6 +157,7 @@ export function useReportData() {
 
   useEffect(() => {
     async function get() {
+      setError(null); 
       try {
         if (
           !report ||
@@ -186,6 +184,7 @@ export function useReportData() {
         const formattedData = report.getFormattedData(allOrgUnits);
         setData(formattedData);
       } catch (e: any) {
+        setError(e?.message || "An unexpected error occurred."); 
         show({
           message: e?.message,
           type: { critical: true },
@@ -197,7 +196,7 @@ export function useReportData() {
         setProgress(0);
       }
     }
-
+  
     setTimeout(async () => {
       await get();
     }, 300);
@@ -216,6 +215,7 @@ export function useReportData() {
     rows: data,
     columns,
     percentage,
+    error,
   };
 }
 
@@ -229,8 +229,9 @@ export function useReportPaginatedData(): {
   rows: { id: string; [key: string]: any }[];
   loading: boolean;
   columns: Array<{ label: string; key: string }>;
+  error ?: string | null;
 } {
-  const { loading, rows, columns, ...props } = useReportData();
+  const { loading, rows, error, columns, ...props } = useReportData();
   const [pageSize, setPageSize] = useState(50);
   const {
     value: chunking,
@@ -283,5 +284,6 @@ export function useReportPaginatedData(): {
     chunking,
     loading,
     rows: rowChunks?.[page - 1] ?? [],
+    error,
   };
 }
