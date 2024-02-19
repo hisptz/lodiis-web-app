@@ -3,26 +3,42 @@ import { evaluationOfPrimaryPackageCompletionAtLeastOneSecondary } from "./prima
 import { evaluationOfPrimaryPackageCompletion } from "./primary-package-completion-helper";
 import { evaluationOfSecondaryPrimaryPackageCompletion } from "./secondary-primary-package-completion-helper";
 import { CombineValues } from "../../../shared/interfaces/report";
+import { evaluateServiceCompletionForCodes, serviceTotalSessions } from "./get-average-session-number-per-intervention";
 
 export function getSanitizesReportValue(
   value: any,
-  codes: Array<string>,
+  codes:Array<string> = [],
   isBoolean: boolean,
   isDate: boolean,
   displayValues: Array<any>,
-  skipSanitizationOfDisplayName: boolean
+  skipSanitizationOfDisplayName: boolean,
+  analyticDataByBeneficiary: any[],
+  programStage: string
 ) {
   const displayNames = _.flattenDeep(
     _.map(displayValues || [], (displayValue) => displayValue.displayName)
   );
   displayNames.push("Yes", "1");
   let sanitizedValue = "";
-  if (codes && codes.length > 0) {
+  // Check if any individual code requires session count validation
+  const requiresSessionValidation = codes.some(code => serviceTotalSessions.hasOwnProperty(code));
+
+  // Special combination check
+  const isSpecificCombination = codes.includes("Go Girls") && codes.includes("AFLATEEN/TOUN") && codes.length === 2;
+
+  if (codes && codes.length > 0 && !requiresSessionValidation && !isSpecificCombination) {
     sanitizedValue =
       codes.includes(value) || displayNames.includes(value)
         ? "Yes"
         : sanitizedValue;
-  } else if (isBoolean) {
+  } else if ( requiresSessionValidation || isSpecificCombination){
+    sanitizedValue = evaluateServiceCompletionForCodes(
+      analyticDataByBeneficiary,
+      programStage,
+      codes,
+    );
+  }
+  else if (isBoolean ) {
     sanitizedValue = displayNames.includes(`${value}`) ? "Yes" : sanitizedValue;
   } else if (isDate) {
     sanitizedValue = getFormattedDate(value);
@@ -753,7 +769,9 @@ export function getFormattedEventAnalyticDataForReport(
                     isBoolean,
                     isDate,
                     displayValues,
-                    isNotAgywBeneficiary
+                    isNotAgywBeneficiary,
+                    analyticDataByBeneficiary,
+                    programStage
                   )
                 : getSanitizedDisplayValue(
                     value,
