@@ -13,10 +13,6 @@ export const serviceTotalSessions:any = {
     'PARENTING': 14,
     'HIV Prevention Education': 4,
   };
-  const combinedCodeRequirement:any = {
-    'Go Girls + AFLATEEN/TOUN': 27, // Total sessions for this combined case
-  };
-
   
 
   export function isServiceCompletionAboveThreshold(
@@ -41,29 +37,31 @@ export const serviceTotalSessions:any = {
 
 
  export function evaluateServiceCompletionForCodes(
-    beneficiaryServiceData: any[],
+  beneficiaryServiceData: any[],
   programStage: string|undefined,
   codes: Array<string>,
 ) {
-  // Check for the specific combination
-  const isSpecificCombination = codes.includes("Go Girls") && codes.includes("AFLATEEN/TOUN") && codes.length === 2;
-  let combinedKey = "";
-
-  if (isSpecificCombination) {
-    combinedKey = "Go Girls + AFLATEEN/TOUN";
-  }
-
-  // Validate the specific combination
-  if (isSpecificCombination && combinedCodeRequirement.hasOwnProperty(combinedKey)) {
-    const currentSessionCount = codes.reduce((total, code) => total + getSessionCountOnDreamsService(
+  console.log('beneficiaryServiceData:', beneficiaryServiceData);
+  console.log('programStage:', programStage);
+  console.log('codes:', codes);
+  console.log('serviceTotalSessions:', serviceTotalSessions);
+   // Special handling for combined "Go Girls" and "AFLATEEN/TOUN"  intervention
+   const containsGoGirls = codes.includes("Go Girls");
+  const containsAflateen = codes.includes("AFLATEEN/TOUN");
+  if (containsGoGirls || containsAflateen) {
+    let goGirlsCompletion = containsGoGirls ? isServiceCompletionAboveThreshold(
       beneficiaryServiceData,
       programStage,
-      code,
-      'Eug4BXDFLym'
-    ), 0);
-    const totalSessions = combinedCodeRequirement[combinedKey];
-    const completionPercentage = (currentSessionCount / totalSessions) * 100;
-    return completionPercentage > 80 ? "Yes" : "No";
+      "Go Girls"
+    ) : "No";
+    let aflateenCompletion = containsAflateen ? isServiceCompletionAboveThreshold(
+      beneficiaryServiceData,
+      programStage,
+      "AFLATEEN/TOUN"
+    ) : "No";
+    if (goGirlsCompletion === "Yes" || aflateenCompletion === "Yes") {
+      return "Yes";
+    }
   } else {
     for (let code of codes) {
       if (serviceTotalSessions.hasOwnProperty(code)) {
