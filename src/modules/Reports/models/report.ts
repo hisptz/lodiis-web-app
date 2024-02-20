@@ -25,7 +25,7 @@ import {
   DEFAULT_ANALYTICS_KEYS,
   PAGE_SIZE,
 } from "../../../constants/reports";
-import { Analytics, Program } from "@hisptz/dhis2-utils";
+import { Analytics, PeriodUtility, Program } from "@hisptz/dhis2-utils";
 import { asyncify, mapSeries } from "async-es";
 import { getFormattedEventAnalyticDataForReport } from "../helpers/get-formatted-analytics-data";
 import { CustomDataTableColumn } from "@hisptz/dhis2-ui";
@@ -338,7 +338,7 @@ export class CustomReport {
   }
 
   async getEventsData(
-    { orgUnits, periods }: { orgUnits: string[]; periods: string[] },
+    { orgUnits, periods,  }: { orgUnits: string[]; periods: string[],},
     {
       getEvents,
       setProgress,
@@ -365,14 +365,29 @@ export class CustomReport {
           stage: string;
         }) => {
           try {
-            const pagination = await this.getPagination(
-              {
-                program,
-                stage,
-                dx,
-                ou: orgUnits,
+
+            const baseRequestObject = {
+              program,
+              stage,
+              dx,
+              ou: orgUnits,
+              page: 1, 
+              pageSize: PAGE_SIZE,
+              skipMeta: true,
+              skipData: false,
+            };
+            const requestObject = this.config.endDateSelection
+              ? {
+                ...baseRequestObject,
+                startDate:"1980-02-20",
+                endDate: PeriodUtility.getPeriodById(periods[0]).end.toFormat('yyyy-MM-dd'),
+                }
+              : {
+                ...baseRequestObject,
                 pe: periods,
-              },
+            };
+            const pagination = await this.getPagination(
+              requestObject,
               { getter: getEvents }
             );
             const pages = Array.from(
@@ -381,24 +396,16 @@ export class CustomReport {
             return await mapSeries(
               pages,
               asyncify(
-                async (page: number) =>
-                  await getEvents({
-                    program,
-                    stage,
-                    dx,
-                    ou: orgUnits,
-                    pe: periods,
-                    page,
-                    pageSize: PAGE_SIZE,
-                    skipMeta: true,
-                    skipData: false,
-                  })
+                async (page: number) =>{
+                  requestObject.page = page;
+                  return await getEvents(requestObject)
                     .then(({ data }) => {
                       return this.sanitizeAnalyticsData(data, { stage });
                     })
                     .catch((error) => {
                       console.error(error);
                     })
+                  }
               )
             ).then((data) => {
               setProgress((prevProgress: number) => {
@@ -475,10 +482,12 @@ export class CustomReport {
   private async getPagination(
     variables: {
       dx: string[];
-      pe: string[];
+      pe?: string[];
       ou: string[];
       program: string;
       stage?: string;
+      startDate?: string;
+      endDate?: string;
     },
     {
       getter,

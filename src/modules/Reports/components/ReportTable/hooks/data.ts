@@ -62,7 +62,7 @@ const reportEventQuery = {
       desc: "eventdate",
       dimension: [
         `ou:${ou.join(";")}`,
-        `pe:${pe.join(";")}`,
+        ...(pe && pe.length > 0 ? [`pe:${pe.join(";")}`] : []),
         ...(dx?.map((dx: string) => `${dx}`) ?? []),
       ],
       stage,
@@ -207,7 +207,8 @@ export function useReportData() {
       return;
     }
 
-    return Math.floor((progress / totalRequests) * 100);
+    const calculatedPercentage = Math.floor((progress / totalRequests) * 100);
+    return calculatedPercentage > 100 ? 100 : calculatedPercentage; 
   }, [totalRequests, progress]);
 
   return {
