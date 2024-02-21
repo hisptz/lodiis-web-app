@@ -41,10 +41,7 @@ export const serviceTotalSessions:any = {
   programStage: string|undefined,
   codes: Array<string>,
 ) {
-  console.log('beneficiaryServiceData:', beneficiaryServiceData);
-  console.log('programStage:', programStage);
-  console.log('codes:', codes);
-  console.log('serviceTotalSessions:', serviceTotalSessions);
+ 
    // Special handling for combined "Go Girls" and "AFLATEEN/TOUN"  intervention
    const containsGoGirls = codes.includes("Go Girls");
   const containsAflateen = codes.includes("AFLATEEN/TOUN");

@@ -20,7 +20,7 @@ export function getSanitizesReportValue(
   );
   displayNames.push("Yes", "1");
   let sanitizedValue = "";
-  // Check if any individual code requires session count validation
+  // Checks if any individual code requires session count validation
   const requiresSessionValidation = codes.some(code => serviceTotalSessions.hasOwnProperty(code));
 
   // Special combination check
