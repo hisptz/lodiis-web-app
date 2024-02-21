@@ -2489,25 +2489,6 @@ export const customReportConfig: CustomReportInterface[] = [
         isAttribute: false,
         programStage: "",
       },
-
-      // {
-      //   id:"Wbf2eer2DoD",
-      //   name: "PRIMARY CAREGIVER NAME",
-      //   isDate: false,
-      //   isBoolean: false,
-      //   isAttribute: false,
-      //   programStage: "",
-      // },
-      // {
-      //   id:"QATqUC6i5x2",
-      //   name: "PRIMARY CAREGIVER SURNAME",
-      //   isDate: false,
-      //   isBoolean: false,
-      //   isAttribute: false,
-      //   programStage: "",
-      // },
-
-
       {
         id: "district_of_service",
         name: "DISTRICT",
@@ -3094,34 +3075,6 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: false,
         programStage: "vcaHzmUuYzU",
       },
-      // {
-      //   id: "date_of_last_service_received",
-      //   name: "DATE OF KAST SERVICE IN Q1",
-      //   isDate: true,
-      //   isBoolean: false,
-      //   programStage: "CHFwighOquA",
-      // },
-      // {
-      //   id: "date_of_last_service_received",
-      //   name: "DATE OF KAST SERVICE IN Q2",
-      //   isDate: true,
-      //   isBoolean: false,
-      //   programStage: "CHFwighOquA",
-      // },
-      // {
-      //   id: "date_of_last_service_received",
-      //   name: "DATE OF KAST SERVICE IN Q3",
-      //   isDate: true,
-      //   isBoolean: false,
-      //   programStage: "CHFwighOquA",
-      // },
-      // {
-      //   id: "date_of_last_service_received",
-      //   name: "DATE OF KAST SERVICE IN Q4",
-      //   isDate: true,
-      //   isBoolean: false,
-      //   programStage: "CHFwighOquA",
-      // },
       {
         id: "BYu8pI5kGXF",
         name: "HIVSCREEN Service",
