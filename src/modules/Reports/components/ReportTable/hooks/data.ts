@@ -11,23 +11,23 @@ const reportEnrollmentQuery = {
 		resource: "analytics",
 		id: ({ program }: any) => `enrollments/query/${program}`,
 		params: ({
-					 ou,
-					 pe,
-					 dx,
-					 startDate,
-					 endDate,
-					 stage,
-					 page,
-					 pageSize,
-					 ...params
-				 }: any) => {
+			ou,
+			pe,
+			dx,
+			startDate,
+			endDate,
+			stage,
+			page,
+			pageSize,
+			...params
+		}: any) => {
 			const dimensions = [
 				`ou:${ou.join(";")}`,
 				`pe:${pe.join(";")}`,
-				...(dx?.map((dx: string) => `${dx}`) ?? [])
+				...(dx?.map((dx: string) => `${dx}`) ?? []),
 			];
 			return {
-				displayProperty: "NAME",
+				displaProperty: "NAME",
 				outputType: "ENROLLMENT",
 				desc: "enrollmentdate",
 				dimension: dimensions,
@@ -37,69 +37,61 @@ const reportEnrollmentQuery = {
 				page,
 				pageSize,
 				totalPages: true,
-				...params
+				...params,
 			};
-		}
-	}
+		},
+	},
 };
 const reportEventQuery = {
 	data: {
 		resource: "analytics",
 		id: ({ program }: any) => `events/query/${program}`,
 		params: ({
-					 ou,
-					 pe,
-					 dx,
-					 startDate,
-					 endDate,
-					 stage,
-					 page,
-					 pageSize,
-					 ...params
-				 }: any) => ({
+			ou,
+			pe,
+			dx,
+			startDate,
+			endDate,
+			stage,
+			page,
+			pageSize,
+			...params
+		}: any) => ({
 			displayProperty: "NAME",
 			outputType: "EVENT",
 			desc: "eventdate",
 			dimension: [
 				`ou:${ou.join(";")}`,
 				...(pe && pe.length > 0 ? [`pe:${pe.join(";")}`] : []),
-				...(dx?.map((dx: string) => `${dx}`) ?? [])
+				...(dx?.map((dx: string) => `${dx}`) ?? []),
 			],
 			stage,
-			startate,
+			startDate
 			endDate,
 			page,
 			pageSize,
 			totalPages: true,
 			...params
-		})
-	}
+		}),
+	},
 };
-const progrmStagsQury = {
+const programStagesQuery = {
 	ps: {
 		resource: "programStages",
 		params: ({ programStageIds }: any) => ({
 			filter: [`id:in:[${programStageIds.join(",")}]`],
 			fields: ["id", "publicAccess"]
-		})
-	}
+		}),
+	},
 };
-const orgUnitQury =
-	o;
-:
-{
-	resource: "organisationUnits",
-		params;
-:
-	{
-		fields: ["id", "name", "level", "ancestors[name,level]"],
-			paging;
-	:
-		false,
+const orgUnitQuery = {
+	ou: {
+		resource: "organisationUnits",
+		params: {
+			fields: ["id", "name", "level", "ancestors[name,level]"],
+			paging: false
+		}
 	}
-,
-}
-,
 };
 const programQuery = {
 	programs: {
@@ -110,9 +102,9 @@ const programQuery = {
 				"id",
 				"programStages[id]",
 				"programTrackedEntityAttributes[trackedEntityAttribute[id]]"
-			]
-		})
-	}
+			],
+		}),
+	},
 };
 
 export const ReportDataState = atomFamily<
@@ -134,7 +126,7 @@ export const ReportDataProgressState = atomFamily<
 	default: {
 		progress: 0,
 		total: 1
-	}
+	},
 });
 
 export function useReportData() {

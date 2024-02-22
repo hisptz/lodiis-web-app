@@ -18,7 +18,7 @@ import {
 	uniqBy
 } from "lodash";
 import { CUSTOM_DX_CONFIG_IDS, DEFAULT_ANALYTICS_KEYS, PAGE_SIZE } from "../../../constants/reports";
-import { Analytics, Pagination, PeriodUtility } from "@hisptz/dhis2-utils";
+import { Analytics, Pagination, PeriodUtility, Program } from "@hisptz/dhis2-utils";
 import { asyncify, mapSeries } from "async-es";
 import { getFormattedEventAnalyticDataForReport } from "../helpers/get-formatted-analytics-data";
 import { CustomDataTableColumn } from "@hisptz/dhis2-ui";
@@ -65,7 +65,7 @@ export class CustomReport {
 					} else {
 						return attribute.ids?.map((id: string) => ({
 							...attribute,
-							id
+							d,
 						}));
 					}
 				}) as ReportDxConfig[]
@@ -115,7 +115,7 @@ export class CustomReport {
 										return {
 											...item,
 											id: dataElement,
-											programStage: stage.id
+											programStage: stage.id,
 										};
 									}) ?? []
 								);
@@ -134,7 +134,7 @@ export class CustomReport {
 				const attributes = this.getAttributesByProgram(program);
 				return {
 					program,
-					dx: uniq(attributes.map(({ id }) => id)
+					dx: uniq(attributes.map(({ id }) => id),
 				};
 			})
 			.filter(({ dx }) => !isEmpty(dx));
@@ -156,7 +156,7 @@ export class CustomReport {
 							...dataElement,
 							programStage
 						})
-					)
+					),
 				]
 			),
 			""
@@ -176,7 +176,7 @@ export class CustomReport {
 							...attribute,
 							program,
 							programStage: stage
-						}))
+						})),
 					];
 				}
 			}
@@ -279,7 +279,7 @@ export class CustomReport {
 						const index = findIndex(headers, ["name", key]);
 						return [key, row[index]];
 					})
-				)
+				),
 			};
 		});
 	}
@@ -558,7 +558,7 @@ export class CustomReport {
 						setProgress
 					})
 				]
-				: [])
+				: []),
 		];
 
 		const data = await Promise.all(promises);
