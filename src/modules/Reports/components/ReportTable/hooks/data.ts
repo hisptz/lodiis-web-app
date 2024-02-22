@@ -66,12 +66,12 @@ const reportEventQuery = {
 				...(dx?.map((dx: string) => `${dx}`) ?? []),
 			],
 			stage,
-			startDate
+			startDate,
 			endDate,
 			page,
 			pageSize,
 			totalPages: true,
-			...params
+			...params,
 		}),
 	},
 };
@@ -80,7 +80,7 @@ const programStagesQuery = {
 		resource: "programStages",
 		params: ({ programStageIds }: any) => ({
 			filter: [`id:in:[${programStageIds.join(",")}]`],
-			fields: ["id", "publicAccess"]
+			fields: ["id", "publicAccess"],
 		}),
 	},
 };
@@ -89,9 +89,9 @@ const orgUnitQuery = {
 		resource: "organisationUnits",
 		params: {
 			fields: ["id", "name", "level", "ancestors[name,level]"],
-			paging: false
-		}
-	}
+			paging: false,
+		},
+	},
 };
 const programQuery = {
 	programs: {
@@ -101,7 +101,7 @@ const programQuery = {
 			fields: [
 				"id",
 				"programStages[id]",
-				"programTrackedEntityAttributes[trackedEntityAttribute[id]]"
+				"programTrackedEntityAttributes[trackedEntityAttribute[id]]",
 			],
 		}),
 	},
@@ -112,7 +112,7 @@ export const ReportDataState = atomFamily<
 	string | undefined
 >({
 	key: "report-data-state",
-	default: undefined
+	default: undefined,
 });
 
 export const ReportDataProgressState = atomFamily<
@@ -125,7 +125,7 @@ export const ReportDataProgressState = atomFamily<
 	key: "report-data-progress",
 	default: {
 		progress: 0,
-		total: 1
+		total: 1,
 	},
 });
 
@@ -134,7 +134,7 @@ export function useReportData() {
 	const {
 		value: loading,
 		setTrue: setIsLoading,
-		setFalse: setIsNotLoading
+		setFalse: setIsNotLoading,
 	} = useBoolean(false);
 	const [error, setError] = useState(null);
 	const handleError = (error: any) => {
@@ -143,22 +143,22 @@ export function useReportData() {
 	};
 	const { refetch: getEnrollments } = useDataQuery(reportEnrollmentQuery, {
 		lazy: true,
-		onError: handleError
+		onError: handleError,
 	});
 	const { refetch: getProgramStages } = useDataQuery(programStagesQuery, {
-		lazy: true
+		lazy: true,
 	});
 	const { refetch: getEvents } = useDataQuery(reportEventQuery, {
 		lazy: true,
-		onError: handleError
+		onError: handleError,
 	});
 	const { refetch: getPrograms } = useDataQuery(programQuery, {
 		lazy: true,
-		onError: handleError
+		onError: handleError,
 	});
 	const { refetch: getOrgUnits } = useDataQuery(orgUnitQuery, {
 		lazy: true,
-		onError: handleError
+		onError: handleError,
 	});
 	const { show, hide } = useAlert(
 		({ message }) => message,
@@ -184,7 +184,7 @@ export function useReportData() {
 				}
 				setIsLoading();
 				const programMetadata = await getPrograms({
-					programIds: report.programs
+					programIds: report.programs,
 				});
 				report.setProgramMetadata(
 					(programMetadata?.programs as any)?.programs as Program[]
@@ -201,7 +201,7 @@ export function useReportData() {
 				setError(e?.message || "An unexpected error occurred.");
 				show({
 					message: e?.message,
-					type: { critical: true }
+					type: { critical: true },
 				});
 				setTimeout(() => hide(), 5000);
 			} finally {
@@ -232,7 +232,7 @@ export function useReportData() {
 		rows: data,
 		columns,
 		percentage,
-		error
+		error,
 	};
 }
 
@@ -253,7 +253,7 @@ export function useReportPaginatedData(): {
 	const {
 		value: chunking,
 		setTrue: setChunkingTrue,
-		setFalse: setChunkingFalse
+		setFalse: setChunkingFalse,
 	} = useBoolean(false);
 
 	const chunkWorker = async ({ rows, pageSize }: any): Promise<any> => {
@@ -295,12 +295,12 @@ export function useReportPaginatedData(): {
 			total: rows?.length,
 			pageCount: rowChunks?.length,
 			onPageChange,
-			onPageSizeChange
+			onPageSizeChange,
 		},
 		columns,
 		chunking,
 		loading,
 		rows: rowChunks?.[page - 1] ?? [],
-		error
+		error,
 	};
 }

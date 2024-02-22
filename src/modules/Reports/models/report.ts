@@ -1,4 +1,7 @@
-import { CustomReportInterface, ReportDxConfig } from "../../../shared/interfaces/report";
+import {
+	CustomReportInterface,
+	ReportDxConfig,
+} from "../../../shared/interfaces/report";
 import {
 	compact,
 	concat,
@@ -15,10 +18,20 @@ import {
 	omit,
 	sumBy,
 	uniq,
-	uniqBy
+	uniqBy,
+	values,
 } from "lodash";
-import { CUSTOM_DX_CONFIG_IDS, DEFAULT_ANALYTICS_KEYS, PAGE_SIZE } from "../../../constants/reports";
-import { Analytics, Pagination, PeriodUtility, Program } from "@hisptz/dhis2-utils";
+import {
+	CUSTOM_DX_CONFIG_IDS,
+	DEFAULT_ANALYTICS_KEYS,
+	PAGE_SIZE,
+} from "../../../constants/reports";
+import {
+	Analytics,
+	Pagination,
+	PeriodUtility,
+	Program,
+} from "@hisptz/dhis2-utils";
 import { asyncify, mapSeries } from "async-es";
 import { getFormattedEventAnalyticDataForReport } from "../helpers/get-formatted-analytics-data";
 import { CustomDataTableColumn } from "@hisptz/dhis2-ui";
@@ -65,7 +78,7 @@ export class CustomReport {
 					} else {
 						return attribute.ids?.map((id: string) => ({
 							...attribute,
-							d,
+							id,
 						}));
 					}
 				}) as ReportDxConfig[]
@@ -134,7 +147,7 @@ export class CustomReport {
 				const attributes = this.getAttributesByProgram(program);
 				return {
 					program,
-					dx: uniq(attributes.map(({ id }) => id),
+					dx: uniq(attributes.map(({ id }) => id)),
 				};
 			})
 			.filter(({ dx }) => !isEmpty(dx));
@@ -154,7 +167,7 @@ export class CustomReport {
 						),
 						(dataElement: ReportDxConfig) => ({
 							...dataElement,
-							programStage
+							programStage,
 						})
 					),
 				]
@@ -175,7 +188,7 @@ export class CustomReport {
 						...attributes.map((attribute) => ({
 							...attribute,
 							program,
-							programStage: stage
+							programStage: stage,
 						})),
 					];
 				}
@@ -199,16 +212,16 @@ export class CustomReport {
 									}
 									return (element.ids ?? []).length
 										? element.ids?.map(
-											(id) =>
-												`${element.programStage}.${id}`
-										)
+												(id) =>
+													`${element.programStage}.${id}`
+										  )
 										: `${element.programStage}.${element.id}`;
 								}) as string[]
 							)
 						)
 					),
 					program: this.getProgramByStage(stage),
-					stage
+					stage,
 				};
 			})
 			.filter(({ program }) => !!program)
@@ -219,7 +232,7 @@ export class CustomReport {
 		return fromPairs(
 			this.programsMetadata?.map((program) => [
 				program.id,
-				program.programStages
+				program.programStages,
 			])
 		);
 	}
@@ -239,7 +252,7 @@ export class CustomReport {
 			return filter(this.attributes, (attribute) => {
 				return !!find(programMetadata.programTrackedEntityAttributes, [
 					"trackedEntityAttribute.id",
-					attribute.id
+					attribute.id,
 				]);
 			});
 		}
@@ -288,7 +301,7 @@ export class CustomReport {
 		variableParams: Array<QueryVariables>,
 		{
 			getEnrollments,
-			setProgress
+			setProgress,
 		}: {
 			getEnrollments: (
 				options: Record<string, any>
@@ -311,7 +324,7 @@ export class CustomReport {
 							async (page: number) =>
 								await getEnrollments({
 									...params,
-									page
+									page,
 								})
 									.then(({ data }) => {
 										return this.sanitizeAnalyticsData(data);
@@ -338,7 +351,7 @@ export class CustomReport {
 		variablesParams: Array<QueryVariables>,
 		{
 			getEvents,
-			setProgress
+			setProgress,
 		}: {
 			getEvents: (
 				options: Record<string, any>
@@ -355,9 +368,9 @@ export class CustomReport {
 			variablesParams,
 			asyncify(
 				async ({
-						   params,
-						   pagination
-					   }: {
+					params,
+					pagination,
+				}: {
 					params: Record<string, any>;
 					pagination: Pagination;
 				}) => {
@@ -374,7 +387,7 @@ export class CustomReport {
 							asyncify(async (page: number) => {
 								return await getEvents({
 									...params,
-									page
+									page,
 								})
 									.then(({ data }) => {
 										return this.sanitizeAnalyticsData(
@@ -404,7 +417,7 @@ export class CustomReport {
 	async getEventPaginationAndParams(
 		{ orgUnits, periods }: { orgUnits: string[]; periods: string[] },
 		{
-			getEvents
+			getEvents,
 		}: {
 			getEvents: (
 				options: Record<string, any>
@@ -420,10 +433,10 @@ export class CustomReport {
 			eventsVariables,
 			asyncify(
 				async ({
-						   program,
-						   stage,
-						   dx
-					   }: {
+					program,
+					stage,
+					dx,
+				}: {
 					program: string;
 					dx: string[];
 					stage: string;
@@ -436,27 +449,27 @@ export class CustomReport {
 						page: 1,
 						pageSize: PAGE_SIZE,
 						skipMeta: true,
-						skipData: false
+						skipData: false,
 					};
 					const requestObject = this.config.endDateSelection
 						? {
-							...baseRequestObject,
-							startDate: "1980-02-20",
-							endDate: PeriodUtility.getPeriodById(
-								periods[0]
-							).end.toFormat("yyyy-MM-dd")
-						}
+								...baseRequestObject,
+								startDate: "1980-02-20",
+								endDate: PeriodUtility.getPeriodById(
+									periods[0]
+								).end.toFormat("yyyy-MM-dd"),
+						  }
 						: {
-							...baseRequestObject,
-							pe: periods
-						};
+								...baseRequestObject,
+								pe: periods,
+						  };
 
 					const pagination = await this.getPagination(requestObject, {
-						getter: getEvents
+						getter: getEvents,
 					});
 					return {
 						params: requestObject,
-						pagination
+						pagination,
 					};
 				}
 			)
@@ -466,7 +479,7 @@ export class CustomReport {
 	async getEnrollmentPaginationAndParams(
 		{ orgUnits, periods }: { orgUnits: string[]; periods: string[] },
 		{
-			getEnrollments
+			getEnrollments,
 		}: {
 			getEnrollments: (
 				options: Record<string, any>
@@ -492,15 +505,15 @@ export class CustomReport {
 							program,
 							dx,
 							ou: orgUnits,
-							pe: periods
+							pe: periods,
 						};
 						const pagination = await this.getPagination(params, {
-							getter: getEnrollments
+							getter: getEnrollments,
 						});
 
 						return {
 							params,
-							pagination
+							pagination,
 						};
 					} catch (e) {
 						console.error(e);
@@ -517,7 +530,7 @@ export class CustomReport {
 			getEvents,
 			getEnrollments,
 			setProgress,
-			setTotalRequests
+			setTotalRequests,
 		}: {
 			getEvents: (
 				options: Record<string, any>
@@ -532,14 +545,14 @@ export class CustomReport {
 		const eventPagination = await this.getEventPaginationAndParams(
 			dimensions,
 			{
-				getEvents
+				getEvents,
 			}
 		);
 
 		let totalPages = sumBy(eventPagination, "pagination.pageCount");
 		const enrollmentPagination =
 			await this.getEnrollmentPaginationAndParams(dimensions, {
-				getEnrollments
+				getEnrollments,
 			});
 		if (this.config.includeEnrollmentWithoutService) {
 			totalPages += sumBy(enrollmentPagination, "pagination.pageCount");
@@ -549,15 +562,15 @@ export class CustomReport {
 		const promises = [
 			this.getEventsData(eventPagination, {
 				getEvents,
-				setProgress
+				setProgress,
 			}),
 			...(this.config.includeEnrollmentWithoutService
 				? [
-					this.getEnrollmentData(enrollmentPagination, {
-						getEnrollments,
-						setProgress
-					})
-				]
+						this.getEnrollmentData(enrollmentPagination, {
+							getEnrollments,
+							setProgress,
+						}),
+				  ]
 				: []),
 		];
 
@@ -586,7 +599,7 @@ export class CustomReport {
 				return {
 					key: item.name,
 					label: item.name,
-					width: 300
+					width: 300,
 				};
 			}),
 			"key"
@@ -604,7 +617,7 @@ export class CustomReport {
 			endDate?: string;
 		},
 		{
-			getter
+			getter,
 		}: {
 			getter: (
 				options: Record<string, any>
@@ -616,7 +629,7 @@ export class CustomReport {
 			page: 1,
 			pageSize: PAGE_SIZE,
 			skipData: true,
-			skipMeta: false
+			skipMeta: false,
 		});
 		return response?.data?.metaData?.pager;
 	}
