@@ -24,7 +24,7 @@ export function getStatusFromBeneficiarySericeData(
 
 export function getSessionCountOnDreamsService(
     beneficiaryServiceData: any[],
-    programStage: string,
+    programStage: string |undefined,
     serviceName: string,
     referenceDataElement: string
 ): number {

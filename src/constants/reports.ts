@@ -4,6 +4,417 @@ export const PAGE_SIZE = 5000;
 
 export const customReportConfig: CustomReportInterface[] = [
   {
+    id: "Consolidate_DREAM_services_with_primary_package",
+    name: "Consolidated DREAMS services with primary package",
+    program: ["hOEIHJDrrvz"],
+    dxConfigs: [
+      {
+        id: "WTZ7GLTrE8Q",
+        name: "First Name",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "rSP9c21JsfC",
+        name: "Surname",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "qZP982qpSPS",
+        name: "Date of Birth",
+        isDate: true,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "beneficiary_age",
+        name: "Age",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "VJiWumvINR6",
+        name: "Sex",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "tNdoR0jYr7R",
+        name: "Contact Number",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "XYPRtYgQUF8",
+        name: "Current Pregnancy status",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "PREGNANT",
+          },
+          {
+            value: "",
+            displayName: "NOT PREGNANT",
+          },
+        ],
+      },
+      {
+        id: "fTSAY18LgCF",
+        name: "ID number",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "q8qPtzanSTU",
+        name: "Number of Sex Partners",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "LmAeo9S1BFX",
+        name: "STIs (Past or Present)",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: false,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "Yes",
+          },
+          {
+            value: "",
+            displayName: "No",
+          },
+        ],
+      },
+      {
+        id: "p33MrrhsQRz",
+        name: "Transactional Sex",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "Yes",
+          },
+          {
+            value: "",
+            displayName: "No",
+          },
+        ],
+      },
+      {
+        id: "yc3BlUIEup3",
+        name: "Experiences of Violence",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "Yes",
+          },
+          {
+            value: "",
+            displayName: "No",
+          },
+        ],
+      },
+      {
+        id: "bApA6X6TVvJ",
+        name: "School Enrollment",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "NOT ENROLLED IN SCHOOL",
+          },
+          {
+            value: "",
+            displayName: "ENROLLED IN SCHOOL",
+          },
+        ],
+      },
+      {
+        id: "HJIHPjOf5s1",
+        name: "Alcohol Use",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "Yes",
+          },
+          {
+            value: "",
+            displayName: "No",
+          },
+        ],
+      },
+      {
+        id: "B4ojlzKypUF",
+        name: "Orphanhood",
+        isDate: false,
+        isBoolean: true,
+        isAttribute: true,
+        programStage: "",
+        displayValues: [
+          {
+            value: "Yes",
+            displayName: "Yes",
+          },
+          {
+            value: "",
+            displayName: "No",
+          },
+        ],
+      },
+      {
+        id: "enrollmentdate",
+        name: "Date of enrollment to the program",
+        isDate: true,
+        isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "date_of_last_service_received",
+        name: "Date Of Last Service Received",
+        isDate: true,
+        isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "district_of_service",
+        name: "District of Service",
+        isDate: false,
+        isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "last_service_community_council",
+        name: "Last Service Community Council",
+        isDate: false,
+        isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "facility_name",
+        name: "Facility Name",
+        isDate: false,
+        isBoolean: false,
+        programStage: "",
+      },
+      {
+        id: "RB8Wx75hGa4",
+        name: "Village",
+        isDate: false,
+        program: "",
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "total_services",
+        name: "Number of services received",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+      },
+      {
+        id: "completed_primary_package",
+        name: "Completed Primary Package",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+        programStages: [
+          {
+            id: "PGFt6IwdZLM",
+            dataElements: ["qFwm4RM45gi"],
+          },
+          {
+            id: "bDJq2JWVTbC",
+            dataElements: ["Eug4BXDFLym"],
+          },
+          {
+            id: "NXsIkG9Q1BA",
+            dataElements: ["uciT2F6ByYO"],
+          },
+        ],
+      },
+      {
+        id: "completed_primary_package_and_atleast_secondary",
+        name: "Completed Primary Package + at least one Secondary Service",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+        programStages: [
+          {
+            id: "PGFt6IwdZLM",
+            dataElements: ["qFwm4RM45gi"],
+          },
+          {
+            id: "bDJq2JWVTbC",
+            dataElements: ["Eug4BXDFLym"],
+          },
+          {
+            id: "NXsIkG9Q1BA",
+            dataElements: ["uciT2F6ByYO"],
+          },
+          {
+            id: "vAMc8n0YB6m",
+            dataElements: ["zbHpXUjGv5H"],
+          },
+          {
+            id: "bDJq2JWVTbC",
+            dataElements: ["Eug4BXDFLym"],
+          },
+          {
+            id: "NXsIkG9Q1BA",
+            dataElements: ["uciT2F6ByYO"],
+          },
+          {
+            id: "mMjGlK1W0Xo",
+            dataElements: ["veoA322323t", "bH9DpJOIutM", "h0P6UfkUvLP"],
+          },
+          {
+            id: "Qw8c20q5V0w",
+            dataElements: ["VtmkYCQkBQw"],
+          },
+          {
+            id: "yK0ENCuwPqh",
+            dataElements: ["mnYT2rZyGgJ"],
+          },
+          {
+            id: "VLW93YjZOyf",
+            dataElements: ["qML4gVZ2UFc"],
+          },
+          {
+            id: "N5SlNqQuMyC",
+            dataElements: ["NhUVtfObJFw"],
+          },
+          {
+            id: "A7Tl3vML6as",
+            dataElements: ["uciT2F6ByYO"],
+          },
+          {
+            id: "MkyTrLeBG8I",
+            dataElements: ["OrC9Bh2bcFz", "rsh5Kvx6qAU", "hXyqgOWZ17b"],
+          },
+        ],
+      },
+      {
+        id: "completed_secondary_package",
+        name: "Completed Secondary Service Package",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+        programStages: [
+          {
+            id: "vAMc8n0YB6m",
+            dataElements: ["zbHpXUjGv5H"],
+          },
+          {
+            id: "bDJq2JWVTbC",
+            dataElements: ["Eug4BXDFLym"],
+          },
+          {
+            id: "NXsIkG9Q1BA",
+            dataElements: ["uciT2F6ByYO"],
+          },
+          {
+            id: "mMjGlK1W0Xo",
+            dataElements: ["veoA322323t", "bH9DpJOIutM", "h0P6UfkUvLP"],
+          },
+          {
+            id: "Qw8c20q5V0w",
+            dataElements: ["VtmkYCQkBQw"],
+          },
+          {
+            id: "yK0ENCuwPqh",
+            dataElements: ["mnYT2rZyGgJ"],
+          },
+          {
+            id: "VLW93YjZOyf",
+            dataElements: ["qML4gVZ2UFc"],
+          },
+          {
+            id: "N5SlNqQuMyC",
+            dataElements: ["NhUVtfObJFw"],
+          },
+          {
+            id: "A7Tl3vML6as",
+            dataElements: ["uciT2F6ByYO"],
+          },
+          {
+            id: "MkyTrLeBG8I",
+            dataElements: ["OrC9Bh2bcFz", "rsh5Kvx6qAU", "hXyqgOWZ17b"],
+          },
+        ],
+      },
+      {
+        id: "klLkGxy328c",
+        name: "Implementing Mechanism Name",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "GsWaSx1t3Qs",
+        name: "Service Provider",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        crossStages: true,
+        programStage: "",
+      },
+    ],
+    disablePeriodSelection: false,
+    endDateSelection: true,
+    allowedImplementingPartners: [
+      "H2CE3Iwdf7v",
+      "vVMJBQvvm5D",
+      "tmuVlsiEjUi",
+      "KixA3B2O8Rp",
+      "A5VS8GCyb8t",
+      "pNg5CAXMtLP",
+    ],
+    includeEnrollmentWithoutService: true,
+  },
+  {
     id: "Consolidate_DREAM_services",
     name: "Consolidated DREAMS services",
     program: ["hOEIHJDrrvz"],
@@ -624,6 +1035,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "vVMJBQvvm5D",
@@ -1275,6 +1687,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "vVMJBQvvm5D",
@@ -1982,6 +2395,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: ["H2CE3Iwdf7v", "KixA3B2O8Rp"],
     includeEnrollmentWithoutService: false,
   },
@@ -2112,6 +2526,17 @@ export const customReportConfig: CustomReportInterface[] = [
         isAttribute: true,
         programStage: "",
       },
+
+      {
+        id:"household_id",
+        name: "HOUSEHOLD ID",
+        isDate: false,
+        program: "",
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+
       {
         id: "eIU7KMx4Tu3",
         name: "BENEFICIARY CODE",
@@ -2204,7 +2629,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
       {
         id: "RDobagXItZ6",
-        name: "NEW OR RETURNING",
+        name: "NEW OR RE-ENROLLED",
         isDate: false,
         program: "",
         isBoolean: false,
@@ -2527,6 +2952,17 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "gkNKXUxpyv9",
       },
+
+      {
+        id:"",
+        name: "VAC LEGAL MESSAGING Case plan",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        programStage: "",
+      },
+
+
       {
         id: "Ccp4Odlh3BE",
         name: "COUNSELLING Case plan",
@@ -2899,6 +3335,20 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "vcaHzmUuYzU",
       },
       {
+        id: "rMtSykWZ4HB",
+        name: "VAC Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "vcaHzmUuYzU",
+      },
+      {
+        id: "rMtSykWZ4HB",
+        name: "VAC Service",
+        isDate: false,
+        isBoolean: true,
+        programStage: "CHFwighOquA",
+      },
+      {
         id: "QDFZ03HbjGj",
         name: "VAC LEGAL MESSAGING Service",
         isDate: false,
@@ -2912,19 +3362,13 @@ export const customReportConfig: CustomReportInterface[] = [
         isBoolean: true,
         programStage: "vcaHzmUuYzU",
       },
+
       {
-        id: "rMtSykWZ4HB",
-        name: "VAC Service",
+        id: "",
+        name: "COUNSELLING Service",
         isDate: false,
         isBoolean: true,
-        programStage: "vcaHzmUuYzU",
-      },
-      {
-        id: "rMtSykWZ4HB",
-        name: "VAC Service",
-        isDate: false,
-        isBoolean: true,
-        programStage: "CHFwighOquA",
+        programStage: "",
       },
       {
         id: "JlRnllAlSk0",
@@ -3239,7 +3683,16 @@ export const customReportConfig: CustomReportInterface[] = [
       },
       {
         id: "GsWaSx1t3Qs",
-        name: "Service Provider",
+        name: "Last Service Provider",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: false,
+        crossStages: true,
+        programStage: "",
+      },
+      {
+        id: "lcyyWZnfQNJ",
+        name: "implementing Partner",
         isDate: false,
         isBoolean: false,
         isAttribute: false,
@@ -3248,6 +3701,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "KixA3B2O8Rp",
@@ -3255,7 +3709,7 @@ export const customReportConfig: CustomReportInterface[] = [
       "NuxoYkqopE2",
       "RoLA6GyxTlS",
     ],
-    includeEnrollmentWithoutService: true,
+    includeEnrollmentWithoutService: false,
   },
   {
     id: "OVC_Interverntion_enrollment",
@@ -3265,6 +3719,14 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "WTZ7GLTrE8Q",
         name: "BENEFICIARY NAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "s1HaiT6OllL",
+        name: "BENEFICIARY MIDDLE NAME",
         isDate: false,
         isBoolean: false,
         isAttribute: true,
@@ -3487,6 +3949,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "KixA3B2O8Rp",
@@ -3504,6 +3967,14 @@ export const customReportConfig: CustomReportInterface[] = [
       {
         id: "WTZ7GLTrE8Q",
         name: "BENEFICIARY NAME",
+        isDate: false,
+        isBoolean: false,
+        isAttribute: true,
+        programStage: "",
+      },
+      {
+        id: "s1HaiT6OllL",
+        name: "BENEFICIARY MIDDLE NAME",
         isDate: false,
         isBoolean: false,
         isAttribute: true,
@@ -4674,6 +5145,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "KixA3B2O8Rp",
@@ -5224,6 +5696,8 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
+
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "vVMJBQvvm5D",
@@ -5774,6 +6248,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: ["H2CE3Iwdf7v", "vVMJBQvvm5D"],
     includeEnrollmentWithoutService: true,
   },
@@ -6341,7 +6816,9 @@ export const customReportConfig: CustomReportInterface[] = [
         programStage: "",
       },
     ],
-    disablePeriodSelection: false,
+    disablePeriodSelection: false, 
+    endDateSelection: false,
+
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "RoLA6GyxTlS",
@@ -7080,6 +7557,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "vVMJBQvvm5D",
@@ -8074,6 +8552,7 @@ export const customReportConfig: CustomReportInterface[] = [
       },
     ],
     disablePeriodSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: [
       "H2CE3Iwdf7v",
       "vVMJBQvvm5D",
@@ -9060,6 +9539,7 @@ export const customReportConfig: CustomReportInterface[] = [
     ],
     disablePeriodSelection: true,
     disableOrgUnitSelection: true,
+    endDateSelection: false,
     allowedImplementingPartners: ["H2CE3Iwdf7v"],
     includeEnrollmentWithoutService: true,
   },
@@ -10334,6 +10814,7 @@ export const customReportConfig: CustomReportInterface[] = [
     ],
     disablePeriodSelection: false,
     disableOrgUnitSelection: false,
+    endDateSelection: false,
     allowedImplementingPartners: ["H2CE3Iwdf7v", "cGenMNiLKqM"],
     includeEnrollmentWithoutService: true,
   },

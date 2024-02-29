@@ -3,26 +3,42 @@ import { evaluationOfPrimaryPackageCompletionAtLeastOneSecondary } from "./prima
 import { evaluationOfPrimaryPackageCompletion } from "./primary-package-completion-helper";
 import { evaluationOfSecondaryPrimaryPackageCompletion } from "./secondary-primary-package-completion-helper";
 import { CombineValues } from "../../../shared/interfaces/report";
+import { evaluateServiceCompletionForCodes, serviceTotalSessions } from "./get-average-session-number-per-intervention";
 
 export function getSanitizesReportValue(
   value: any,
-  codes: Array<string>,
+  codes:Array<string> = [],
   isBoolean: boolean,
   isDate: boolean,
   displayValues: Array<any>,
-  skipSanitizationOfDisplayName: boolean
+  skipSanitizationOfDisplayName: boolean,
+  analyticDataByBeneficiary: any[],
+  programStage: string
 ) {
   const displayNames = _.flattenDeep(
     _.map(displayValues || [], (displayValue) => displayValue.displayName)
   );
   displayNames.push("Yes", "1");
   let sanitizedValue = "";
-  if (codes && codes.length > 0) {
+  // Checks if any individual code requires session count validation
+  const requiresSessionValidation = codes.some(code => serviceTotalSessions.hasOwnProperty(code));
+
+  // Special combination check
+  const isSpecificCombination = codes.includes("Go Girls") && codes.includes("AFLATEEN/TOUN") && codes.length === 2;
+
+  if (codes && codes.length > 0 && !requiresSessionValidation && !isSpecificCombination) {
     sanitizedValue =
       codes.includes(value) || displayNames.includes(value)
         ? "Yes"
         : sanitizedValue;
-  } else if (isBoolean) {
+  } else if ( requiresSessionValidation || isSpecificCombination){
+    sanitizedValue = evaluateServiceCompletionForCodes(
+      analyticDataByBeneficiary,
+      programStage,
+      codes,
+    );
+  }
+  else if (isBoolean ) {
     sanitizedValue = displayNames.includes(`${value}`) ? "Yes" : sanitizedValue;
   } else if (isDate) {
     sanitizedValue = getFormattedDate(value);
@@ -118,6 +134,8 @@ function getAssessmentDate(analyticDataByBeneficiary: Array<any>) {
       analyticDataByBeneficiary,
       programStage
     );
+
+   
     if (_.keys(serviceData).length > 0) {
       date =
         serviceData && _.keys(serviceData).length > 0
@@ -371,6 +389,7 @@ function getBeneficiaryTypeValue(
       )
     )
   );
+  
 
   let beneficiaryProgramId = "";
   if (eventProgramStages.length > 0) {
@@ -409,8 +428,30 @@ function getBeneficiaryTypeValue(
         ? "Primary Child"
         : "Child";
   }
+ 
   return beneficiaryType;
 }
+
+function getBeneficiaryCodeValue(analyticDataByBeneficiary: any) {
+  let beneficiaryCode = "";
+  const id = "eIU7KMx4Tu3"; 
+
+
+  for (const data of analyticDataByBeneficiary) {
+    if (data && data[id]) {
+      beneficiaryCode = data[id];
+      break; 
+    }
+  }
+  if (beneficiaryCode) {
+    beneficiaryCode = beneficiaryCode.slice(0, -1);
+  }
+
+  return beneficiaryCode;
+}
+
+
+
 
 export function getServiceFromReferral(
   analyticsDataByBeneficiary: Array<any>,
@@ -485,8 +526,28 @@ export function getFormattedEventAnalyticDataForReport(
             combinedValues,
           } = dxConfigs;
           let value = "";
-
-          if (id === "completed_primary_package") {
+         
+          if(id === "GsWaSx1t3Qs"){
+            const lastService: any = getLastServiceFromAnalyticData(
+              analyticDataByBeneficiary,
+              programStage  
+            );
+            value = lastService && _.keys(lastService).length > 0
+              ? lastService["eventdate"] || value
+              : value;  
+           
+          }
+          else if (id === "lcyyWZnfQNJ"){
+            const lastService: any = getLastServiceFromAnalyticData(
+              analyticDataByBeneficiary,
+              programStage  
+            );
+            value = lastService && _.keys(lastService).length > 0
+              ? lastService["eventdate"] || value
+              : value;  
+          
+          }
+          else if (id === "completed_primary_package") {
             value = evaluationOfPrimaryPackageCompletion(
               analyticDataByBeneficiary,
               programStages
@@ -581,6 +642,10 @@ export function getFormattedEventAnalyticDataForReport(
               const age = getBeneficiaryAge(dob);
               value = getBeneficiaryAgeRanges(age);
             }
+          }  else if(id === "household_id"){
+            value = getBeneficiaryCodeValue(
+              analyticDataByBeneficiary,
+            );
           } else if (id === "beneficiary_type") {
             value = getBeneficiaryTypeValue(
               analyticDataByBeneficiary,
@@ -592,7 +657,7 @@ export function getFormattedEventAnalyticDataForReport(
               ids,
               programStage
             );
-          } else if (id === "is_service_provided") {
+          }else if (id === "is_service_provided") {
             const lastService = getLastServiceFromAnalyticData(
               analyticDataByBeneficiary,
               programStage
@@ -704,7 +769,9 @@ export function getFormattedEventAnalyticDataForReport(
                     isBoolean,
                     isDate,
                     displayValues,
-                    isNotAgywBeneficiary
+                    isNotAgywBeneficiary,
+                    analyticDataByBeneficiary,
+                    programStage
                   )
                 : getSanitizedDisplayValue(
                     value,

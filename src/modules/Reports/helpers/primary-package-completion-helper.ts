@@ -86,10 +86,10 @@ export function evaluationOfPrimaryPackageCompletion(
             case '10-14': {
                 if (
                     hasHivRiskAssessment &&
-                    hivPreventionEducationSessions >= 9 &&
-                    violationEducationSessions >= 1 &&
-                    aflateenTounSessions >= 9 &&
-                    financialEducationSessions === 4
+                    hivPreventionEducationSessions >= 4 &&
+                    violationEducationSessions >= 10 &&
+                    financialEducationSessions >= 4  &&
+                   (aflateenTounSessions >= 10 || goGirlsSessions >= 12) 
                 ) {
                     completed = 'Yes';
                 }
@@ -98,11 +98,11 @@ export function evaluationOfPrimaryPackageCompletion(
             case '15-19': {
                 if (
                     hasHivRiskAssessment &&
-                    hivPreventionEducationSessions >= 9 &&
-                    violationEducationSessions >= 1 &&
-                    aflateenTounSessions >= 9 &&
-                    goGirlsSessions >= 10 &&
-                    financialEducationSessions === 4
+                    hivPreventionEducationSessions >= 4 &&
+                    violationEducationSessions >= 10 &&
+                    financialEducationSessions >= 4  &&
+                    (aflateenTounSessions >= 10 || goGirlsSessions >= 12) &&
+                    condomEducationSessions >= 4
                 ) {
                     completed = 'Yes';
                 }
@@ -111,12 +111,11 @@ export function evaluationOfPrimaryPackageCompletion(
             case '20-24': {
                 if (
                     hasHivRiskAssessment &&
-                    hivPreventionEducationSessions >= 9 &&
-                    violationEducationSessions >= 1 &&
-                    aflateenTounSessions >= 9 &&
-                    goGirlsSessions >= 10 &&
+                    hivPreventionEducationSessions >= 4 &&
+                    violationEducationSessions >= 10 &&
+                    (aflateenTounSessions >= 10 || goGirlsSessions >= 12) &&
                     (hasCondomEductionProvided || condomEducationSessions >= 4) &&
-                    financialEducationSessions === 4
+                    financialEducationSessions >= 4
                 ) {
                     completed = 'Yes';
                 }

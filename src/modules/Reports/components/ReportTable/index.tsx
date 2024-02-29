@@ -5,19 +5,50 @@ import { useElementSize } from "usehooks-ts"
 import FullPageLoader, {
   FullPageProgressLoader,
 } from "../../../../shared/components/Loaders"
+import {NoticeBox} from "@dhis2/ui"
 
 export function ReportTable() {
-  const { loading, columns, rows, pagination, chunking, percentage } =
+  const { loading, columns, rows, pagination, chunking, error, percentage } =
     useReportPaginatedData()
   const [containerRef, { width, height }] = useElementSize()
 
+
   if (loading && percentage === undefined) {
-    return <FullPageLoader />
+    if (error) {
+      return (
+      <div
+        ref={containerRef}
+        style={{ maxHeight: "calc(100vh - 324px)" }}
+        className="p-16 w-100 h-100"
+      >
+        <NoticeBox error title="Error">
+          {error}
+        </NoticeBox>
+      </div>
+      );
+    }
+    return <FullPageLoader />;
+  }
+  
+  if (error) {
+    return (
+      <div
+        ref={containerRef}
+        style={{ maxHeight: "calc(100vh - 324px)" }}
+        className="p-16 w-100 h-100"
+      >
+        <NoticeBox error title="Error">
+          {error}
+        </NoticeBox>
+      </div>
+    );
   }
 
   if (percentage !== undefined) {
     return <FullPageProgressLoader percentage={percentage} />
   }
+
+
 
   return (
     <div
