@@ -31,4 +31,5 @@ export interface CustomReportInterface {
   disableOrgUnitSelection?: boolean;
   allowedImplementingPartners?: string[];
   includeEnrollmentWithoutService?: boolean;
+  endDateSelection?: boolean;
 }
