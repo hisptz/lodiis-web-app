@@ -3,8 +3,7 @@ import DataManagement from "../modules/DataManagement";
 import i18n from '@dhis2/d2-i18n';
 import Dashboard, {DashboardRouting} from "../modules/Dashboard";
 import Reports from "../modules/Reports";
-import {IconDashboardWindow24, IconEditItems24, IconTable24, IconVisualizationGauge24} from '@dhis2/ui'
-import PerformanceMonitoring from "../modules/PerformanceMonitoring";
+import {IconDashboardWindow24, IconEditItems24, IconTable24} from '@dhis2/ui'
 import Details from "../modules/DataManagement/components/Details";
 import {DataManagementOutlet} from "../modules/DataManagement/components/Outlet";
 import {DashboardOutlet} from "../modules/Dashboard/components/Outlet";
@@ -55,12 +54,5 @@ export const NAV_ITEMS: NavItem[] = [
         label: i18n.t("Custom Reports"),
         path: "reports",
         icon: IconTable24
-    },
-    {
-        element: PerformanceMonitoring,
-        label: i18n.t("Performance Monitoring"),
-        path: "performance-monitoring",
-        icon: IconVisualizationGauge24
-    },
-
+    }
 ]
