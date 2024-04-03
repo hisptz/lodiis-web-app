@@ -4,7 +4,7 @@ import { CustomReportInterface } from '../../../shared/interfaces/report';
 export function getFilteredReportByUserImplementingPartner(
     reports: CustomReportInterface[],
     implementingPartnerId: string
-) {
+): any[] {
   return _.filter(
       reports || [],
       (report: CustomReportInterface) =>
