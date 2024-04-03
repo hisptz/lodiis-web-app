@@ -1,17 +1,17 @@
 import { atom } from "recoil";
-import { KBProgram } from "../models/program";
 import React from "react";
-import { useKBProgram } from "../hooks/program";
 import FullPageLoader from "../components/Loaders";
 import { ErrorThrower } from "../components/ErrorThrower";
+import { CurrentUser } from "../models/user";
+import { useCurrentUser } from "../hooks/user";
 
-export const KBProgramState = atom<KBProgram | undefined | null>({
-	key: "kb-program-state",
+export const CurrentUserState = atom<CurrentUser | undefined | null>({
+	key: "kb-current-user-state",
 	default: undefined,
 });
 
-export function KBProgramSync({ children }: { children: React.ReactNode }) {
-	const { loading, error } = useKBProgram();
+export function CurrentUserSync({ children }: { children: React.ReactNode }) {
+	const { loading, error } = useCurrentUser();
 	if (loading) {
 		return <FullPageLoader />;
 	}

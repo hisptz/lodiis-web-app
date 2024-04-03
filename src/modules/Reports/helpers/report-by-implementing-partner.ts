@@ -1,15 +1,15 @@
-import {Report} from 'src/app/shared/models/report.model';
-import * as _ from 'lodash';
+import * as _ from "lodash";
+import { CustomReportInterface } from "../../../shared/interfaces/report";
 
 export function getFilteredReportByUserImplementingPartner(
-    reports: Report[],
-    implementingPartnerId: string
-) {
-  return _.filter(
-      reports || [],
-      (report: Report) =>
-          report &&
-          report.allowedImplementingPartners &&
-          report.allowedImplementingPartners.includes(implementingPartnerId)
-  );
+	reports: CustomReportInterface[],
+	implementingPartnerId: string,
+): any[] {
+	return _.filter(
+		reports || [],
+		(report: CustomReportInterface) =>
+			report &&
+			report.allowedImplementingPartners &&
+			report.allowedImplementingPartners.includes(implementingPartnerId),
+	);
 }

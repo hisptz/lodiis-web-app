@@ -7,3 +7,5 @@ declare module "async-es" {
 }
 declare module "html2pdf.js";
 declare module "file-saver";
+declare module "@dhis2/d2-i18n";
+declare module "@dhis2/ui";
