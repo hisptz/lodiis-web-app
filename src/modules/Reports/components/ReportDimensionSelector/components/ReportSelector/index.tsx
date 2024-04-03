@@ -17,7 +17,8 @@ import { compact, find, isEmpty } from "lodash"
 import { useBoolean } from "usehooks-ts"
 import { DimensionSelector } from "../../../../../../shared/components/DimensionsSelector/components/DimensionSelector"
 import { DimensionState } from "../../../../../../shared/state/dimensions"
-import { CustomReportInterface } from "../../../../../../shared/interfaces/report"
+import { getFilteredReportByUserImplementingPartner } from "../../../../helpers/report-by-implementing-partner"
+import { CurrentUserState } from "../../../../../../shared/state/currentUser"
 
 export function ReportSelector({
   onSelect,
@@ -27,11 +28,11 @@ export function ReportSelector({
   selected: string[]
 }) {
   const [reports] = useSetting("reports", { global: true })
+  const [currentUser] = useRecoilState(CurrentUserState);
   return (
     <div className="w-100 p-8">
       <Menu>
-        //TODO handling report filtering with IPs
-        {reports?.filter((report: CustomReportInterface)=> report.allowedImplementingPartners && report.allowedImplementingPartners.length > 0).map((report: { id: string; name: string }) => (
+        { getFilteredReportByUserImplementingPartner(reports, currentUser?.userImplmentingPartner ?? '').map((report: { id: string; name: string }) => (
           <MenuItem
             onClick={() => onSelect([report.id])}
             active={selected.includes(report.id)}
