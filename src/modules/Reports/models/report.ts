@@ -179,12 +179,12 @@ export class CustomReport {
           dx: uniq(
             compact(
               flattenDeep(
-                elements.map((element) => {
+                elements.map((element: any) => {
                   if (defaultCustomDxConfigIds.includes(element.id ?? "")) {
                     return undefined;
                   }
                   return (element.ids ?? []).length
-                    ? element.ids?.map((id) => `${element.programStage}.${id}`)
+                    ? element.ids?.map((id: string) => `${element.programStage}.${id}`)
                     : `${element.programStage}.${element.id}`;
                 }) as string[]
               )
