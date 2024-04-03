@@ -162,7 +162,7 @@ export function useReportData() {
 	});
 	const { show, hide } = useAlert(
 		({ message }) => message,
-		({ type }) => ({ ...type, duration: 3000 })
+		({ type }) => ({ ...type, duration: 3000 }),
 	);
 	const [data, setData] = useRecoilState(ReportDataState(report?.id));
 	const columns = useMemo(() => report?.getColumns() ?? [], [report]);
@@ -187,11 +187,16 @@ export function useReportData() {
 					programIds: report.programs,
 				});
 				report.setProgramMetadata(
-					(programMetadata?.programs as any)?.programs as Program[]
+					(programMetadata?.programs as any)?.programs as Program[],
 				);
 				await report.getData(
 					{ orgUnits, periods },
-					{ getEvents, getEnrollments, setTotalRequests, setProgress }
+					{
+						getEvents,
+						getEnrollments,
+						setTotalRequests,
+						setProgress,
+					},
 				);
 				const allOrgUnits = ((await getOrgUnits())?.ou as any)
 					?.organisationUnits;
@@ -222,7 +227,7 @@ export function useReportData() {
 		}
 
 		const calculatedPercentage = Math.floor(
-			(progress / totalRequests) * 100
+			(progress / totalRequests) * 100,
 		);
 		return calculatedPercentage > 100 ? 100 : calculatedPercentage;
 	}, [totalRequests, progress]);

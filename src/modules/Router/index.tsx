@@ -36,7 +36,7 @@ export default function MainRouter(): React.ReactElement {
 														element={<SubElement />}
 													/>
 												);
-											}
+											},
 										)}
 									</Route>
 								);
