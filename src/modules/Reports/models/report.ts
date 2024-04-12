@@ -114,6 +114,22 @@ export class CustomReport {
 		) as ReportDxConfig[];
 	}
 
+	get reportProgramStageIds(): string[] {
+		return filter(
+			uniq(
+				flattenDeep(
+					this.dataItems.map((item) => {
+						return [
+							item.programStage ?? "",
+							...map(item.programStages ?? [], ({ id }) => id),
+						];
+					}),
+				) as string[],
+			),
+			(stage) => stage !== "",
+		);
+	}
+
 	get dataElements(): ReportDxConfig[] {
 		return flattenDeep(
 			filter(
