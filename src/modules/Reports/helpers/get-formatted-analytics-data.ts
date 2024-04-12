@@ -139,7 +139,13 @@ const prepVisitProgramStages = ["nVCqxOg0nMQ", "Yn6AJ0CAxb2"];
 const beneficiaryDateOfBirthReference = ["qZP982qpSPS", "jVSwC6Ln95H"];
 const primaryChildCheckReference = "KO5NC4pfBmv";
 const casePlanProgramStages = ["gkNKXUxpyv9", "vjF07cZNST3"];
+const lastIpProvideService = 'lcyyWZnfQNJ';
+const lastServiceProvider ='GsWaSx1t3Qs';
+
+const enrolledIp ='klLkGxy328c';
+const enrolledServiceProvider = 'DdnlE8kmIkT';
 export const defaultPrepVisitKey = "Follow up Visit";
+
 
 function getAssessmentDate(analyticDataByBeneficiary: Array<any>) {
 	let date = "";
@@ -547,24 +553,24 @@ export function getFormattedEventAnalyticDataForReport(
 						combinedValues,
 					} = dxConfigs;
 					let value = "";
-
-					if (id === "GsWaSx1t3Qs") {
+					if (id === "last_service_provider") {
 						const lastService: any = getLastServiceFromAnalyticData(
 							analyticDataByBeneficiary,
 							programStage,
 						);
 						value =
 							lastService && _.keys(lastService).length > 0
-								? lastService["eventdate"] || value
+								? lastService[lastServiceProvider] || lastService[enrolledServiceProvider] || value
 								: value;
-					} else if (id === "lcyyWZnfQNJ") {
+					} else if (id === "last_ip_provide_service") {
 						const lastService: any = getLastServiceFromAnalyticData(
 							analyticDataByBeneficiary,
 							programStage,
 						);
+						
 						value =
 							lastService && _.keys(lastService).length > 0
-								? lastService["eventdate"] || value
+								? lastService[lastIpProvideService] || lastService[enrolledIp] || value
 								: value;
 					} else if (id === "completed_primary_package") {
 						value = evaluationOfPrimaryPackageCompletion(
@@ -890,10 +896,18 @@ export function getFormattedEventAnalyticDataForReport(
 			}),
 		),
 		(beneficiary: any) => {
-			const serviceProvider = beneficiary["Service Provider"] || "";
+			const enrolledServiceProvider = beneficiary["Enrolled Service Provider"] || "";
+			const serviceProvider = beneficiary["Last Service Provider"] || "";
+			if (enrolledServiceProvider === "scriptrunner") {
+				beneficiary["Enrolled Service Provider"] = "UPLOADED";
+				beneficiary["Enrolled IP"]= '';
+				if(_.keys(beneficiary).includes("Enrolled Sub IP")){
+					beneficiary["Enrolled Sub IP"] = '';
+				}
+			}
 			if (serviceProvider === "scriptrunner") {
-				beneficiary["Implementing Mechanism Name"] = "UPLOADED";
-				beneficiary["Service Provider"] = "UPLOADED";
+				beneficiary["Last Service Provider"] = "UPLOADED";
+				beneficiary["Last IP provide service"] = '';
 			}
 			return beneficiary;
 		},
