@@ -100,7 +100,7 @@ const programQuery = {
 			filter: [`id:in:[${programIds.join(",")}]`],
 			fields: [
 				"id",
-				"programStages[id]",
+				"programStages[id,programStageDataElements[dataElement[id]]]",
 				"programTrackedEntityAttributes[trackedEntityAttribute[id]]",
 			],
 		}),
