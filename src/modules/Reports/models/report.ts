@@ -114,31 +114,87 @@ export class CustomReport {
 		) as ReportDxConfig[];
 	}
 
+	get reportProgramStageIds(): string[] {
+		return filter(
+			uniq(
+				flattenDeep(
+					this.dataItems.map((item) => {
+						return [
+							item.programStage ?? "",
+							...map(item.programStages ?? [], ({ id }) => id),
+						];
+					}),
+				) as string[],
+			),
+			(stage) => stage !== "",
+		);
+	}
+
 	get dataElements(): ReportDxConfig[] {
 		return flattenDeep(
-			filter(
-				this.dataItems.map((item) => {
-					if (!item.programStages || isEmpty(item.programStages)) {
-						return item;
-					} else {
-						return flattenDeep(
-							item.programStages.map((stage) => {
-								return (
-									stage.dataElements.map((dataElement) => {
-										return {
-											...item,
-											id: dataElement,
-											programStage: stage.id,
-										};
-									}) ?? []
+			map(
+				flattenDeep(
+					filter(
+						this.dataItems.map((item) => {
+							if (
+								!item.programStages ||
+								isEmpty(item.programStages)
+							) {
+								return item;
+							} else {
+								return flattenDeep(
+									item.programStages.map((stage) => {
+										return (
+											stage.dataElements.map(
+												(dataElement) => {
+													return {
+														...item,
+														id: dataElement,
+														programStage: stage.id,
+													};
+												},
+											) ?? []
+										);
+									}),
 								);
-							}),
-						);
-					}
-				}),
-				({ isAttribute }: any) => !isAttribute,
-			) as ReportDxConfig[],
-		);
+							}
+						}),
+						({ isAttribute }: any) => !isAttribute,
+					) as ReportDxConfig[],
+				),
+				(item) => {
+					return item.programStage !== ""
+						? [item]
+						: map(this.reportProgramStageIds, (stage) => {
+								const progranStageObj = find(
+									this.programsMetadata,
+									(program) => {
+										return !!find(program.programStages, [
+											"id",
+											stage,
+										]);
+									},
+								);
+								if (progranStageObj) {
+									const programStage = find(
+										progranStageObj.programStages,
+										["id", stage],
+									);
+									const dataElemetIds =
+										programStage?.programStageDataElements?.map(
+											({ dataElement }) => dataElement.id,
+										);
+									if (
+										dataElemetIds?.includes(item.id ?? "")
+									) {
+										return { ...item, programStage: stage };
+									}
+								}
+								return item;
+							});
+				},
+			),
+		) as ReportDxConfig[];
 	}
 
 	get enrollmentAnalyticsParameters() {
