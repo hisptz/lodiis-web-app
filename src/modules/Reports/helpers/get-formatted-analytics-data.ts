@@ -7,6 +7,7 @@ import {
 	evaluateServiceCompletionForCodes,
 	serviceTotalSessions,
 } from "./get-average-session-number-per-intervention";
+import { DEFAULT_ANALYTICS_KEYS } from "../../../constants/reports";
 
 export function getSanitizesReportValue(
 	value: any,
@@ -552,7 +553,20 @@ export function getFormattedEventAnalyticDataForReport(
 						combinedValues,
 					} = dxConfigs;
 					let value = "";
-					if (id === lastServiceProvider) {
+					if (id === "total_services") {
+						const totalServices = _.uniq(
+							_.map(
+								_.filter(analyticDataByBeneficiary, (data) => {
+									return (
+										data[DEFAULT_ANALYTICS_KEYS.PSI] !==
+										undefined
+									);
+								}),
+								(data) => data[DEFAULT_ANALYTICS_KEYS.PSI],
+							),
+						).length;
+						value = `${totalServices}`;
+					} else if (id === lastServiceProvider) {
 						const lastService: any = getLastServiceFromAnalyticData(
 							analyticDataByBeneficiary,
 							programStage,
@@ -839,62 +853,6 @@ export function getFormattedEventAnalyticDataForReport(
 					reportConfig.dxConfigs,
 					(config: any) => config.id === "total_services",
 				);
-				if (totalNumberOfServices) {
-					const serviceIds = _.uniq(
-						_.map(
-							_.filter(
-								reportConfig.dxConfigs,
-								(dxConfig: any) => !dxConfig.isAttribute,
-							),
-							({ id, isBoolean, codes }) => ({
-								id,
-								allowedValues: codes
-									? [...codes]
-									: isBoolean
-										? ["1"]
-										: [],
-							}),
-						),
-					);
-
-					const serviceColumnsWithValue = _.filter(
-						reportConfig.dxConfigs,
-						(dxConfig: any) =>
-							!dxConfig.isAttribute &&
-							beneficiaryData[dxConfig.name] === "Yes",
-					).length;
-					const totalServiceProvided = _.uniqBy(
-						_.flattenDeep(
-							_.filter(
-								analyticDataByBeneficiary,
-								(dataObj: any) => {
-									const { psi, programStage, tei } = dataObj;
-									return (
-										psi &&
-										psi != "" &&
-										programStage &&
-										programStage != "" &&
-										tei &&
-										tei != "" &&
-										_.some(
-											serviceIds,
-											({ id, allowedValues }) =>
-												dataObj[id] != "" &&
-												allowedValues.includes(
-													dataObj[id],
-												),
-										)
-									);
-								},
-							),
-						),
-						"psi",
-					).length;
-					if (serviceColumnsWithValue > 0) {
-						beneficiaryData[totalNumberOfServices.name] =
-							totalServiceProvided;
-					}
-				}
 				return { ...beneficiaryData, id: tei };
 			}),
 		),
