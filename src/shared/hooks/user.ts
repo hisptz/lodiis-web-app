@@ -13,6 +13,16 @@ const query = {
 	},
 };
 
+const userQuery = {
+	response: {
+		resource: "users",
+		params: ({userId}:any)=>({
+			filter: [`id:eq:${userId}`],
+			fields: ["id", "attributeValues[value,attribute[id,name]]"],
+		}),
+	},
+};
+
 export function useCurrentUser() {
 	const { data, loading, error } = useDataQuery(query);
 	const [currentUser, setCurrentUser] = useRecoilState(CurrentUserState);
@@ -27,4 +37,39 @@ export function useCurrentUser() {
 		loading,
 		error,
 	};
+}
+
+export function useCurrentUserInfo(userId: string) {
+	const [currentUser, setCurrentUser] = useRecoilState(CurrentUserState);
+	const { data, loading, error, refetch } = useDataQuery(userQuery, {
+		variables: {
+			userId,
+		},
+	});
+	useEffect(() => {
+		if (userId !=='') {
+			refetch({
+				userId,
+			});
+		}
+		return () => {};
+	}, [userId]);
+	
+	useEffect(() => {
+		if(userId === '') return;
+		
+		const response: any = data?.response ?? {}
+		const users = response.users ?? [];
+		if(users.length > 0){
+			const user = new CurrentUser( users[0]);
+			setCurrentUser(user);	
+		}
+	}, [data]);
+
+	return {
+		currentUser,
+		loading,
+		error
+	};
+
 }
