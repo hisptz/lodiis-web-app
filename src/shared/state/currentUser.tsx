@@ -3,7 +3,7 @@ import React from "react";
 import FullPageLoader from "../components/Loaders";
 import { ErrorThrower } from "../components/ErrorThrower";
 import { CurrentUser } from "../models/user";
-import { useCurrentUser,useCurrentUserInfo } from "../hooks/user";
+import { useCurrentUser, useCurrentUserInfo } from "../hooks/user";
 
 export const CurrentUserState = atom<CurrentUser | undefined | null>({
 	key: "kb-current-user-state",
@@ -11,7 +11,7 @@ export const CurrentUserState = atom<CurrentUser | undefined | null>({
 });
 
 export function CurrentUserSync({ children }: { children: React.ReactNode }) {
-	const {  loading, error } = useCurrentUser();
+	const { loading, error } = useCurrentUser();
 	if (loading) {
 		return <FullPageLoader />;
 	}
@@ -23,10 +23,13 @@ export function CurrentUserSync({ children }: { children: React.ReactNode }) {
 	return <CurrentUserInfoSync children={children}></CurrentUserInfoSync>;
 }
 
-
-export function CurrentUserInfoSync({ children }: { children: React.ReactNode }) {
+export function CurrentUserInfoSync({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const [currentUser] = useRecoilState(CurrentUserState);
-	const {  loading, error } = useCurrentUserInfo(currentUser?.user.id ?? '');
+	const { loading, error } = useCurrentUserInfo(currentUser?.user.id ?? "");
 	if (loading) {
 		return <FullPageLoader />;
 	}

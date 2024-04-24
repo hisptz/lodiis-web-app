@@ -16,7 +16,7 @@ const query = {
 const userQuery = {
 	response: {
 		resource: "users",
-		params: ({userId}:any)=>({
+		params: ({ userId }: any) => ({
 			filter: [`id:eq:${userId}`],
 			fields: ["id", "attributeValues[value,attribute[id,name]]"],
 		}),
@@ -47,29 +47,28 @@ export function useCurrentUserInfo(userId: string) {
 		},
 	});
 	useEffect(() => {
-		if (userId !=='') {
+		if (userId !== "") {
 			refetch({
 				userId,
 			});
 		}
 		return () => {};
 	}, [userId]);
-	
+
 	useEffect(() => {
-		if(userId === '') return;
-		
-		const response: any = data?.response ?? {}
+		if (userId === "") return;
+
+		const response: any = data?.response ?? {};
 		const users = response.users ?? [];
-		if(users.length > 0){
-			const user = new CurrentUser( users[0]);
-			setCurrentUser(user);	
+		if (users.length > 0) {
+			const user = new CurrentUser(users[0]);
+			setCurrentUser(user);
 		}
 	}, [data]);
 
 	return {
 		currentUser,
 		loading,
-		error
+		error,
 	};
-
 }

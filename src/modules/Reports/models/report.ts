@@ -83,12 +83,12 @@ export class CustomReport {
 							id,
 						}));
 					}
-				}) as ReportDxConfig[]
+				}) as ReportDxConfig[],
 			),
-			"id"
+			"id",
 		).filter((config) => {
 			return !Object.values(CUSTOM_DX_CONFIG_IDS).includes(
-				config.id as CUSTOM_DX_CONFIG_IDS
+				config.id as CUSTOM_DX_CONFIG_IDS,
 			);
 		});
 	}
@@ -112,7 +112,7 @@ export class CustomReport {
 	get attributes(): ReportDxConfig[] {
 		return filter(
 			this.dataItems,
-			({ isAttribute }) => isAttribute === true
+			({ isAttribute }) => isAttribute === true,
 		) as ReportDxConfig[];
 	}
 
@@ -125,10 +125,10 @@ export class CustomReport {
 							item.programStage ?? "",
 							...map(item.programStages ?? [], ({ id }) => id),
 						];
-					})
-				) as string[]
+					}),
+				) as string[],
 			),
-			(stage) => stage !== ""
+			(stage) => stage !== "",
 		);
 	}
 
@@ -154,15 +154,15 @@ export class CustomReport {
 														id: dataElement,
 														programStage: stage.id,
 													};
-												}
+												},
 											) ?? []
 										);
-									})
+									}),
 								);
 							}
 						}),
-						({ isAttribute }: any) => !isAttribute
-					) as ReportDxConfig[]
+						({ isAttribute }: any) => !isAttribute,
+					) as ReportDxConfig[],
 				),
 				(item) => {
 					return item.programStage !== ""
@@ -175,16 +175,16 @@ export class CustomReport {
 											"id",
 											stage,
 										]);
-									}
+									},
 								);
 								if (progranStageObj) {
 									const programStage = find(
 										progranStageObj.programStages,
-										["id", stage]
+										["id", stage],
 									);
 									const dataElemetIds =
 										programStage?.programStageDataElements?.map(
-											({ dataElement }) => dataElement.id
+											({ dataElement }) => dataElement.id,
 										);
 									if (
 										dataElemetIds?.includes(item.id ?? "")
@@ -193,9 +193,9 @@ export class CustomReport {
 									}
 								}
 								return item;
-						  });
-				}
-			)
+							});
+				},
+			),
 		) as ReportDxConfig[];
 	}
 
@@ -221,16 +221,16 @@ export class CustomReport {
 						filter(
 							this.dataElements,
 							({ crossStages, programStage }) =>
-								crossStages && !programStage
+								crossStages && !programStage,
 						),
 						(dataElement: ReportDxConfig) => ({
 							...dataElement,
 							programStage,
-						})
+						}),
 					),
-				]
+				],
 			),
-			""
+			"",
 		);
 
 		const sanitizedDataElements = mapValues(
@@ -250,7 +250,7 @@ export class CustomReport {
 						})),
 					];
 				}
-			}
+			},
 		);
 
 		return keys(sanitizedDataElements)
@@ -263,7 +263,7 @@ export class CustomReport {
 								elements.map((element: any) => {
 									if (
 										defaultCustomDxConfigIds.includes(
-											element.id ?? ""
+											element.id ?? "",
 										)
 									) {
 										return undefined;
@@ -271,12 +271,12 @@ export class CustomReport {
 									return (element.ids ?? []).length
 										? element.ids?.map(
 												(id: any) =>
-													`${element.programStage}.${id}`
-										  )
+													`${element.programStage}.${id}`,
+											)
 										: `${element.programStage}.${element.id}`;
-								}) as string[]
-							)
-						)
+								}) as string[],
+							),
+						),
 					),
 					program: this.getProgramByStage(stage),
 					stage,
@@ -291,7 +291,7 @@ export class CustomReport {
 			this.programsMetadata?.map((program) => [
 				program.id,
 				program.programStages,
-			])
+			]),
 		);
 	}
 
@@ -302,7 +302,7 @@ export class CustomReport {
 	getAttributesByProgram(programId: string): ReportDxConfig[] {
 		if (!this.programsMetadata) {
 			throw Error(
-				"Programs metadata not found. Call `setProgramMetadata method first`"
+				"Programs metadata not found. Call `setProgramMetadata method first`",
 			);
 		}
 		const programMetadata = find(this.programsMetadata, ["id", programId]);
@@ -320,7 +320,7 @@ export class CustomReport {
 	getProgramByStage(programStage: string): string | undefined {
 		if (!this.programsMetadata) {
 			throw Error(
-				"Programs metadata not found. Call `setProgramMetadata method first`"
+				"Programs metadata not found. Call `setProgramMetadata method first`",
 			);
 		}
 		return find(this.programsMetadata, (program) => {
@@ -337,20 +337,20 @@ export class CustomReport {
 				keys(
 					omit(
 						metaData?.dimensions,
-						concat(["ou", "pe"], metaData?.dimensions?.ou || [])
-					)
-				)
-			)
+						concat(["ou", "pe"], metaData?.dimensions?.ou || []),
+					),
+				),
+			),
 		);
 		return rows?.map((row) => {
 			return {
 				programStage: options?.stage,
 				...fromPairs(
 					dataKeys.map((key) => {
-						const newKey =  last(split(key, "."))?? key;
+						const newKey = last(split(key, ".")) ?? key;
 						const index = findIndex(headers, ["name", key]);
 						return [newKey, row[index]];
-					})
+					}),
 				),
 			};
 		});
@@ -363,10 +363,10 @@ export class CustomReport {
 			setProgress,
 		}: {
 			getEnrollments: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
 			setProgress: Dispatch<SetStateAction<number>>;
-		}
+		},
 	) {
 		return await mapSeries(
 			variableParams,
@@ -374,8 +374,8 @@ export class CustomReport {
 				try {
 					const pages = Array.from(
 						Array(
-							Math.ceil((pagination.total as number) / PAGE_SIZE)
-						).keys()
+							Math.ceil((pagination.total as number) / PAGE_SIZE),
+						).keys(),
 					).map((index) => index + 1);
 					return await mapSeries(
 						pages,
@@ -396,14 +396,14 @@ export class CustomReport {
 									})
 									.catch((error) => {
 										console.error(error);
-									})
-						)
+									}),
+						),
 					);
 				} catch (e) {
 					console.error(e);
 					return [];
 				}
-			})
+			}),
 		);
 	}
 
@@ -414,10 +414,10 @@ export class CustomReport {
 			setProgress,
 		}: {
 			getEvents: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
 			setProgress: Dispatch<SetStateAction<number>>;
-		}
+		},
 	) {
 		const eventsVariables: EventVariables[] = this.eventAnalyticsParameters;
 		if (isEmpty(eventsVariables)) {
@@ -436,7 +436,7 @@ export class CustomReport {
 				}) => {
 					try {
 						const pages = Array.from(
-							Array(pagination.pageCount as number).keys()
+							Array(pagination.pageCount as number).keys(),
 						).map((index) => index + 1);
 
 						return await mapSeries(
@@ -455,20 +455,20 @@ export class CustomReport {
 									.then(({ data }) => {
 										return this.sanitizeAnalyticsData(
 											data,
-											{ stage: params.stage }
+											{ stage: params.stage },
 										);
 									})
 									.catch((error) => {
 										console.error(error);
 									});
-							})
+							}),
 						);
 					} catch (e) {
 						console.error(e);
 						return [];
 					}
-				}
-			)
+				},
+			),
 		);
 	}
 
@@ -478,9 +478,9 @@ export class CustomReport {
 			getEvents,
 		}: {
 			getEvents: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
-		}
+		},
 	): Promise<Array<QueryVariables>> {
 		const eventsVariables: EventVariables[] = this.eventAnalyticsParameters;
 		if (isEmpty(eventsVariables)) {
@@ -514,13 +514,13 @@ export class CustomReport {
 								...baseRequestObject,
 								startDate: "1980-02-20",
 								endDate: PeriodUtility.getPeriodById(
-									periods[0]
+									periods[0],
 								).end.toFormat("yyyy-MM-dd"),
-						  }
+							}
 						: {
 								...baseRequestObject,
 								pe: periods,
-						  };
+							};
 
 					const pagination = await this.getPagination(requestObject, {
 						getter: getEvents,
@@ -529,8 +529,8 @@ export class CustomReport {
 						params: requestObject,
 						pagination,
 					};
-				}
-			)
+				},
+			),
 		);
 	}
 
@@ -540,9 +540,9 @@ export class CustomReport {
 			getEnrollments,
 		}: {
 			getEnrollments: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
-		}
+		},
 	): Promise<Array<QueryVariables>> {
 		const enrollmentVariables: { program: string; dx: string[] }[] = this
 			.enrollmentAnalyticsParameters as {
@@ -581,8 +581,8 @@ export class CustomReport {
 						console.error(e);
 						return [];
 					}
-				}
-			)
+				},
+			),
 		);
 	}
 
@@ -595,20 +595,20 @@ export class CustomReport {
 			setTotalRequests,
 		}: {
 			getEvents: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
 			getEnrollments: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
 			setProgress: any;
 			setTotalRequests: any;
-		}
+		},
 	) {
 		const eventPagination = await this.getEventPaginationAndParams(
 			dimensions,
 			{
 				getEvents,
-			}
+			},
 		);
 
 		let totalPages = sumBy(eventPagination, "pagination.pageCount");
@@ -633,7 +633,7 @@ export class CustomReport {
 							getEnrollments,
 							setProgress,
 						}),
-				  ]
+					]
 				: []),
 		];
 
@@ -650,9 +650,9 @@ export class CustomReport {
 				this.data ?? [],
 				this.config,
 				orgUnits,
-				this.programToProgramStages
+				this.programToProgramStages,
 			),
-			"id"
+			"id",
 		);
 	}
 
@@ -665,7 +665,7 @@ export class CustomReport {
 					width: 300,
 				};
 			}),
-			"key"
+			"key",
 		);
 	}
 
@@ -683,9 +683,9 @@ export class CustomReport {
 			getter,
 		}: {
 			getter: (
-				options: Record<string, any>
+				options: Record<string, any>,
 			) => Promise<Record<string, any>>;
-		}
+		},
 	): Promise<Pagination> {
 		const response = await getter({
 			...variables,
