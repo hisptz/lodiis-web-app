@@ -435,6 +435,7 @@ export class CustomReport {
 						const pages = Array.from(
 							Array(pagination.pageCount as number).keys()
 						).map((index) => index + 1);
+
 						return await mapSeries(
 							pages,
 							asyncify(async (page: number) => {
@@ -560,6 +561,10 @@ export class CustomReport {
 							dx,
 							ou: orgUnits,
 							pe: periods,
+							page: 1,
+							pageSize: PAGE_SIZE,
+							skipMeta: false,
+							skipData: false,
 						};
 						const pagination = await this.getPagination(params, {
 							getter: getEnrollments,
@@ -602,6 +607,7 @@ export class CustomReport {
 				getEvents,
 			}
 		);
+
 		let totalPages = sumBy(eventPagination, "pagination.pageCount");
 
 		const enrollmentPagination =
@@ -688,7 +694,7 @@ export class CustomReport {
 		return {
 			...serverPagination,
 			pageSize: PAGE_SIZE,
-			pageCount: Math.ceil(serverPagination.total ?? 0 / PAGE_SIZE),
+			pageCount: Math.ceil((serverPagination.total ?? 0) / PAGE_SIZE),
 		};
 	}
 }
