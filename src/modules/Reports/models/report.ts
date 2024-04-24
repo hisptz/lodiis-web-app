@@ -13,9 +13,11 @@ import {
 	groupBy,
 	isEmpty,
 	keys,
+	last,
 	map,
 	mapValues,
 	omit,
+	split,
 	sumBy,
 	uniq,
 	uniqBy,
@@ -345,8 +347,9 @@ export class CustomReport {
 				programStage: options?.stage,
 				...fromPairs(
 					dataKeys.map((key) => {
+						const newKey =  last(split(key, "."))?? key;
 						const index = findIndex(headers, ["name", key]);
-						return [key, row[index]];
+						return [newKey, row[index]];
 					})
 				),
 			};
