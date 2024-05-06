@@ -8,6 +8,7 @@ import {
 	serviceTotalSessions,
 } from "./get-average-session-number-per-intervention";
 import { DEFAULT_ANALYTICS_KEYS } from "../../../constants/reports";
+import { ATTRIBUTES } from "../../../constants/metadata";
 
 export function getSanitizesReportValue(
 	value: any,
@@ -516,362 +517,438 @@ export function getFormattedEventAnalyticDataForReport(
 	programToProgramStageObject: any,
 ) {
 	const groupedAnalyticDataByBeneficiary = _.groupBy(analyticData, "tei");
-	return _.map(
-		_.flattenDeep(
-			_.map(_.keys(groupedAnalyticDataByBeneficiary), (tei: string) => {
-				const analyticDataByBeneficiary =
-					groupedAnalyticDataByBeneficiary[tei];
-				const isNotAgywBeneficiary =
-					_.filter(
-						_.uniq(
-							_.flatMapDeep(
-								_.map(
-									analyticDataByBeneficiary,
-									(data: any) => data.programStage ?? "",
+	const mandatoryFieldColumns = _.uniq(
+		_.map(
+			_.filter(reportConfig.dxConfigs || [], (dxConfig: any) => {
+				const id = dxConfig.id ?? "";
+				return (
+					id !== "" &&
+					[
+						ATTRIBUTES.FIRST_NAME,
+						ATTRIBUTES.SURNAME,
+						ATTRIBUTES.DATE_OF_BIRTH,
+						ATTRIBUTES.SEX,
+					].includes(id)
+				);
+			}),
+			(dxConfig: any) => dxConfig.name ?? "",
+		),
+	);
+	return _.filter(
+		_.map(
+			_.flattenDeep(
+				_.map(
+					_.keys(groupedAnalyticDataByBeneficiary),
+					(tei: string) => {
+						const analyticDataByBeneficiary =
+							groupedAnalyticDataByBeneficiary[tei];
+						const isNotAgywBeneficiary =
+							_.filter(
+								_.uniq(
+									_.flatMapDeep(
+										_.map(
+											analyticDataByBeneficiary,
+											(data: any) =>
+												data.programStage ?? "",
+										),
+									),
 								),
-							),
-						),
-						(stage: string) =>
-							noneAgywParticipationProgramStages.includes(
-								stage,
-							) ||
-							noneAgywDreamBeneficairiesStage.includes(stage),
-					).length > 0;
-				let beneficiaryData: any = {};
+								(stage: string) =>
+									noneAgywParticipationProgramStages.includes(
+										stage,
+									) ||
+									noneAgywDreamBeneficairiesStage.includes(
+										stage,
+									),
+							).length > 0;
+						let beneficiaryData: any = {};
 
-				for (const dxConfigs of reportConfig.dxConfigs || []) {
-					const {
-						id,
-						ids,
-						name,
-						programStage,
-						isBoolean,
-						codes,
-						isDate,
-						displayValues,
-						programStages,
-						combinedValues,
-					} = dxConfigs;
-					let value = "";
-					if (id === "total_services") {
-						const totalServices = _.uniq(
-							_.map(
-								_.filter(analyticDataByBeneficiary, (data) => {
-									return (
-										data[DEFAULT_ANALYTICS_KEYS.PSI] !==
-										undefined
-									);
-								}),
-								(data) => data[DEFAULT_ANALYTICS_KEYS.PSI],
-							),
-						).length;
-						value = `${totalServices}`;
-					} else if (id === lastServiceProvider) {
-						const lastService: any = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-						value =
-							lastService && _.keys(lastService).length > 0
-								? lastService[lastServiceProvider] ||
-									lastService[enrolledServiceProvider] ||
-									value
-								: value;
-					} else if (id === lastIpProvideService) {
-						const lastService: any = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-
-						value =
-							lastService && _.keys(lastService).length > 0
-								? lastService[lastIpProvideService] ||
-									lastService[enrolledIp] ||
-									value
-								: value;
-					} else if (id === "completed_primary_package") {
-						value = evaluationOfPrimaryPackageCompletion(
-							analyticDataByBeneficiary,
-							programStages,
-						);
-					} else if (id === "completed_secondary_package") {
-						value = evaluationOfSecondaryPrimaryPackageCompletion(
-							analyticDataByBeneficiary,
-							programStages,
-						);
-					} else if (
-						id === "completed_primary_package_and_atleast_secondary"
-					) {
-						value =
-							evaluationOfPrimaryPackageCompletionAtLeastOneSecondary(
-								analyticDataByBeneficiary,
+						for (const dxConfigs of reportConfig.dxConfigs || []) {
+							const {
+								id,
+								ids,
+								name,
+								programStage,
+								isBoolean,
+								codes,
+								isDate,
+								displayValues,
 								programStages,
-							);
-					} else if (id === "district_of_residence") {
-						const ouIds = _.uniq(
-							_.flattenDeep(
-								_.map(analyticDataByBeneficiary, (dataObj) =>
-									_.keys(dataObj).length > 0
-										? dataObj["ou"] || ""
-										: "",
-								),
-							),
-						);
-						value = getLocationNameByIdAndLevel(
-							locations,
-							districtLevel,
-							ouIds.length > 0 ? ouIds[0] : value,
-						);
-					} else if (id === "community_council_of_residence") {
-						const ouIds = _.uniq(
-							_.flattenDeep(
-								_.map(analyticDataByBeneficiary, (dataObj) =>
-									_.keys(dataObj).length > 0
-										? dataObj["ou"] || ""
-										: "",
-								),
-							),
-						);
-						value = getLocationNameByIdAndLevel(
-							locations,
-							communityCouncilLevel,
-							ouIds.length > 0 ? ouIds[0] : value,
-						);
-					} else if (id === "is_eligible_for_prep") {
-						value = isBeneficiaryEligibleForPrep(
-							ids,
-							analyticDataByBeneficiary,
-						);
-					} else if (id === "is_screened_for_prep") {
-						var isScreenedForPrep = _isBenediciaryScreenedForPrep(
-							ids,
-							analyticDataByBeneficiary,
-						);
-						value = isScreenedForPrep ? "Yes" : "No";
-					} else if (id === "prep_beneficairy_status") {
-						value = getPrepBeneficiaryStatus(
-							analyticDataByBeneficiary,
-						);
-					} else if (id === "assessmment_date") {
-						const assessmentDate = getAssessmentDate(
-							analyticDataByBeneficiary,
-						);
-						value = `${assessmentDate}`.split(" ")[0];
-					} else if (id === "is_assemmenet_conducted") {
-						const assessmentDate = getAssessmentDate(
-							analyticDataByBeneficiary,
-						);
-						value = assessmentDate === "" ? "No" : "Yes";
-					} else if (id === "hiv_risk_assessment_result") {
-						value = getBeneficiaryHivRiskAssessmentResult(
-							ids,
-							analyticDataByBeneficiary,
-						);
-					} else if (id === "beneficiary_age") {
-						const dob = getValueFromAnalyticalData(
-							analyticDataByBeneficiary,
-							beneficiaryDateOfBirthReference,
-							programStage,
-						);
-						if (dob !== "") {
-							const age = getBeneficiaryAge(dob);
-							value = `${age}`;
-						}
-					} else if (id === "beneficiary_age_range") {
-						const dob = getValueFromAnalyticalData(
-							analyticDataByBeneficiary,
-							beneficiaryDateOfBirthReference,
-							programStage,
-						);
-						if (dob !== "") {
-							const age = getBeneficiaryAge(dob);
-							value = getBeneficiaryAgeRange(age);
-						}
-					} else if (id === "beneficiary_age_ranges") {
-						const dob = getValueFromAnalyticalData(
-							analyticDataByBeneficiary,
-							beneficiaryDateOfBirthReference,
-							programStage,
-						);
-						if (dob !== "") {
-							const age = getBeneficiaryAge(dob);
-							value = getBeneficiaryAgeRanges(age);
-						}
-					} else if (id === "household_id") {
-						value = getBeneficiaryCodeValue(
-							analyticDataByBeneficiary,
-						);
-					} else if (id === "beneficiary_type") {
-						value = getBeneficiaryTypeValue(
-							analyticDataByBeneficiary,
-							programToProgramStageObject,
-						);
-					} else if (id === "prep_from_long_form") {
-						value = getLongFormPrEPValue(
-							analyticDataByBeneficiary,
-							ids,
-							programStage,
-						);
-					} else if (id === "is_service_provided") {
-						const lastService = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-						value =
-							lastService && _.keys(lastService).length > 0
-								? "Yes"
-								: value === ""
-									? ""
-									: "No";
-					}
-					if (id === "last_service_community_council") {
-						const lastService: any = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-						const locationId =
-							lastService && _.keys(lastService).length > 0
-								? lastService["ou"] || ""
-								: "";
-						value = getLocationNameByIdAndLevel(
-							locations,
-							communityCouncilLevel,
-							locationId,
-						);
-					} else if (id === "facility_name") {
-						value = getLocationNameByLevel(
-							analyticDataByBeneficiary,
-							locations,
-							facilityLevel,
-						);
-					} else if (id === "district_of_service") {
-						value = getLocationNameByLevel(
-							analyticDataByBeneficiary,
-							locations,
-							districtLevel,
-						);
-					} else if (id === "service_from_referral") {
-						value = getServiceFromReferral(
-							analyticDataByBeneficiary,
-							programStage,
-							codes,
-						);
-					} else if (id === "date_of_last_service_received") {
-						const lastService: any = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-						value =
-							lastService && _.keys(lastService).length > 0
-								? lastService["eventdate"] || value
-								: value;
-					} else if (id === "date_case_plan") {
-						const lastService: any = getLastServiceFromAnalyticData(
-							analyticDataByBeneficiary,
-							programStage,
-						);
-						value =
-							lastService && _.keys(lastService).length > 0
-								? lastService["eventdate"] || value
-								: value;
-					} else if (id === "isAgywBeneficiary") {
-						value = !isNotAgywBeneficiary ? "Yes" : "No";
-					} else if (ids && combinedValues) {
-						value = getValueFromCombinedDataValues(
-							analyticDataByBeneficiary,
-							ids,
-							combinedValues,
-							programStage,
-						);
-					} else {
-						// Take consideration of services codes
-						const eventReportData =
-							id !== "" && programStage === ""
-								? _.find(
-										analyticDataByBeneficiary,
-										(data: any) => {
-											return codes && codes.length > 0
-												? _.keys(data).includes(id) &&
-														codes.includes(data[id])
-												: _.keys(data).includes(id);
-										},
-									)
-								: _.find(
-										analyticDataByBeneficiary,
-										(data: any) => {
-											return codes && codes.length > 0
-												? _.keys(data).includes(id) &&
-														codes.includes(
-															data[id],
-														) &&
-														data.programStage &&
-														data.programStage ===
-															programStage
-												: _.keys(data).includes(id) &&
-														data.programStage &&
-														data.programStage ===
-															programStage;
-										},
-									);
-						value = eventReportData ? eventReportData[id] : value;
-					}
-					if (id === "following_up_visit") {
-						const followingUpVisits = getFollowingUpVisits(
-							analyticDataByBeneficiary,
-						);
-						beneficiaryData = {
-							...beneficiaryData,
-							...followingUpVisits,
-						};
-					} else {
-						if (
-							_.keys(beneficiaryData).includes(name) &&
-							beneficiaryData[name] !== ""
-						) {
-							value = beneficiaryData[name];
-						}
-						beneficiaryData[name] =
-							value !== ""
-								? getSanitizesReportValue(
-										value,
-										codes,
-										isBoolean,
-										isDate,
-										displayValues,
-										isNotAgywBeneficiary,
+								combinedValues,
+							} = dxConfigs;
+							let value = "";
+							if (id === "total_services") {
+								const totalServices = _.uniq(
+									_.map(
+										_.filter(
+											analyticDataByBeneficiary,
+											(data) => {
+												return (
+													data[
+														DEFAULT_ANALYTICS_KEYS
+															.PSI
+													] !== undefined
+												);
+											},
+										),
+										(data) =>
+											data[DEFAULT_ANALYTICS_KEYS.PSI],
+									),
+								).length;
+								value = `${totalServices}`;
+							} else if (id === lastServiceProvider) {
+								const lastService: any =
+									getLastServiceFromAnalyticData(
 										analyticDataByBeneficiary,
 										programStage,
-									)
-								: getSanitizedDisplayValue(
-										value,
-										displayValues,
-										isNotAgywBeneficiary,
 									);
+								value =
+									lastService &&
+									_.keys(lastService).length > 0
+										? lastService[lastServiceProvider] ||
+											lastService[
+												enrolledServiceProvider
+											] ||
+											value
+										: value;
+							} else if (id === lastIpProvideService) {
+								const lastService: any =
+									getLastServiceFromAnalyticData(
+										analyticDataByBeneficiary,
+										programStage,
+									);
+
+								value =
+									lastService &&
+									_.keys(lastService).length > 0
+										? lastService[lastIpProvideService] ||
+											lastService[enrolledIp] ||
+											value
+										: value;
+							} else if (id === "completed_primary_package") {
+								value = evaluationOfPrimaryPackageCompletion(
+									analyticDataByBeneficiary,
+									programStages,
+								);
+							} else if (id === "completed_secondary_package") {
+								value =
+									evaluationOfSecondaryPrimaryPackageCompletion(
+										analyticDataByBeneficiary,
+										programStages,
+									);
+							} else if (
+								id ===
+								"completed_primary_package_and_atleast_secondary"
+							) {
+								value =
+									evaluationOfPrimaryPackageCompletionAtLeastOneSecondary(
+										analyticDataByBeneficiary,
+										programStages,
+									);
+							} else if (id === "district_of_residence") {
+								const ouIds = _.uniq(
+									_.flattenDeep(
+										_.map(
+											analyticDataByBeneficiary,
+											(dataObj) =>
+												_.keys(dataObj).length > 0
+													? dataObj["ou"] || ""
+													: "",
+										),
+									),
+								);
+								value = getLocationNameByIdAndLevel(
+									locations,
+									districtLevel,
+									ouIds.length > 0 ? ouIds[0] : value,
+								);
+							} else if (
+								id === "community_council_of_residence"
+							) {
+								const ouIds = _.uniq(
+									_.flattenDeep(
+										_.map(
+											analyticDataByBeneficiary,
+											(dataObj) =>
+												_.keys(dataObj).length > 0
+													? dataObj["ou"] || ""
+													: "",
+										),
+									),
+								);
+								value = getLocationNameByIdAndLevel(
+									locations,
+									communityCouncilLevel,
+									ouIds.length > 0 ? ouIds[0] : value,
+								);
+							} else if (id === "is_eligible_for_prep") {
+								value = isBeneficiaryEligibleForPrep(
+									ids,
+									analyticDataByBeneficiary,
+								);
+							} else if (id === "is_screened_for_prep") {
+								var isScreenedForPrep =
+									_isBenediciaryScreenedForPrep(
+										ids,
+										analyticDataByBeneficiary,
+									);
+								value = isScreenedForPrep ? "Yes" : "No";
+							} else if (id === "prep_beneficairy_status") {
+								value = getPrepBeneficiaryStatus(
+									analyticDataByBeneficiary,
+								);
+							} else if (id === "assessmment_date") {
+								const assessmentDate = getAssessmentDate(
+									analyticDataByBeneficiary,
+								);
+								value = `${assessmentDate}`.split(" ")[0];
+							} else if (id === "is_assemmenet_conducted") {
+								const assessmentDate = getAssessmentDate(
+									analyticDataByBeneficiary,
+								);
+								value = assessmentDate === "" ? "No" : "Yes";
+							} else if (id === "hiv_risk_assessment_result") {
+								value = getBeneficiaryHivRiskAssessmentResult(
+									ids,
+									analyticDataByBeneficiary,
+								);
+							} else if (id === "beneficiary_age") {
+								const dob = getValueFromAnalyticalData(
+									analyticDataByBeneficiary,
+									beneficiaryDateOfBirthReference,
+									programStage,
+								);
+								if (dob !== "") {
+									const age = getBeneficiaryAge(dob);
+									value = `${age}`;
+								}
+							} else if (id === "beneficiary_age_range") {
+								const dob = getValueFromAnalyticalData(
+									analyticDataByBeneficiary,
+									beneficiaryDateOfBirthReference,
+									programStage,
+								);
+								if (dob !== "") {
+									const age = getBeneficiaryAge(dob);
+									value = getBeneficiaryAgeRange(age);
+								}
+							} else if (id === "beneficiary_age_ranges") {
+								const dob = getValueFromAnalyticalData(
+									analyticDataByBeneficiary,
+									beneficiaryDateOfBirthReference,
+									programStage,
+								);
+								if (dob !== "") {
+									const age = getBeneficiaryAge(dob);
+									value = getBeneficiaryAgeRanges(age);
+								}
+							} else if (id === "household_id") {
+								value = getBeneficiaryCodeValue(
+									analyticDataByBeneficiary,
+								);
+							} else if (id === "beneficiary_type") {
+								value = getBeneficiaryTypeValue(
+									analyticDataByBeneficiary,
+									programToProgramStageObject,
+								);
+							} else if (id === "prep_from_long_form") {
+								value = getLongFormPrEPValue(
+									analyticDataByBeneficiary,
+									ids,
+									programStage,
+								);
+							} else if (id === "is_service_provided") {
+								const lastService =
+									getLastServiceFromAnalyticData(
+										analyticDataByBeneficiary,
+										programStage,
+									);
+								value =
+									lastService &&
+									_.keys(lastService).length > 0
+										? "Yes"
+										: value === ""
+											? ""
+											: "No";
+							}
+							if (id === "last_service_community_council") {
+								const lastService: any =
+									getLastServiceFromAnalyticData(
+										analyticDataByBeneficiary,
+										programStage,
+									);
+								const locationId =
+									lastService &&
+									_.keys(lastService).length > 0
+										? lastService["ou"] || ""
+										: "";
+								value = getLocationNameByIdAndLevel(
+									locations,
+									communityCouncilLevel,
+									locationId,
+								);
+							} else if (id === "facility_name") {
+								value = getLocationNameByLevel(
+									analyticDataByBeneficiary,
+									locations,
+									facilityLevel,
+								);
+							} else if (id === "district_of_service") {
+								value = getLocationNameByLevel(
+									analyticDataByBeneficiary,
+									locations,
+									districtLevel,
+								);
+							} else if (id === "service_from_referral") {
+								value = getServiceFromReferral(
+									analyticDataByBeneficiary,
+									programStage,
+									codes,
+								);
+							} else if (id === "date_of_last_service_received") {
+								const lastService: any =
+									getLastServiceFromAnalyticData(
+										analyticDataByBeneficiary,
+										programStage,
+									);
+								value =
+									lastService &&
+									_.keys(lastService).length > 0
+										? lastService["eventdate"] || value
+										: value;
+							} else if (id === "date_case_plan") {
+								const lastService: any =
+									getLastServiceFromAnalyticData(
+										analyticDataByBeneficiary,
+										programStage,
+									);
+								value =
+									lastService &&
+									_.keys(lastService).length > 0
+										? lastService["eventdate"] || value
+										: value;
+							} else if (id === "isAgywBeneficiary") {
+								value = !isNotAgywBeneficiary ? "Yes" : "No";
+							} else if (ids && combinedValues) {
+								value = getValueFromCombinedDataValues(
+									analyticDataByBeneficiary,
+									ids,
+									combinedValues,
+									programStage,
+								);
+							} else {
+								// Take consideration of services codes
+								const eventReportData =
+									id !== "" && programStage === ""
+										? _.find(
+												analyticDataByBeneficiary,
+												(data: any) => {
+													return codes &&
+														codes.length > 0
+														? _.keys(data).includes(
+																id,
+															) &&
+																codes.includes(
+																	data[id],
+																)
+														: _.keys(data).includes(
+																id,
+															);
+												},
+											)
+										: _.find(
+												analyticDataByBeneficiary,
+												(data: any) => {
+													return codes &&
+														codes.length > 0
+														? _.keys(data).includes(
+																id,
+															) &&
+																codes.includes(
+																	data[id],
+																) &&
+																data.programStage &&
+																data.programStage ===
+																	programStage
+														: _.keys(data).includes(
+																id,
+															) &&
+																data.programStage &&
+																data.programStage ===
+																	programStage;
+												},
+											);
+								value = eventReportData
+									? eventReportData[id]
+									: value;
+							}
+							if (id === "following_up_visit") {
+								const followingUpVisits = getFollowingUpVisits(
+									analyticDataByBeneficiary,
+								);
+								beneficiaryData = {
+									...beneficiaryData,
+									...followingUpVisits,
+								};
+							} else {
+								if (
+									_.keys(beneficiaryData).includes(name) &&
+									beneficiaryData[name] !== ""
+								) {
+									value = beneficiaryData[name];
+								}
+								beneficiaryData[name] =
+									value !== ""
+										? getSanitizesReportValue(
+												value,
+												codes,
+												isBoolean,
+												isDate,
+												displayValues,
+												isNotAgywBeneficiary,
+												analyticDataByBeneficiary,
+												programStage,
+											)
+										: getSanitizedDisplayValue(
+												value,
+												displayValues,
+												isNotAgywBeneficiary,
+											);
+							}
+						}
+						return { ...beneficiaryData, id: tei };
+					},
+				),
+			),
+			(beneficiary: any) => {
+				const enrolledServiceProvider =
+					beneficiary["Enrolled Service Provider"] || "";
+				const serviceProvider =
+					beneficiary["Last Service Provider"] || "";
+				if (enrolledServiceProvider === "scriptrunner") {
+					beneficiary["Enrolled Service Provider"] = "UPLOADED";
+					beneficiary["Enrolled IP"] = "";
+					if (_.keys(beneficiary).includes("Enrolled Sub IP")) {
+						beneficiary["Enrolled Sub IP"] = "";
 					}
 				}
-				const totalNumberOfServices = _.find(
-					reportConfig.dxConfigs,
-					(config: any) => config.id === "total_services",
-				);
-				return { ...beneficiaryData, id: tei };
-			}),
-		),
-		(beneficiary: any) => {
-			const enrolledServiceProvider =
-				beneficiary["Enrolled Service Provider"] || "";
-			const serviceProvider = beneficiary["Last Service Provider"] || "";
-			if (enrolledServiceProvider === "scriptrunner") {
-				beneficiary["Enrolled Service Provider"] = "UPLOADED";
-				beneficiary["Enrolled IP"] = "";
-				if (_.keys(beneficiary).includes("Enrolled Sub IP")) {
-					beneficiary["Enrolled Sub IP"] = "";
+				if (serviceProvider === "scriptrunner") {
+					beneficiary["Last Service Provider"] = "UPLOADED";
+					beneficiary["Last IP provide service"] = "";
 				}
-			}
-			if (serviceProvider === "scriptrunner") {
-				beneficiary["Last Service Provider"] = "UPLOADED";
-				beneficiary["Last IP provide service"] = "";
-			}
-			return beneficiary;
-		},
+				return beneficiary;
+			},
+		),
+		(beneficiary: any) =>
+			_.isEmpty(
+				_.keys(
+					_.pickBy(
+						_.pickBy(beneficiary, (value, key) =>
+							mandatoryFieldColumns.includes(key),
+						),
+						(value, key) => _.isEmpty(value),
+					),
+				),
+			),
 	);
 }

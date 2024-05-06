@@ -13,9 +13,11 @@ import {
 	groupBy,
 	isEmpty,
 	keys,
+	last,
 	map,
 	mapValues,
 	omit,
+	split,
 	sumBy,
 	uniq,
 	uniqBy,
@@ -335,7 +337,7 @@ export class CustomReport {
 				keys(
 					omit(
 						metaData?.dimensions,
-						concat(["ou", "pe"], metaData?.dimensions.ou || []),
+						concat(["ou", "pe"], metaData?.dimensions?.ou || []),
 					),
 				),
 			),
@@ -345,8 +347,9 @@ export class CustomReport {
 				programStage: options?.stage,
 				...fromPairs(
 					dataKeys.map((key) => {
+						const newKey = last(split(key, ".")) ?? key;
 						const index = findIndex(headers, ["name", key]);
-						return [key, row[index]];
+						return [newKey, row[index]];
 					}),
 				),
 			};
@@ -382,6 +385,12 @@ export class CustomReport {
 									...params,
 									page,
 								})
+									.then((data) => {
+										setProgress((prevProgress: number) => {
+											return prevProgress + 1;
+										});
+										return data;
+									})
 									.then(({ data }) => {
 										return this.sanitizeAnalyticsData(data);
 									})
@@ -395,12 +404,7 @@ export class CustomReport {
 					return [];
 				}
 			}),
-		).then((data) => {
-			setProgress((prevProgress: number) => {
-				return prevProgress + 1;
-			});
-			return data;
-		});
+		);
 	}
 
 	async getEventsData(
@@ -432,12 +436,9 @@ export class CustomReport {
 				}) => {
 					try {
 						const pages = Array.from(
-							Array(
-								Math.ceil(
-									(pagination.total as number) / PAGE_SIZE,
-								),
-							).keys(),
+							Array(pagination.pageCount as number).keys(),
 						).map((index) => index + 1);
+
 						return await mapSeries(
 							pages,
 							asyncify(async (page: number) => {
@@ -445,6 +446,12 @@ export class CustomReport {
 									...params,
 									page,
 								})
+									.then((data) => {
+										setProgress((prevProgress: number) => {
+											return prevProgress + 1;
+										});
+										return data;
+									})
 									.then(({ data }) => {
 										return this.sanitizeAnalyticsData(
 											data,
@@ -455,12 +462,7 @@ export class CustomReport {
 										console.error(error);
 									});
 							}),
-						).then((data) => {
-							setProgress((prevProgress: number) => {
-								return prevProgress + 1;
-							});
-							return data;
-						});
+						);
 					} catch (e) {
 						console.error(e);
 						return [];
@@ -504,7 +506,7 @@ export class CustomReport {
 						ou: orgUnits,
 						page: 1,
 						pageSize: PAGE_SIZE,
-						skipMeta: true,
+						skipMeta: false,
 						skipData: false,
 					};
 					const requestObject = this.config.endDateSelection
@@ -562,6 +564,10 @@ export class CustomReport {
 							dx,
 							ou: orgUnits,
 							pe: periods,
+							page: 1,
+							pageSize: PAGE_SIZE,
+							skipMeta: false,
+							skipData: false,
 						};
 						const pagination = await this.getPagination(params, {
 							getter: getEnrollments,
@@ -606,6 +612,7 @@ export class CustomReport {
 		);
 
 		let totalPages = sumBy(eventPagination, "pagination.pageCount");
+
 		const enrollmentPagination =
 			await this.getEnrollmentPaginationAndParams(dimensions, {
 				getEnrollments,
@@ -616,13 +623,13 @@ export class CustomReport {
 		setTotalRequests(totalPages);
 
 		const promises = [
-			this.getEventsData(eventPagination, {
+			await this.getEventsData(eventPagination, {
 				getEvents,
 				setProgress,
 			}),
 			...(this.config.includeEnrollmentWithoutService
 				? [
-						this.getEnrollmentData(enrollmentPagination, {
+						await this.getEnrollmentData(enrollmentPagination, {
 							getEnrollments,
 							setProgress,
 						}),
@@ -683,10 +690,14 @@ export class CustomReport {
 		const response = await getter({
 			...variables,
 			page: 1,
-			pageSize: PAGE_SIZE,
-			skipData: true,
+			pageSize: 1,
 			skipMeta: false,
 		});
-		return response?.data?.metaData?.pager;
+		const serverPagination = response?.data?.metaData?.pager;
+		return {
+			...serverPagination,
+			pageSize: PAGE_SIZE,
+			pageCount: Math.ceil((serverPagination.total ?? 0) / PAGE_SIZE),
+		};
 	}
 }
