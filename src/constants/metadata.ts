@@ -9,6 +9,7 @@ export enum ATTRIBUTES {
 	PRIMARY_UIC = "fTSAY18LgCF",
 	SECONDARY_UIC = "eIU7KMx4Tu3",
 	IMPLEMENTING_PARTNER = "wpiLo7DTwKF",
+	SEX = "vIX4GTSCX4P",
 }
 
 export const DEFAULT_PROGRAM_CONFIG: ProgramConfig = {

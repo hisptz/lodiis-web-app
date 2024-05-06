@@ -8,6 +8,7 @@ import {
 	serviceTotalSessions,
 } from "./get-average-session-number-per-intervention";
 import { DEFAULT_ANALYTICS_KEYS } from "../../../constants/reports";
+import { ATTRIBUTES } from "../../../constants/metadata";
 
 export function getSanitizesReportValue(
 	value: any,
@@ -516,6 +517,23 @@ export function getFormattedEventAnalyticDataForReport(
 	programToProgramStageObject: any,
 ) {
 	const groupedAnalyticDataByBeneficiary = _.groupBy(analyticData, "tei");
+	const mandatoryFieldColumns = _.uniq(
+		_.map(
+			_.filter(reportConfig.dxConfigs || [], (dxConfig: any) => {
+				const id = dxConfig.id ?? "";
+				return (
+					id !== "" &&
+					[
+						ATTRIBUTES.FIRST_NAME,
+						ATTRIBUTES.SURNAME,
+						ATTRIBUTES.DATE_OF_BIRTH,
+						ATTRIBUTES.SEX,
+					].includes(id)
+				);
+			}),
+			(dxConfig: any) => dxConfig.name ?? "",
+		),
+	);
 	return _.map(
 		_.flattenDeep(
 			_.map(_.keys(groupedAnalyticDataByBeneficiary), (tei: string) => {
